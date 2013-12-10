@@ -1,0 +1,475 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		66253DC018572BE100F3F062 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DBF18572BE100F3F062 /* Foundation.framework */; };
+		66253DC218572BE100F3F062 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DC118572BE100F3F062 /* CoreGraphics.framework */; };
+		66253DC418572BE100F3F062 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DC318572BE100F3F062 /* UIKit.framework */; };
+		66253DCA18572BE100F3F062 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66253DC818572BE100F3F062 /* InfoPlist.strings */; };
+		66253DCC18572BE100F3F062 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DCB18572BE100F3F062 /* main.m */; };
+		66253DD018572BE100F3F062 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DCF18572BE100F3F062 /* AppDelegate.m */; };
+		66253DD318572BE100F3F062 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66253DD118572BE100F3F062 /* Main.storyboard */; };
+		66253DD618572BE100F3F062 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DD518572BE100F3F062 /* ViewController.m */; };
+		66253DD818572BE100F3F062 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66253DD718572BE100F3F062 /* Images.xcassets */; };
+		66253DDF18572BE100F3F062 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DDE18572BE100F3F062 /* XCTest.framework */; };
+		66253DE018572BE100F3F062 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DBF18572BE100F3F062 /* Foundation.framework */; };
+		66253DE118572BE100F3F062 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DC318572BE100F3F062 /* UIKit.framework */; };
+		66253DE918572BE100F3F062 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66253DE718572BE100F3F062 /* InfoPlist.strings */; };
+		66253DEB18572BE100F3F062 /* H2H_FeelsafeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DEA18572BE100F3F062 /* H2H_FeelsafeTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		66253DE218572BE100F3F062 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66253DB418572BE100F3F062 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66253DBB18572BE100F3F062;
+			remoteInfo = "H2H Feelsafe";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		66253DBC18572BE100F3F062 /* H2H Feelsafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "H2H Feelsafe.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66253DBF18572BE100F3F062 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		66253DC118572BE100F3F062 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		66253DC318572BE100F3F062 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		66253DC718572BE100F3F062 /* H2H Feelsafe-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "H2H Feelsafe-Info.plist"; sourceTree = "<group>"; };
+		66253DC918572BE100F3F062 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66253DCB18572BE100F3F062 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		66253DCD18572BE100F3F062 /* H2H Feelsafe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "H2H Feelsafe-Prefix.pch"; sourceTree = "<group>"; };
+		66253DCE18572BE100F3F062 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		66253DCF18572BE100F3F062 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		66253DD218572BE100F3F062 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		66253DD418572BE100F3F062 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		66253DD518572BE100F3F062 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		66253DD718572BE100F3F062 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		66253DDD18572BE100F3F062 /* H2H FeelsafeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "H2H FeelsafeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66253DDE18572BE100F3F062 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		66253DE618572BE100F3F062 /* H2H FeelsafeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "H2H FeelsafeTests-Info.plist"; sourceTree = "<group>"; };
+		66253DE818572BE100F3F062 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66253DEA18572BE100F3F062 /* H2H_FeelsafeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = H2H_FeelsafeTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		66253DB918572BE100F3F062 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66253DC218572BE100F3F062 /* CoreGraphics.framework in Frameworks */,
+				66253DC418572BE100F3F062 /* UIKit.framework in Frameworks */,
+				66253DC018572BE100F3F062 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66253DDA18572BE100F3F062 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66253DDF18572BE100F3F062 /* XCTest.framework in Frameworks */,
+				66253DE118572BE100F3F062 /* UIKit.framework in Frameworks */,
+				66253DE018572BE100F3F062 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		66253DB318572BE100F3F062 = {
+			isa = PBXGroup;
+			children = (
+				66253DC518572BE100F3F062 /* H2H Feelsafe */,
+				66253DE418572BE100F3F062 /* H2H FeelsafeTests */,
+				66253DBE18572BE100F3F062 /* Frameworks */,
+				66253DBD18572BE100F3F062 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		66253DBD18572BE100F3F062 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				66253DBC18572BE100F3F062 /* H2H Feelsafe.app */,
+				66253DDD18572BE100F3F062 /* H2H FeelsafeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		66253DBE18572BE100F3F062 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				66253DBF18572BE100F3F062 /* Foundation.framework */,
+				66253DC118572BE100F3F062 /* CoreGraphics.framework */,
+				66253DC318572BE100F3F062 /* UIKit.framework */,
+				66253DDE18572BE100F3F062 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		66253DC518572BE100F3F062 /* H2H Feelsafe */ = {
+			isa = PBXGroup;
+			children = (
+				66253DCE18572BE100F3F062 /* AppDelegate.h */,
+				66253DCF18572BE100F3F062 /* AppDelegate.m */,
+				66253DD118572BE100F3F062 /* Main.storyboard */,
+				66253DD418572BE100F3F062 /* ViewController.h */,
+				66253DD518572BE100F3F062 /* ViewController.m */,
+				66253DD718572BE100F3F062 /* Images.xcassets */,
+				66253DC618572BE100F3F062 /* Supporting Files */,
+			);
+			path = "H2H Feelsafe";
+			sourceTree = "<group>";
+		};
+		66253DC618572BE100F3F062 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				66253DC718572BE100F3F062 /* H2H Feelsafe-Info.plist */,
+				66253DC818572BE100F3F062 /* InfoPlist.strings */,
+				66253DCB18572BE100F3F062 /* main.m */,
+				66253DCD18572BE100F3F062 /* H2H Feelsafe-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		66253DE418572BE100F3F062 /* H2H FeelsafeTests */ = {
+			isa = PBXGroup;
+			children = (
+				66253DEA18572BE100F3F062 /* H2H_FeelsafeTests.m */,
+				66253DE518572BE100F3F062 /* Supporting Files */,
+			);
+			path = "H2H FeelsafeTests";
+			sourceTree = "<group>";
+		};
+		66253DE518572BE100F3F062 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				66253DE618572BE100F3F062 /* H2H FeelsafeTests-Info.plist */,
+				66253DE718572BE100F3F062 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		66253DBB18572BE100F3F062 /* H2H Feelsafe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66253DEE18572BE200F3F062 /* Build configuration list for PBXNativeTarget "H2H Feelsafe" */;
+			buildPhases = (
+				66253DB818572BE100F3F062 /* Sources */,
+				66253DB918572BE100F3F062 /* Frameworks */,
+				66253DBA18572BE100F3F062 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "H2H Feelsafe";
+			productName = "H2H Feelsafe";
+			productReference = 66253DBC18572BE100F3F062 /* H2H Feelsafe.app */;
+			productType = "com.apple.product-type.application";
+		};
+		66253DDC18572BE100F3F062 /* H2H FeelsafeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66253DF118572BE200F3F062 /* Build configuration list for PBXNativeTarget "H2H FeelsafeTests" */;
+			buildPhases = (
+				66253DD918572BE100F3F062 /* Sources */,
+				66253DDA18572BE100F3F062 /* Frameworks */,
+				66253DDB18572BE100F3F062 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66253DE318572BE100F3F062 /* PBXTargetDependency */,
+			);
+			name = "H2H FeelsafeTests";
+			productName = "H2H FeelsafeTests";
+			productReference = 66253DDD18572BE100F3F062 /* H2H FeelsafeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		66253DB418572BE100F3F062 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Maxime Berail";
+				TargetAttributes = {
+					66253DDC18572BE100F3F062 = {
+						TestTargetID = 66253DBB18572BE100F3F062;
+					};
+				};
+			};
+			buildConfigurationList = 66253DB718572BE100F3F062 /* Build configuration list for PBXProject "H2H Feelsafe" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 66253DB318572BE100F3F062;
+			productRefGroup = 66253DBD18572BE100F3F062 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				66253DBB18572BE100F3F062 /* H2H Feelsafe */,
+				66253DDC18572BE100F3F062 /* H2H FeelsafeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		66253DBA18572BE100F3F062 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66253DD818572BE100F3F062 /* Images.xcassets in Resources */,
+				66253DCA18572BE100F3F062 /* InfoPlist.strings in Resources */,
+				66253DD318572BE100F3F062 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66253DDB18572BE100F3F062 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66253DE918572BE100F3F062 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		66253DB818572BE100F3F062 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66253DD618572BE100F3F062 /* ViewController.m in Sources */,
+				66253DD018572BE100F3F062 /* AppDelegate.m in Sources */,
+				66253DCC18572BE100F3F062 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66253DD918572BE100F3F062 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66253DEB18572BE100F3F062 /* H2H_FeelsafeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		66253DE318572BE100F3F062 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66253DBB18572BE100F3F062 /* H2H Feelsafe */;
+			targetProxy = 66253DE218572BE100F3F062 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		66253DC818572BE100F3F062 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66253DC918572BE100F3F062 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		66253DD118572BE100F3F062 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66253DD218572BE100F3F062 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		66253DE718572BE100F3F062 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66253DE818572BE100F3F062 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		66253DEC18572BE200F3F062 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		66253DED18572BE200F3F062 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		66253DEF18572BE200F3F062 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "H2H Feelsafe/H2H Feelsafe-Prefix.pch";
+				INFOPLIST_FILE = "H2H Feelsafe/H2H Feelsafe-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		66253DF018572BE200F3F062 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "H2H Feelsafe/H2H Feelsafe-Prefix.pch";
+				INFOPLIST_FILE = "H2H Feelsafe/H2H Feelsafe-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		66253DF218572BE200F3F062 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/H2H Feelsafe.app/H2H Feelsafe";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "H2H Feelsafe/H2H Feelsafe-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "H2H FeelsafeTests/H2H FeelsafeTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		66253DF318572BE200F3F062 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/H2H Feelsafe.app/H2H Feelsafe";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "H2H Feelsafe/H2H Feelsafe-Prefix.pch";
+				INFOPLIST_FILE = "H2H FeelsafeTests/H2H FeelsafeTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		66253DB718572BE100F3F062 /* Build configuration list for PBXProject "H2H Feelsafe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66253DEC18572BE200F3F062 /* Debug */,
+				66253DED18572BE200F3F062 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66253DEE18572BE200F3F062 /* Build configuration list for PBXNativeTarget "H2H Feelsafe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66253DEF18572BE200F3F062 /* Debug */,
+				66253DF018572BE200F3F062 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		66253DF118572BE200F3F062 /* Build configuration list for PBXNativeTarget "H2H FeelsafeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66253DF218572BE200F3F062 /* Debug */,
+				66253DF318572BE200F3F062 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 66253DB418572BE100F3F062 /* Project object */;
+}
