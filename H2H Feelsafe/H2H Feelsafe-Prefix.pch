@@ -13,4 +13,5 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+#define kURL @"http://www.virtua-vista.fr/geoloc2/public/index.php/api"
 #endif
