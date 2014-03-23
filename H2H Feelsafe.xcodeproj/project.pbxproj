@@ -54,6 +54,8 @@
 		664059F21875D86C00BA60F7 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 664059F11875D86C00BA60F7 /* AddressBookUI.framework */; };
 		664059F51875D95300BA60F7 /* AddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664059F41875D95300BA60F7 /* AddViewController.m */; };
 		664059FB1876145D00BA60F7 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 664059FA1876145D00BA60F7 /* MessageUI.framework */; };
+		66DBEA5018DF389900E2D696 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66DBEA4D18DF389900E2D696 /* SVProgressHUD.bundle */; };
+		66DBEA5118DF389900E2D696 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DBEA4F18DF389900E2D696 /* SVProgressHUD.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +140,9 @@
 		664059F31875D95300BA60F7 /* AddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddViewController.h; sourceTree = "<group>"; };
 		664059F41875D95300BA60F7 /* AddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddViewController.m; sourceTree = "<group>"; };
 		664059FA1876145D00BA60F7 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		66DBEA4D18DF389900E2D696 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		66DBEA4E18DF389900E2D696 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		66DBEA4F18DF389900E2D696 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +227,7 @@
 				66030972186C7F0100FD855E /* default_profile.jpg */,
 				66253DF418572E9A00F3F062 /* WebServices.h */,
 				66253DF518572E9A00F3F062 /* WebServices.m */,
+				66DBEA4C18DF389900E2D696 /* SVProgressHUD */,
 				664059D61875A7D100BA60F7 /* ViewDeck */,
 				66253E07185738C400F3F062 /* OpenFlow */,
 				66253DC518572BE100F3F062 /* H2H Feelsafe */,
@@ -342,6 +348,16 @@
 			name = Navigation;
 			sourceTree = "<group>";
 		};
+		66DBEA4C18DF389900E2D696 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				66DBEA4D18DF389900E2D696 /* SVProgressHUD.bundle */,
+				66DBEA4E18DF389900E2D696 /* SVProgressHUD.h */,
+				66DBEA4F18DF389900E2D696 /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -432,6 +448,7 @@
 				66253E131857435B00F3F062 /* 1@2x.png in Resources */,
 				66253E151857435B00F3F062 /* 3@2x.png in Resources */,
 				66253DFC185735A200F3F062 /* textaerea@2x.png in Resources */,
+				66DBEA5018DF389900E2D696 /* SVProgressHUD.bundle in Resources */,
 				66253DD818572BE100F3F062 /* Images.xcassets in Resources */,
 				66253DCA18572BE100F3F062 /* InfoPlist.strings in Resources */,
 				66253E141857435B00F3F062 /* 2@2x.png in Resources */,
@@ -465,6 +482,7 @@
 				6603097A186DF31600FD855E /* ALGroupViewController.m in Sources */,
 				664059E31875A83F00BA60F7 /* NavigationViewController.m in Sources */,
 				66253DD018572BE100F3F062 /* AppDelegate.m in Sources */,
+				66DBEA5118DF389900E2D696 /* SVProgressHUD.m in Sources */,
 				6603097D186E1AA400FD855E /* ALGroupCell.m in Sources */,
 				664059E81875AB1700BA60F7 /* ListViewController.m in Sources */,
 				664059DD1875A7D100BA60F7 /* IISideController.m in Sources */,

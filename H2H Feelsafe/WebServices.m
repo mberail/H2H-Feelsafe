@@ -42,17 +42,26 @@
     return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 }
 
-+ (NSData *)sendData:(NSDictionary *)parameters atUrl:(NSString *)url withAuthorization:(BOOL *)authorization
++ (NSData *)sendData:(id)parameters atUrl:(NSString *)url withAuthorization:(BOOL)authorization inJSON:(BOOL)json
 {
     NSLog(@"url : %@",url);
     NSLog(@"para : %@",parameters);
     
-    NSString *stringTemp = @"";
-    for (int i = 0; i < [parameters count]; i++)
+    NSData *requestData = [[NSData alloc] init];
+    if (json)
     {
-        stringTemp = [NSString stringWithFormat:@"%@%@=%@&",stringTemp,parameters.allKeys[i],parameters.allValues[i]];
+        requestData = [NSJSONSerialization dataWithJSONObject:parameters options:kNilOptions error:nil];
     }
-    NSData *requestData = [stringTemp dataUsingEncoding:NSUTF8StringEncoding];
+    else
+    {
+        NSString *stringTemp = @"";
+        for (int i = 0; i < [parameters count]; i++)
+        {
+            stringTemp = [NSString stringWithFormat:@"%@%@=%@&",stringTemp,[parameters allKeys][i],[parameters allValues][i]];
+        }
+        requestData = [stringTemp dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    
     NSLog(@"data : %@",[[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -77,13 +86,29 @@
     return responseData;
 }
 
++ (NSData *)getData:(NSString *)url
+{
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSDictionary *dictTemp = [[NSUserDefaults standardUserDefaults] objectForKey:@"infos"];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[dictTemp objectForKey:@"password"]];
+    NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [self base64forData:authData]];
+    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
+    [request setHTTPMethod:@"GET"];
+    
+    NSHTTPURLResponse *response = nil;
+    NSError *errors = nil;
+    NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&errors];
+    return responseData;
+}
+
 + (BOOL)checkEmail:(NSString *)emailAddress
 {
     NSArray *objects = [NSArray arrayWithObject:emailAddress];
     NSArray *keys = [NSArray arrayWithObject:@"login"];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/user/whoami",kURL];
-    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO];
+    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
     if (response != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
@@ -105,7 +130,7 @@
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"statut"]];
-    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
     if (responseData != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
@@ -127,7 +152,7 @@
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/register",kURL,[pref objectForKey:@"statut"]];
-    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
     if (responseData != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
@@ -145,10 +170,13 @@
 
 + (NSArray *)searchInPhoneBook:(NSArray *)contacts
 {
-    /*NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/searchinphonebook",kURL,[pref objectForKey:@"statut"]];
-    NSDictionary *dictData = [self sendData:contacts atUrl:stringUrl];
-    return [dictData objectForKey:@"message"];*/
+    NSData *responseData = [self sendData:contacts atUrl:stringUrl withAuthorization:YES inJSON:NO];
+    if (responseData != nil)
+    {
+        
+    }
     return nil;
 }
 

@@ -12,6 +12,7 @@
 #import "NavigationViewController.h"
 #import "ListViewController.h"
 #import "IIViewDeckController.h"
+#import "SVProgressHUD.h"
 
 @interface LoginViewController ()
 {
@@ -31,7 +32,7 @@
     labels = [[NSArray alloc] initWithObjects:@"Identifiant",@"Mot de passe", nil];
 }
 
-- (void)login
+- (void)proceedWithLogin
 {
     NSMutableArray *mutArray = [[NSMutableArray alloc] init];
     for (int i = 0; i < labels.count; i++)
@@ -46,32 +47,68 @@
         }
         [mutArray addObject:cell.theTextField.text];
     }
-    if (mutArray.count == labels.count)
+    if (mutArray.count != labels.count)
     {
-        BOOL login = [WebServices login:mutArray];
-        if (login)
+        return;
+    }
+    for (int i = 0; i < mutArray.count; i++)
+    {
+        NSString *expression = @"";
+        if (i == 0)
         {
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
-            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
-            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
-            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
-            viewDeck.leftSize = 65;
-            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
-            [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+            expression = @"[\\w-_.]{1,30}@[\\w-_.]{1,30}\\.[a-z]{2,6}";
         }
         else
+            expression = @".{6,30}";
+        NSError *error = nil;
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
+        NSTextCheckingResult *match = [regex firstMatchInString:mutArray[i] options:0 range:NSMakeRange(0, [mutArray[i] length])];
+        if (!match)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Identifiants incorrects, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"Champs mal complétés" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            return;
         }
     }
+    [self startLoginProcess:mutArray];
 }
+
+- (void)startLoginProcess:(NSArray *)tab
+{
+    [SVProgressHUD showWithStatus:@"Vérification email" maskType:SVProgressHUDMaskTypeBlack];
+    [self performSelector:@selector(login:) withObject:tab afterDelay:0.2];
+}
+
+- (void)login:(NSArray *)tab
+{
+    BOOL login = [WebServices login:tab];
+    [SVProgressHUD dismiss];
+    if (login)
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
+        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+        UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
+        IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+        viewDeck.leftSize = 65;
+        viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+        [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+    }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:nil message:@"Identifiants incorrects, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+
+}
+
+#pragma mark - Text field delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
     return YES;
 }
+
+#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
