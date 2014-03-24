@@ -68,6 +68,19 @@
         {
             NSIndexPath *index = [NSIndexPath indexPathForRow:j inSection:i];
             signUpCell *cell = (signUpCell *)[self.tableView cellForRowAtIndexPath:index];
+            if (index.section == 0 && index.row == 0)
+            {
+                NSString *expression = @"[0-9a-z]{4,100}";
+                NSError *error = nil;
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
+                NSTextCheckingResult *match = [regex firstMatchInString:cell.theTextField.text options:0 range:NSMakeRange(0, cell.theTextField.text.length)];
+                if (!match)
+                {
+                    [[[UIAlertView alloc] initWithTitle:nil message:@"Le username ne doit contenir au moins 4 lettres minuscules et/ou des chiffres :" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                    reallyBreak = YES;
+                    break;
+                }
+            }
             if ([cell.rightLabel.text isEqualToString:@"*"] && cell.theTextField.text.length == 0)
             {
                 [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter tous les champs obligatoires." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -75,6 +88,7 @@
                 break;
                 
             }
+            
             if (index.section == 1 && index.row == 0)
             {
                 NSString *expression = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
@@ -100,11 +114,12 @@
             }
         }
     }
-    NSLog(@"mutArray : %@",mutArray);
+   
     if (mutArray.count == 7 && accepted)
     {
-        NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+        
         NSString *statut = @"";
+        NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
         if (self.segmentedControl.selectedSegmentIndex == 0)
         {
             statut = @"referent";
@@ -113,7 +128,9 @@
         {
             statut = @"protege";
         }
-        [pref setObject:statut forKey:@"statut"];
+        [pref setObject:statut forKey:@"status"];
+         NSLog(@"mutArray : %@",mutArray);
+        
         
         BOOL signUp = [WebServices signUp:mutArray];
         if (signUp)
@@ -218,7 +235,9 @@
     {
         if (indexPath.row == 0)
         {
+            NSUserDefaults * pref = [NSUserDefaults standardUserDefaults];
             cell.rightLabel.text = @"*";
+            cell.theTextField.text = [pref objectForKey:@"email"];
         }
         else
         {
@@ -227,6 +246,7 @@
     }
     else if (indexPath.section == 2)
     {
+        
         cell.rightLabel.text = @"";
         [cell.theTextField setHidden:YES];
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, 150, 20)];

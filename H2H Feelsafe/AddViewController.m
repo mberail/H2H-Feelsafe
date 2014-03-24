@@ -8,12 +8,13 @@
 
 #import "AddViewController.h"
 #import "WebServices.h"
+#import <AddressBookUI/AddressBookUI.h>
 
 @interface AddViewController ()
 {
     NSArray *arrays;
     NSArray *searchs;
-    NSArray *contactsFromAddressBook;
+    NSArray*contactsFromAddressBook;
 }
 @end
 
@@ -96,6 +97,7 @@
                 if ([[phoneTemp substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"06"] || [[phoneTemp substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"07"] || [[phoneTemp substringWithRange:NSMakeRange(0, 3)] isEqualToString:@"+33"])
                 {
                     [theContact setValue:phoneTemp forKey:@"phone"];
+                    NSLog(@"%@",phoneTemp);
                 }
             }
             ABMultiValueRef emails = ABRecordCopyValue(contact, kABPersonEmailProperty);
@@ -112,6 +114,7 @@
             theContact.phone = phone;
             theContact.email = email;*/
             [theContacts addObject:theContact];
+           
         }
     }
     return theContacts;

@@ -12,10 +12,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSUUID *phoneuuid = [[UIDevice currentDevice]identifierForVendor];
+    NSString *phoneid = [phoneuuid UUIDString];
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    [pref setObject:phoneid forKey:@"phoneid"];
+    NSLog(@"PhoneID : %@",phoneid);
+    NSString *phoneos = @"iphone";
+    [pref setObject:phoneos forKey:@"phoneos"];
     // Override point for customization after application launch.
     return YES;
 }
-							
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

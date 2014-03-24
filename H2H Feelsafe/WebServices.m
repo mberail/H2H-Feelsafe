@@ -7,6 +7,7 @@
 //
 
 #import "WebServices.h"
+#import <AddressBookUI/AddressBookUI.h>
 
 @implementation WebServices
 
@@ -57,7 +58,14 @@
         NSString *stringTemp = @"";
         for (int i = 0; i < [parameters count]; i++)
         {
-            stringTemp = [NSString stringWithFormat:@"%@%@=%@&",stringTemp,[parameters allKeys][i],[parameters allValues][i]];
+            if( i == [parameters count]-1 )
+            {
+                stringTemp = [NSString stringWithFormat:@"%@%@=%@",stringTemp,[parameters allKeys][i],[parameters allValues][i]];
+            }
+            else
+            {
+                stringTemp = [NSString stringWithFormat:@"%@%@=%@&",stringTemp,[parameters allKeys][i],[parameters allValues][i]];
+            }
         }
         requestData = [stringTemp dataUsingEncoding:NSUTF8StringEncoding];
     }
@@ -104,6 +112,7 @@
 
 + (BOOL)checkEmail:(NSString *)emailAddress
 {
+    //return 1;
     NSArray *objects = [NSArray arrayWithObject:emailAddress];
     NSArray *keys = [NSArray arrayWithObject:@"login"];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
@@ -112,12 +121,17 @@
     if (response != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
+        NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+        NSString *email = [infosDict objectForKey:@"login"];
+        [pref setObject:email forKey:@"email"];
         int code = [[dictData objectForKey:@"code"] intValue];
-        if (code == 4128)
+        if (code == 4129)
         {
-            NSString *statut = [dictData objectForKey:@"statut"];
-            NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-            [pref setObject:statut forKey:@"statut"];
+            
+            NSString *status = [dictData objectForKey:@"status"];
+           
+            [pref setObject:status forKey:@"status"];
+            
             return 1;
         }
     }
@@ -126,10 +140,16 @@
 
 + (BOOL)login:(NSArray *)parameters
 {
+    //return 1;
     NSArray *keys = [NSArray arrayWithObjects:@"mail",@"password", nil];
-    NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:parameters forKeys:keys];
+    NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"statut"]];
+    NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
+    NSString *phoneid = [preference objectForKey:@"phoneos"];
+    [infosDict setObject:phoneid forKey:@"phoneid"];
+    NSString *phoneos = [pref objectForKey:@"phoneos"];
+    [infosDict setObject:phoneos forKey:@"phoneos"];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
     if (responseData != nil)
     {
@@ -149,13 +169,20 @@
 + (BOOL)signUp:(NSArray *)parameters
 {
     NSArray *keys = [NSArray arrayWithObjects:@"username",@"password",@"confirmation",@"mail",@"phone",@"lastname",@"firstname", nil];
-    NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:parameters forKeys:keys];
+    NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/register",kURL,[pref objectForKey:@"statut"]];
-    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
-    if (responseData != nil)
+    //NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
+    NSString *phoneos = [pref objectForKey:@"phoneos"];
+    [infosDict setObject:phoneos forKey:@"phoneos"];
+    NSString *phoneid = [pref objectForKey:@"phoneid"];
+    [infosDict setObject:phoneid forKey:@"phoneid"];
+    NSString *Status = [pref objectForKey:@"status"];
+    [infosDict setObject:Status forKey:@"status"];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/register",kURL];
+    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
+    if (response != nil)
     {
-        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
         int code = [[dictData objectForKey:@"code"] intValue];
         if (code == 200)
         {
@@ -163,6 +190,14 @@
             NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
             [pref setObject:infos forKey:@"infos"];
             return 1;
+        }
+        if (code == 4128)
+        {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"L'identifiant est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        }
+        if (code == 4129)
+        {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"L'addresse Mail est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
     }
     return 0;

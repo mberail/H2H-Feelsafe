@@ -13,6 +13,7 @@
 #import "ListViewController.h"
 #import "IIViewDeckController.h"
 #import "SVProgressHUD.h"
+#import <AddressBookUI/AddressBookUI.h>
 
 @interface LoginViewController ()
 {
@@ -25,11 +26,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(login)];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(proceedWithLogin)];
     self.navigationItem.rightBarButtonItem = item;
     self.navigationItem.title = @"Connexion";
 	
-    labels = [[NSArray alloc] initWithObjects:@"Identifiant",@"Mot de passe", nil];
+    labels = [[NSArray alloc] initWithObjects:@"Email",@"Mot de passe", nil];
 }
 
 - (void)proceedWithLogin
@@ -95,7 +96,7 @@
     }
     else
     {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"Identifiants incorrects, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:nil message:@"Email ou mot-de-passe incorrects, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
     }
 
 }
@@ -131,6 +132,12 @@
     if (indexPath.row == 1)
     {
         cell.theTextField.secureTextEntry = YES;
+    }
+    if (indexPath.row == 0)
+    {
+        NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+        NSString *email = [pref objectForKey:@"email"];
+        cell.theTextField.text = email;
     }
     return cell;
 }
