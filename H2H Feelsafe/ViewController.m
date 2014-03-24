@@ -30,7 +30,7 @@
     UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];
     self.navigationItem.leftBarButtonItem = item2;
     
-    slides = [[NSArray alloc] initWithObjects:@"1.png",@"2.png",@"3.png",@"4.png",@"5.png",nil];
+    slides = [[NSArray alloc] initWithObjects:@"01_Accueil_IOS7_v2.jpg",@"02_Plan_Suivis_IOS7_v3.jpg",@"03_Liste_Suivis_IOS7_v3.jpg",@"04_Alertes_IOS7_v3.jpg",@"05_Diaporama_IOS7_v3.jpg",nil];
     
     for (int i = 0; i < slides.count; i++)
     {
