@@ -171,9 +171,20 @@
         int code = [[dictData objectForKey:@"code"] intValue];
         if (code == 200)
         {
-            NSDictionary *infos = [dictData objectForKey:@"message"];
-            NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-            [pref setObject:infos forKey:@"infos"];
+            NSString *status = [pref objectForKey:@"status"];
+            if ([status isEqual:@"referent"])
+            {
+                NSDictionary *infos = [dictData objectForKey:@"message"];
+                NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+                [pref setObject:infos forKey:@"infos"];
+                NSLog(@"infos : %@",infos);
+            }
+            else if ([status isEqual:@"protege"])
+            {
+                //NSarray *infos = [dictData objectForKey:@"message"];
+                //[pref setObject:infos forKey:@"infos"];
+                //NSLog(@"infos : %@", infos);
+            }
             return 1;
         }
     }
@@ -202,9 +213,19 @@
         int code = [[dictData objectForKey:@"code"] intValue];
         if (code == 200)
         {
-            NSDictionary *infos = [dictData objectForKey:@"message"];
-            NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-            [pref setObject:infos forKey:@"infos"];
+            if ([Status isEqual:@"referent"])
+            {
+                NSDictionary *infos = [dictData objectForKey:@"message"];
+                NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+                [pref setObject:infos forKey:@"infos"];
+                NSLog(@"infos : %@",infos);
+            }
+            else if ([Status isEqual:@"protege"])
+            {
+                //NSArray *infos = [dictData objectForKey:@"message"];
+               // [pref setObject:infos forKey:@"infos"];
+                NSLog(@"infos :  ");
+            }
             return 1;
         }
         if (code == 4128)
