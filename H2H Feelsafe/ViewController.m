@@ -57,7 +57,7 @@
 
 - (void)checkEmail
 {
-    
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSString *expression = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
@@ -70,6 +70,10 @@
         if (emailExists)
         {
             vc = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        }
+        else if ([[pref objectForKey:@"CheckMail"]  isEqual: @"false"])
+        {
+            return;
         }
         else
         {

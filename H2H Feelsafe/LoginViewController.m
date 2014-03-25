@@ -138,6 +138,8 @@
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
         NSString *email = [pref objectForKey:@"email"];
         cell.theTextField.text = email;
+        cell.theTextField.textColor = [UIColor grayColor];
+        [cell.theTextField setUserInteractionEnabled:false];
     }
     return cell;
 }

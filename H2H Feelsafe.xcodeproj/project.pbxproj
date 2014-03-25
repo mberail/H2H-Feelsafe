@@ -22,7 +22,6 @@
 		66253DCC18572BE100F3F062 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DCB18572BE100F3F062 /* main.m */; };
 		66253DD018572BE100F3F062 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DCF18572BE100F3F062 /* AppDelegate.m */; };
 		66253DD318572BE100F3F062 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66253DD118572BE100F3F062 /* Main.storyboard */; };
-		66253DD618572BE100F3F062 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253DD518572BE100F3F062 /* ViewController.m */; };
 		66253DD818572BE100F3F062 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66253DD718572BE100F3F062 /* Images.xcassets */; };
 		66253DDF18572BE100F3F062 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DDE18572BE100F3F062 /* XCTest.framework */; };
 		66253DE018572BE100F3F062 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66253DBF18572BE100F3F062 /* Foundation.framework */; };

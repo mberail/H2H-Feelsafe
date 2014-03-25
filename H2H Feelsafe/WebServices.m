@@ -125,14 +125,28 @@
         NSString *email = [infosDict objectForKey:@"login"];
         [pref setObject:email forKey:@"email"];
         int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 404)
+        {
+            NSString *mailOK = @"true";
+            [pref setObject:mailOK forKey:@"CheckMail"];
+
+        }
         if (code == 4129)
         {
             
             NSString *status = [dictData objectForKey:@"status"];
            
             [pref setObject:status forKey:@"status"];
+            NSString *mailOK = @"true";
+            [pref setObject:mailOK forKey:@"CheckMail"];
             
             return 1;
+        }
+        if (code == 4119)
+        {
+            NSString *mailOK = @"false";
+            [pref setObject:mailOK forKey:@"CheckMail"];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"L'adresse mail n'est pas valide !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
     }
     return 0;
@@ -140,15 +154,15 @@
 
 + (BOOL)login:(NSArray *)parameters
 {
-    //return 1;
     NSArray *keys = [NSArray arrayWithObjects:@"mail",@"password", nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
-    NSString *phoneid = [preference objectForKey:@"phoneos"];
+    NSString *phoneid = [pref objectForKey:@"phoneid"];
     [infosDict setObject:phoneid forKey:@"phoneid"];
     NSString *phoneos = [pref objectForKey:@"phoneos"];
     [infosDict setObject:phoneos forKey:@"phoneos"];
+    NSString *MDP = [infosDict objectForKey:@"password"];
+    [pref setObject:MDP forKey:@"password"];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
     if (responseData != nil)
@@ -178,6 +192,8 @@
     [infosDict setObject:phoneid forKey:@"phoneid"];
     NSString *Status = [pref objectForKey:@"status"];
     [infosDict setObject:Status forKey:@"status"];
+    NSString *MDP = [infosDict objectForKey:@"password"];
+    [pref setObject:MDP forKey:@"password"];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/user/register",kURL];
     NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
     if (response != nil)

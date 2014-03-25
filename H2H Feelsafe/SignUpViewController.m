@@ -238,6 +238,8 @@
             NSUserDefaults * pref = [NSUserDefaults standardUserDefaults];
             cell.rightLabel.text = @"*";
             cell.theTextField.text = [pref objectForKey:@"email"];
+            cell.theTextField.textColor = [UIColor grayColor];
+            [cell.theTextField setUserInteractionEnabled:false];
         }
         else
         {
