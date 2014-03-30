@@ -9,12 +9,14 @@
 #import "AddViewController.h"
 #import "WebServices.h"
 #import <AddressBookUI/AddressBookUI.h>
+#import "SVProgressHUD.h"
 
 @interface AddViewController ()
 {
     NSArray *arrays;
     NSArray *searchs;
     NSArray*contactsFromAddressBook;
+    NSArray *ContactsChecked;
 }
 @end
 
@@ -42,18 +44,25 @@
     arrays = [[NSArray alloc] init];
     searchs = [[NSArray alloc] init];
     contactsFromAddressBook = [self getAllContactsFromAddressBook];
+   
+    //ContactsChecked = [self proceedWithSearch: contactsFromAddressBook];
+    //NSLog(@"Contacts list : %@",ContactsChecked);
+
     [self updateContactsFromAddressBook];
+    
+
 }
 
 - (void)updateContactsFromAddressBook
 {
-    //NSArray *contacts = [WebServices searchInPhoneBook:contactsFromAddressBook];
-    NSArray *contacts = contactsFromAddressBook;
+    NSArray *contacts = [self startsearchInPhoneBookProcess:contactsFromAddressBook];
+    NSLog(@"tructruc : %@",contacts);
     NSMutableArray *alreadyRegistered = [[NSMutableArray alloc] init];
     NSMutableArray *notRegistered = [[NSMutableArray alloc] init];
+   
     for (NSDictionary *dict in contacts)
     {
-        if ([[dict objectForKey:@"registered"] intValue] == 1)
+        if ([[dict objectForKey:@"registered"] intValue] != 0)
         {
             [alreadyRegistered addObject:dict];
         }
@@ -62,8 +71,18 @@
             [notRegistered addObject:dict];
         }
     }
+    
     arrays = [NSArray arrayWithObjects:alreadyRegistered, notRegistered, nil];
+    
     [self.tableView reloadData];
+}
+
+- (NSArray *)startsearchInPhoneBookProcess:(NSArray *)tab
+{
+    
+    NSArray *ContactsCheck = [WebServices searchInPhoneBook:tab];
+    return ContactsCheck;
+   // NSLog(@"contact %@" , ContactsChecked);
 }
 
 - (NSArray *)getAllContactsFromAddressBook
@@ -75,7 +94,6 @@
     NSLog(@"%@",addressBook);
     if (addressBook != nil)
     {
-         NSLog(@"blosse va");
         ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
         
         if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
@@ -89,15 +107,18 @@
                     ABRecordRef contact = (__bridge ABRecordRef)allContacts[i];
                     NSMutableDictionary *theContact = [[NSMutableDictionary alloc] init];
                     NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonFirstNameProperty);
-                    if (firstName)
-                    {
-                        [theContact setValue:firstName forKey:@"firstname"];
-                    }
                     NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonLastNameProperty);
-                    if (lastName)
+                    if (firstName == NULL)
                     {
-                        [theContact setValue:lastName forKey:@"lastname"];
+                              [theContact setValue:lastName forKey:@"name"];
                     }
+                    if (lastName == NULL)
+                    {
+                            [theContact setValue:firstName forKey:@"name"];
+                    }
+                    else
+                        [theContact setValue:[ NSString stringWithFormat:@"%@ %@",firstName,lastName] forKey:@"name"];
+                    
                     ABMultiValueRef phones = ABRecordCopyValue(contact, kABPersonPhoneProperty);
                     for (int j = 0; j < ABMultiValueGetCount(phones); j++)
                     {
@@ -105,21 +126,25 @@
                         if ([[phoneTemp substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"06"] || [[phoneTemp substringWithRange:NSMakeRange(0, 2)] isEqualToString:@"07"] || [[phoneTemp substringWithRange:NSMakeRange(0, 3)] isEqualToString:@"+33"])
                         {
                             [theContact setValue:phoneTemp forKey:@"phone"];
-                            NSLog(@"%@",phoneTemp);
+                            //NSLog(@"%@",phoneTemp);
                         }
                     }
                     ABMultiValueRef emails = ABRecordCopyValue(contact, kABPersonEmailProperty);
                     for (int k = 0; k < ABMultiValueGetCount(emails); k++)
                     {
                         NSString *emailTemp = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emails, k);
+                        NSString *vide = @"";
                         if (emailTemp.length != 0)
                         {
                             [theContact setValue:emailTemp forKey:@"mail"];
                         }
+                        else
+                        {
+                            [theContact setValue:vide forKey:@"mail"];
+                        }
                     }
                     
                     [theContacts addObject:theContact];
-                    
                 }
             });
         }
@@ -129,20 +154,22 @@
             NSArray *allContacts = (__bridge_transfer NSArray *)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(addressBook, source, ABPersonGetSortOrdering());
             for (int i = 0; i < allContacts.count; i++)
             {
-                NSLog(@"blosse va");
+
                 //Contact *theContacts = [[Contact alloc] init];
                 ABRecordRef contact = (__bridge ABRecordRef)allContacts[i];
                 NSMutableDictionary *theContact = [[NSMutableDictionary alloc] init];
                 NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonFirstNameProperty);
-                if (firstName)
-                {
-                    [theContact setValue:firstName forKey:@"firstname"];
-                }
                 NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonLastNameProperty);
-                if (lastName)
+                if (firstName == NULL)
                 {
-                        [theContact setValue:lastName forKey:@"lastname"];
+                    [theContact setValue:lastName forKey:@"name"];
                 }
+                if (lastName == NULL)
+                {
+                    [theContact setValue:firstName forKey:@"name"];
+                }
+                else
+                    [theContact setValue:[ NSString stringWithFormat:@"%@ %@",firstName,lastName] forKey:@"name"];
                 ABMultiValueRef phones = ABRecordCopyValue(contact, kABPersonPhoneProperty);
                 for (int j = 0; j < ABMultiValueGetCount(phones); j++)
                 {
@@ -157,13 +184,19 @@
                 for (int k = 0; k < ABMultiValueGetCount(emails); k++)
                 {
                     NSString *emailTemp = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emails, k);
+                    NSString  *vide = @"";
                     if (emailTemp.length != 0)
                     {
                         [theContact setValue:emailTemp forKey:@"mail"];
                     }
+                    else
+                    {
+                        [theContact setValue:vide forKey:@"mail"];
+                    }
                 }
                 
                 [theContacts addObject:theContact];
+                
                 
             }
         }
@@ -267,17 +300,9 @@
     {
         contact = [searchs objectAtIndex:indexPath.row];
     }
-    NSString *firstname = [contact objectForKey:@"firstname"];
-    NSString *lastname = [contact objectForKey:@"lastname"];
-
-    if(lastname == NULL)
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",firstname];
-    else if(firstname == NULL)
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",lastname];
-    else if(firstname == NULL && lastname == NULL)
-        cell.textLabel.text = [NSString stringWithFormat:@"contact sans informations"];
-    else
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@",firstname, lastname];
+    NSString *name = [contact objectForKey:@"name"];
+  
+    cell.textLabel.text = name;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.frame = CGRectMake(280, 8, 28, 28);
     button.tag = indexPath.row;

@@ -43,18 +43,14 @@
     return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 }
 
-+ (NSData *)sendData:(id)parameters atUrl:(NSString *)url withAuthorization:(BOOL)authorization inJSON:(BOOL)json
++ (NSData *)sendData:(id)parameters atUrl:(NSString *)url withAuthorization:(BOOL)authorization Json:(BOOL)json
 {
     NSLog(@"url : %@",url);
     NSLog(@"para : %@",parameters);
     
     NSData *requestData = [[NSData alloc] init];
-    if (json)
-    {
-        requestData = [NSJSONSerialization dataWithJSONObject:parameters options:kNilOptions error:nil];
-    }
-    else
-    {
+    
+ 
         NSString *stringTemp = @"";
         for (int i = 0; i < [parameters count]; i++)
         {
@@ -68,15 +64,16 @@
             }
         }
         requestData = [stringTemp dataUsingEncoding:NSUTF8StringEncoding];
-    }
     
-    NSLog(@"data : %@",[[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+
+    NSLog(@"requestdata : %@",[[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     if (authorization)
     {
         NSDictionary *dictTemp = [[NSUserDefaults standardUserDefaults] objectForKey:@"infos"];
-        NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[dictTemp objectForKey:@"password"]];
+        NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+        NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[pref objectForKey:@"password"]];
         NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
         NSString *authValue = [NSString stringWithFormat:@"Basic %@", [self base64forData:authData]];
         [request setValue:authValue forHTTPHeaderField:@"Authorization"];
@@ -117,7 +114,7 @@
     NSArray *keys = [NSArray arrayWithObject:@"login"];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/user/whoami",kURL];
-    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
+    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (response != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
@@ -164,7 +161,7 @@
     NSString *MDP = [infosDict objectForKey:@"password"];
     [pref setObject:MDP forKey:@"password"];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
-    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (responseData != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
@@ -174,16 +171,17 @@
             NSString *status = [pref objectForKey:@"status"];
             if ([status isEqual:@"referent"])
             {
-                NSDictionary *infos = [dictData objectForKey:@"message"];
+                NSDictionary *infos_referent = [dictData objectForKey:@"message"];
                 NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-                [pref setObject:infos forKey:@"infos"];
-                NSLog(@"infos : %@",infos);
+                [pref setObject:infos_referent forKey:@"infos"];
+                NSLog(@"infos : %@",dictData);
             }
             else if ([status isEqual:@"protege"])
             {
-                //NSarray *infos = [dictData objectForKey:@"message"];
-                //[pref setObject:infos forKey:@"infos"];
-                //NSLog(@"infos : %@", infos);
+                NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+                NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+                NSLog(@"infos : %@", infos_protege);
+               // [pref setObject:infos forKey:@"infos"];
             }
             return 1;
         }
@@ -206,7 +204,7 @@
     NSString *MDP = [infosDict objectForKey:@"password"];
     [pref setObject:MDP forKey:@"password"];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/user/register",kURL];
-    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO inJSON:NO];
+    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (response != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
@@ -242,14 +240,34 @@
 
 + (NSArray *)searchInPhoneBook:(NSArray *)contacts
 {
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/searchinphonebook",kURL,[pref objectForKey:@"statut"]];
-    NSData *responseData = [self sendData:contacts atUrl:stringUrl withAuthorization:YES inJSON:NO];
-    if (responseData != nil)
+   // NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *infodict = [[NSMutableDictionary alloc]init];
+    NSData *JsonData = [NSJSONSerialization dataWithJSONObject:contacts options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *jsonString = [[NSString alloc]initWithData:JsonData encoding:NSUTF8StringEncoding];
+    [infodict setObject:contacts forKey:@"phonebook"];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/searchinphonebook",kURL];
+    [infodict setObject:jsonString forKey:@"phonebook"];
+    NSData *response = [self sendData:infodict atUrl:stringUrl withAuthorization:YES Json:YES];
+    if (response != nil)
     {
+        NSDictionary *responsedict = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
+         NSDictionary *infos = [responsedict objectForKey:@"message"];
+        NSMutableArray *contactList =[[NSMutableArray alloc]init ];
+        for (int i =0; i <[infos count]-1; i+=1)
+        {
+            NSString *index = [NSString stringWithFormat:@"%i",i];
+            NSArray *value = [infos objectForKey:index];
+            if (value !=nil)
+            [contactList addObject:value];
+            else
+                continue;
+            
+        }
+        NSLog(@"truc truc %@",contactList);
+        return contactList;
         
     }
-    return nil;
+         return nil;
 }
 
 + (NSArray *)searchResults:(NSString *)searchText

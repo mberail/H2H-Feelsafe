@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "WebServices.h"
+#import "SVProgressHUD.h"
 
 @interface ViewController ()
 {
@@ -25,7 +26,7 @@
     self.navigationItem.title = @"H2H Feelsafe";
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(checkEmail)];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
     self.navigationItem.rightBarButtonItem = item;
     UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];
     self.navigationItem.leftBarButtonItem = item2;
@@ -54,21 +55,38 @@
 {
     [super didReceiveMemoryWarning];
 }
-
-- (void)checkEmail
+-(void)ProceedWithEmail
 {
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    
     NSString *expression = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:&error];
     NSTextCheckingResult *match = [regex firstMatchInString:self.emailTextField.text options:0 range:NSMakeRange(0, self.emailTextField.text.length)];
+    NSString *text = self.emailTextField.text;
     if (match)
     {
-        BOOL emailExists = [WebServices checkEmail:self.emailTextField.text];
+        [self StartCheckEmailProcess:text];
+    }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter une adresse mail valide." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+}
+-(void)StartCheckEmailProcess: (NSString *)mail
+{
+    [SVProgressHUD showWithStatus:@"Vérification de l'adresse mail" maskType:SVProgressHUDMaskTypeBlack];
+    [self performSelector:@selector(checkEmail:) withObject:mail afterDelay:0.2];
+}
+- (void)checkEmail: (NSString *)mail
+{
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+        BOOL emailExists = [WebServices checkEmail:mail];
+    [SVProgressHUD dismiss];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [[UIViewController alloc] init];
         if (emailExists)
         {
+             [SVProgressHUD showSuccessWithStatus:@"Adresse Mail idenftifié"];
             vc = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
         }
         else if ([[pref objectForKey:@"CheckMail"]  isEqual: @"false"])
@@ -77,14 +95,12 @@
         }
         else
         {
+             [SVProgressHUD showSuccessWithStatus:@"Mail inconue veuillez créer un compte"];
             vc = [storyboard instantiateViewControllerWithIdentifier:@"SignUpViewController"];
         }
         [self.navigationController pushViewController:vc animated:YES];
-    }
-    else
-    {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter une adresse mail valide." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-    }
+    
+    
 }
 
 - (void)cancelEmail
@@ -148,7 +164,8 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [self checkEmail];
+    [SVProgressHUD showWithStatus:@"Vérification Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
+    [self performSelector:@selector(checkEmail:) withObject:textField.text afterDelay:0.2];
     
     return YES;
 }

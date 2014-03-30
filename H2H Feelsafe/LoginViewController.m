@@ -75,7 +75,7 @@
 
 - (void)startLoginProcess:(NSArray *)tab
 {
-    [SVProgressHUD showWithStatus:@"Vérification email" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:@"Vérification Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(login:) withObject:tab afterDelay:0.2];
 }
 
@@ -85,11 +85,12 @@
     NSString *status = [pref objectForKey:@"status"];
     NSLog(@"status : %@",status);
     BOOL login = [WebServices login:tab];
-    [SVProgressHUD dismiss];
+    
     if (login )
     {
         if ([status isEqual:@"referent"])
         {
+        [SVProgressHUD showSuccessWithStatus:@"Bienvenue"];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
         UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -101,7 +102,11 @@
         }
         else if ([status isEqual:@"protege"])
                  {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Page protégé en cours de conception" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                     [SVProgressHUD dismiss];
+                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                     UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
+                     [self.navigationController pushViewController:vc animated:YES];
+          //  [[[UIAlertView alloc] initWithTitle:nil message:@"Page protégé en cours de conception" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                  }
     }
     else

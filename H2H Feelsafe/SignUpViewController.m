@@ -10,6 +10,7 @@
 #import "signUpCell.h"
 #import "WebServices.h"
 #import "IIViewDeckController.h"
+#import "SVProgressHUD.h"
 
 @interface SignUpViewController ()
 {
@@ -36,6 +37,34 @@
     accepted = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(CGUaccepted) name:@"CGUaccepted" object:nil];
+}
+-(void)StartSignUp: (NSArray *)tab
+{
+    BOOL signUp = [WebServices signUp:tab] ;
+    [SVProgressHUD dismiss];
+    if (signUp)
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
+        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+        UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
+        IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+        viewDeck.leftSize = 65;
+        viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+        [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+    }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:nil message:@"Tous les champs ne sont pas correctement remplis, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+}
+
+
+- (void)startSignupProcess:(NSArray *)tab
+{
+    [SVProgressHUD showWithStatus:@"Vérification Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
+    [self performSelector:@selector(StartSignUp:) withObject:tab afterDelay:0.2];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -132,22 +161,7 @@
          NSLog(@"mutArray : %@",mutArray);
         
         
-        BOOL signUp = [WebServices signUp:mutArray];
-        if (signUp)
-        {
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
-            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
-            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
-            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
-            viewDeck.leftSize = 65;
-            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
-            [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
-        }
-        else
-        {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Tous les champs ne sont pas correctement remplis, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        }
+        [self startSignupProcess:mutArray];
     }
 }
 
