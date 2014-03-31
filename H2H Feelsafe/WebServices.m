@@ -270,9 +270,34 @@
          return nil;
 }
 
+
 + (NSArray *)searchResults:(NSString *)searchText
 {
     return nil;
+}
+
++(BOOL) updatePosition:(NSArray *)parameters
+{
+    NSArray *keys = [NSArray arrayWithObjects:@"alert",@"lon",@"lat",@"address",@"message",nil];
+    NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+   
+                NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+              //  NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+                NSLog(@"infos : %@", infos_protege);
+                // [pref setObject:infos forKey:@"infos"];
+            }
+            return 1;
+    }
+    return 0;
 }
 
 @end

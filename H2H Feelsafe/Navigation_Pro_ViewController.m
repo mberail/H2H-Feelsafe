@@ -27,8 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.navigationController setNavigationBarHidden:NO];
-    self.navigationController.title = @"protégé";
+    self.navigationItem.title = @"Protégé";
     self.StatutView.layer.borderColor =[UIColor blackColor].CGColor;
     self.StatutView.layer.borderWidth = 2.0f;
     //self.navigationItem.title = @"Protégé";
