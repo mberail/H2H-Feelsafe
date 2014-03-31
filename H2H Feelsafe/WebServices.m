@@ -275,7 +275,7 @@
     return nil;
 }
 
-+(BOOL) updatePosition:(NSArray *)parameters
++ (BOOL)updatePosition:(NSArray *)parameters
 {
     NSArray *keys = [NSArray arrayWithObjects:@"alert",@"lon",@"lat",@"address",@"message",nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];

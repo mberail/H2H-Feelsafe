@@ -8,6 +8,13 @@
 
 #import "AppDelegate.h"
 #import "IIViewDeckController.h"
+#import <CoreLocation/CoreLocation.h>
+
+@interface AppDelegate () <CLLocationManagerDelegate>
+
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
+@end
 
 @implementation AppDelegate
 
@@ -48,15 +55,88 @@
         UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
         self.window.rootViewController = nvc;
     }
-    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
     return YES;
 }
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    NSLog(@"to background");
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    __block UIBackgroundTaskIdentifier bgTask = 0;
+    
+    // Request permission to run in the background. Provide an
+    // expiration handler in case the task runs long.
+    NSAssert(bgTask == UIBackgroundTaskInvalid, nil);
+    
+    bgTask = [app beginBackgroundTaskWithExpirationHandler:^
+              {
+                  // Synchronize the cleanup call on the main thread in case
+                  // the task actually finishes at around the same time.
+                  dispatch_async(dispatch_get_main_queue(), ^
+                                 {
+                                     if (bgTask != UIBackgroundTaskInvalid)
+                                     {
+                                         [app endBackgroundTask:bgTask];
+                                         bgTask = UIBackgroundTaskInvalid;
+                                     }
+                                 });
+              }];
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+                   {
+                       if ([[preferences objectForKey:@"order_begun"] intValue] == 1)
+                       {
+                           self.locationManager.distanceFilter = kCLDistanceFilterNone;
+                           self.locationManager.desiredAccuracy = kCLLocationAccuracyBest; //meilleure précision pour la géolocalisation
+                           [self.locationManager startMonitoringSignificantLocationChanges];
+                           [self.locationManager startUpdatingLocation]; //début de la géolocalisation
+                           [self setPosition];
+                           NSLog(@"App staus: applicationDidEnterBackground");
+                           // Synchronize the cleanup call on the main thread in case
+                           // the expiration handler is fired at the same time.
+                           dispatch_async(dispatch_get_main_queue(), ^
+                                          {
+                                              if (bgTask != UIBackgroundTaskInvalid)
+                                              {
+                                                  [app endBackgroundTask:bgTask];
+                                                  bgTask = UIBackgroundTaskInvalid;
+                                              }
+                                          });
+                       }
+                   });
+    NSLog(@"backgroundTimeRemaining: %.0f",[[UIApplication sharedApplication] backgroundTimeRemaining]);
+}
+
+- (void)setPosition //envoie des coord GPS à la BDD
+{
+    CLLocation *location = self.locationManager.location;
+    //ajouter appel à la méthode updateLocation WebServices
+}
+
+//iOS > 6 : envoi des coord GPS
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    CLLocation *location = [locations lastObject];
+    NSLog(@"new location %@", location.description);
+    //ajouter appel à la méthode updateLocation WebServices
+}
+
+//iOS < 6 : envoi des coord GPS
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    NSLog(@"new location %@", newLocation.description);
+    //ajouter appel à la méthode updateLocation WebServices
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"Erreur de localisation %@", error);
+    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -67,7 +147,16 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    if ([[preferences objectForKey:@"isConnected"] boolValue] == YES)
+    {
+        self.locationManager.distanceFilter = kCLDistanceFilterNone;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        [self.locationManager startMonitoringSignificantLocationChanges];
+        [self.locationManager startUpdatingLocation];
+        [self setPosition];
+        NSLog(@"App status: applicationWillEnterForeground");
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

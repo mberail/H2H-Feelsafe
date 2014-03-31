@@ -35,6 +35,7 @@
 		66253E06185738BF00F3F062 /* AFUIImageReflection.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253E03185738BF00F3F062 /* AFUIImageReflection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66253E0A18573F7F00F3F062 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253E0918573F7F00F3F062 /* LoginViewController.m */; };
 		66253E0D1857426400F3F062 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66253E0C1857426400F3F062 /* SignUpViewController.m */; };
+		6625680B18E9CF61008ECFBF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6625680A18E9CF61008ECFBF /* CoreLocation.framework */; };
 		664059DD1875A7D100BA60F7 /* IISideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664059D81875A7D100BA60F7 /* IISideController.m */; };
 		664059DE1875A7D100BA60F7 /* IIViewDeckController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664059DA1875A7D100BA60F7 /* IIViewDeckController.m */; };
 		664059DF1875A7D100BA60F7 /* IIWrapController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664059DC1875A7D100BA60F7 /* IIWrapController.m */; };
@@ -115,6 +116,7 @@
 		66253E0918573F7F00F3F062 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		66253E0B1857426400F3F062 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
 		66253E0C1857426400F3F062 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		6625680A18E9CF61008ECFBF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		664059D71875A7D100BA60F7 /* IISideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IISideController.h; sourceTree = "<group>"; };
 		664059D81875A7D100BA60F7 /* IISideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IISideController.m; sourceTree = "<group>"; };
 		664059D91875A7D100BA60F7 /* IIViewDeckController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIViewDeckController.h; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6625680B18E9CF61008ECFBF /* CoreLocation.framework in Frameworks */,
 				664059FB1876145D00BA60F7 /* MessageUI.framework in Frameworks */,
 				664059F21875D86C00BA60F7 /* AddressBookUI.framework in Frameworks */,
 				664059F01875D86600BA60F7 /* AddressBook.framework in Frameworks */,
@@ -249,6 +252,7 @@
 		66253DBE18572BE100F3F062 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6625680A18E9CF61008ECFBF /* CoreLocation.framework */,
 				664059FA1876145D00BA60F7 /* MessageUI.framework */,
 				664059F11875D86C00BA60F7 /* AddressBookUI.framework */,
 				664059EF1875D86600BA60F7 /* AddressBook.framework */,
