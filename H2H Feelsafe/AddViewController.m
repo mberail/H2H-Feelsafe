@@ -304,6 +304,7 @@
   
     cell.textLabel.text = name;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.backgroundColor = [UIColor whiteColor];
     button.frame = CGRectMake(280, 8, 28, 28);
     button.tag = indexPath.row;
     if (indexPath.section == 0)

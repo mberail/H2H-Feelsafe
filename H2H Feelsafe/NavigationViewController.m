@@ -76,7 +76,7 @@
     }
     else if ([cell.textLabel.text isEqualToString:@"Protégés"])
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
@@ -95,7 +95,7 @@
 {
     if (buttonIndex == 0)
     {
-        [UIView animateWithDuration:0.5 delay:2.0 options:UIViewAnimationOptionTransitionNone animations:^{[self.viewDeckController closeLeftView];} completion:^(BOOL finished){if (finished)[self dismissModalViewControllerAnimated:YES];}];
+        [UIView animateWithDuration:0.5 delay:2.0 options:UIViewAnimationOptionTransitionNone animations:^{[self.viewDeckController closeLeftView];} completion:^(BOOL finished){if (finished)[self dismissViewControllerAnimated:YES completion:^{[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isConnected"];}];}]; //fermeture des vues + mise en cache de la déconnexion
     }
 }
 

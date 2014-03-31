@@ -155,11 +155,11 @@
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSString *phoneid = [pref objectForKey:@"phoneid"];
-    [infosDict setObject:phoneid forKey:@"phoneid"];
+    [infosDict setObject:phoneid forKey:@"phoneid"]; //mise en cache du phoneid
     NSString *phoneos = [pref objectForKey:@"phoneos"];
-    [infosDict setObject:phoneos forKey:@"phoneos"];
+    [infosDict setObject:phoneos forKey:@"phoneos"]; //mise en cache de phoneos
     NSString *MDP = [infosDict objectForKey:@"password"];
-    [pref setObject:MDP forKey:@"password"];
+    [pref setObject:MDP forKey:@"password"]; //mise en cache du mot de passe
     NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (responseData != nil)
@@ -168,6 +168,7 @@
         int code = [[dictData objectForKey:@"code"] intValue];
         if (code == 200)
         {
+            [pref setBool:YES forKey:@"isConnected"]; //mise en cache de la connexion réussie
             NSString *status = [pref objectForKey:@"status"];
             if ([status isEqual:@"referent"])
             {
@@ -179,9 +180,7 @@
             else if ([status isEqual:@"protege"])
             {
                 NSDictionary *infos_protege = [dictData objectForKey:@"message"];
-                NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
                 NSLog(@"infos : %@", infos_protege);
-               // [pref setObject:infos forKey:@"infos"];
             }
             return 1;
         }

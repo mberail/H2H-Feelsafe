@@ -7,19 +7,48 @@
 //
 
 #import "AppDelegate.h"
+#import "IIViewDeckController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSUUID *phoneuuid = [[UIDevice currentDevice]identifierForVendor];
+    NSUUID *phoneuuid = [[UIDevice currentDevice] identifierForVendor];
     NSString *phoneid = [phoneuuid UUIDString];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     [pref setObject:phoneid forKey:@"phoneid"];
     NSLog(@"PhoneID : %@",phoneid);
     NSString *phoneos = @"iphone";
     [pref setObject:phoneos forKey:@"phoneos"];
-    // Override point for customization after application launch.
+    
+    if ([[pref objectForKey:@"isConnected"] boolValue] == YES)
+    {
+        if ([[pref objectForKey:@"status"] isEqualToString:@"referent"])
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
+            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+            viewDeck.leftSize = 65;
+            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+            self.window.rootViewController = viewDeck;
+        }
+        else if ([[pref objectForKey:@"status"] isEqualToString:@"protege"])
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
+            self.window.rootViewController = vc;
+        }
+    }
+    else
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
+        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.window.rootViewController = nvc;
+    }
+    
     return YES;
 }
 
