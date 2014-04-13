@@ -1,28 +1,29 @@
 //
-//  AddViewController.m
+//  ProAddViewController.m
 //  H2H Feelsafe
 //
-//  Created by Maxime Berail on 02/01/14.
+//  Created by Pierre perrin on 12/04/2014.
 //  Copyright (c) 2014 Maxime Berail. All rights reserved.
 //
 
-#import "AddViewController.h"
+#import "ProAddViewController.h"
 #import "WebServices.h"
 #import <AddressBookUI/AddressBookUI.h>
 #import "SVProgressHUD.h"
 
 
-@interface AddViewController ()
+@interface ProAddViewController ()
 {
     NSArray *arrays;
     NSArray *searchs;
     NSArray*contactsFromAddressBook;
     NSArray *ContactsChecked;
-
+    NSMutableArray *idInvitations;
+    NSString *idSelected;
 }
 @end
 
-@implementation AddViewController
+@implementation ProAddViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,24 +43,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [SVProgressHUD showWithStatus:@"recherche de protégés"];
-    self.navigationItem.title = @"Ajouter un protégé";
+    [SVProgressHUD showWithStatus:@"recherche de référents"];
+    self.navigationItem.title = @"Ajouter un référent";
     arrays = [[NSArray alloc] init];
     searchs = [[NSArray alloc] init];
-  
+    idInvitations =[[NSMutableArray alloc]init];
     contactsFromAddressBook = [self getAllContactsFromAddressBook];
-   
     //ContactsChecked = [self proceedWithSearch: contactsFromAddressBook];
     //NSLog(@"Contacts list : %@",ContactsChecked);
-
-   
     
-
+    
+    
+    
 }
 -(void)viewDidAppear:(BOOL)animated
 {
     
-     [self updateContactsFromAddressBook];
+    [self updateContactsFromAddressBook];
 }
 
 
@@ -68,22 +68,23 @@
     
     NSArray *contacts = [self startsearchInPhoneBookProcess:contactsFromAddressBook];
     //NSLog(@"tructruc : %@",contacts);
-    NSMutableArray *alreadyRegistered = [[NSMutableArray alloc] init];
+    NSMutableArray *invitations =  [[NSMutableArray alloc]initWithArray:[WebServices checkInvitation]];
     NSMutableArray *notRegistered = [[NSMutableArray alloc] init];
+    for (int i = 0; i<[invitations count];i++)
+    {
+        [[invitations objectAtIndex:i] setValue:[[invitations objectAtIndex:i]objectForKey:@"username"] forKey:@"name"];
+        [idInvitations setObject:[[invitations objectAtIndex:i]objectForKey:@"id"] atIndexedSubscript:i];
+    }
+    NSLog(@"initations : %@",invitations);
     [SVProgressHUD dismiss];
     for (NSDictionary *dict in contacts)
     {
-        if ([[dict objectForKey:@"registered"] intValue] != 0)
-        {
-            [alreadyRegistered addObject:dict];
-        }
-        else
-        {
+
             [notRegistered addObject:dict];
-        }
+        
     }
-    
-    arrays = [NSArray arrayWithObjects:alreadyRegistered, notRegistered, nil];
+   
+    arrays = [NSArray arrayWithObjects:invitations,notRegistered, nil];
     
     [self.tableView reloadData];
 }
@@ -91,10 +92,11 @@
 - (NSArray *)startsearchInPhoneBookProcess:(NSArray *)tab
 {
     
-    NSArray *ContactsCheck = [WebServices searchInPhoneBook:tab];
+    NSArray *ContactsCheck = tab;
+    //[WebServices searchInPhoneBook:tab];
     [SVProgressHUD dismiss];
     return ContactsCheck;
-   // NSLog(@"contact %@" , ContactsChecked);
+    // NSLog(@"contact %@" , ContactsChecked);
 }
 
 - (NSArray *)getAllContactsFromAddressBook
@@ -122,12 +124,13 @@
                     NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonLastNameProperty);
                     if (firstName == NULL)
                     {
-                              [theContact setValue:lastName forKey:@"name"];
+                        [theContact setValue:lastName forKey:@"name"];
                     }
                     if (lastName == NULL)
                     {
-                            [theContact setValue:firstName forKey:@"name"];
+                        [theContact setValue:firstName forKey:@"name"];
                     }
+                
                     else
                         [theContact setValue:[ NSString stringWithFormat:@"%@ %@",firstName,lastName] forKey:@"name"];
                     
@@ -166,12 +169,13 @@
             NSArray *allContacts = (__bridge_transfer NSArray *)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(addressBook, source, ABPersonGetSortOrdering());
             for (int i = 0; i < allContacts.count; i++)
             {
-
+                
                 //Contact *theContacts = [[Contact alloc] init];
                 ABRecordRef contact = (__bridge ABRecordRef)allContacts[i];
                 NSMutableDictionary *theContact = [[NSMutableDictionary alloc] init];
                 NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonFirstNameProperty);
                 NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(contact, kABPersonLastNameProperty);
+               // NSString *username = [[[arrays objectAtIndex:0] objectAtIndex:0] objectForKey:@"username"];
                 if (firstName == NULL)
                 {
                     [theContact setValue:lastName forKey:@"name"];
@@ -179,6 +183,10 @@
                 if (lastName == NULL)
                 {
                     [theContact setValue:firstName forKey:@"name"];
+                }
+                if (firstName == NULL && lastName == NULL)
+                {
+                    [theContact setValue:@"coucou" forKey:@"name"];
                 }
                 else
                     [theContact setValue:[ NSString stringWithFormat:@"%@ %@",firstName,lastName] forKey:@"name"];
@@ -214,7 +222,7 @@
         }
         else if( ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied)
         {
-    [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez autoriser l'application à accéder à vos contact dans les réglages du téléphone !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez autoriser l'application à accéder à vos contact dans les réglages du téléphone !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             NSMutableDictionary *theContact = [[NSMutableDictionary alloc] init];
             [theContact setValue:@"L'application ne peut pas acceder aux contacts" forKey:@"firstname"];
             [theContacts addObject:theContact];
@@ -222,27 +230,11 @@
         }
         
     }
-   // NSLog(@"Contacts : %@",theContacts);
+    // NSLog(@"Contacts : %@",theContacts);
     return theContacts;
 }
 
-- (IBAction)changeSearch:(id)sender
-{
-    UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
-    if (segmentedControl.selectedSegmentIndex == 0)
-    {
-        CGRect frame = self.tableView.frame;
-        frame.origin.y -= 40;
-        self.tableView.frame = frame;
-    }
-    else if (segmentedControl.selectedSegmentIndex == 1)
-    {
-        CGRect frame = self.tableView.frame;
-        frame.origin.y += 40;
-        self.tableView.frame = frame;
-    }
-    [self.tableView reloadData];
-}
+
 
 #pragma mark - Search display delegate
 
@@ -250,15 +242,15 @@
 {
     
     NSString *search = searchBar.text;
-   [self.searchDisplayController setActive:NO animated:YES];
-    [self.searchBar setHidden:YES];
+    [self.searchDisplayController setActive:NO animated:YES];
+   
     [SVProgressHUD showWithStatus:@"Recherche du Username"];
     
-   [self performSelector:@selector(Searchprocess:) withObject:search afterDelay:0.2];
+    [self performSelector:@selector(Searchprocess:) withObject:search afterDelay:0.2];
 }
 -(NSArray *)startSearchProcess:(NSString *)recherche
 {
-     NSArray *responses = [WebServices searchResults:recherche];
+    NSArray *responses = [WebServices searchResults:recherche];
     
     return responses;
 }
@@ -267,9 +259,9 @@
     NSArray *responses = [self startSearchProcess:recherche];
     searchs = responses;
     [self.tableView reloadData];
-    [self.searchBar setHidden:NO];
+    
     [SVProgressHUD dismiss];
-  //  [self.tableView setHidden:NO];
+    //  [self.tableView setHidden:NO];
 }
 
 
@@ -277,42 +269,26 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-    {
+ 
         return arrays.count;
-    }
-    else
-    {
-        return 1;
-    }
+  
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-    {
+    
         return [[arrays objectAtIndex:section] count];
-    }
-    else
-    {
-        return searchs.count;
-    }
+   
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSString *title = nil;
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-    {
-        if (section == 0)
-        {
-            title = @"Amis protégés";
-        }
-        else if (section == 1)
-        {
-            title = @"Inviter des amis";
-        }
-    }
+     NSString *title = nil;
+    if(section == 0)
+        title = @"Rélérents qui vous ont ajouté";
+    else
+       title = @"Inviter des amis depuis mes contacts";
+   
     return title;
 }
 
@@ -324,19 +300,14 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ContactCell"];
     }
     NSDictionary *contact = [[NSDictionary alloc] init];
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-    {
+
+    
         contact = [[arrays objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         NSString *name = [contact objectForKey:@"name"];
         
         cell.textLabel.text = name;
-    }
-    else
-    {
-        contact = [searchs objectAtIndex:indexPath.row];
-        cell.textLabel.text = [contact objectForKey:@"username"];
-    }
    
+    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = [UIColor whiteColor];
     button.frame = CGRectMake(280, 8, 28, 28);
@@ -344,7 +315,7 @@
     if (indexPath.section == 0)
     {
         [button setBackgroundImage:[UIImage imageNamed:@"user_add.png"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(addContactFromAddressBook:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
     }
     else if (indexPath.section == 1)
     {
@@ -355,37 +326,48 @@
     return cell;
 }
 
-- (void)addContactFromAddressBook:(UIButton *)sender
+- (void) idSlctd:(UIButton *)sender
 {
-    if( self.segmentedControl.selectedSegmentIndex == 0)
+    idSelected = [[NSString alloc]initWithFormat:@"%@",[idInvitations objectAtIndex:sender.tag]];
+    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"Réponse à l'invitation" delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:@"Refuser" otherButtonTitles:@"Accepter", nil];
+    action.actionSheetStyle = UIActionSheetStyleAutomatic;
+    [action showInView:self.view];
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
     {
-        NSLog(@"truc %@",[[arrays objectAtIndex:0] objectAtIndex:sender.tag]);
-        NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[[arrays objectAtIndex:0] objectAtIndex:sender.tag] objectForKey:@"registered"]];
-        [self startInviteProcess:protegeId];
+        NSDictionary *response = [[NSDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:idSelected,@"-1" , nil]forKeys:[[NSArray alloc]initWithObjects:@"id",@"answer", nil ]];
+        NSArray *response2 = [[NSArray alloc]initWithObjects:response, nil];
+        NSLog(@"ResponseArray : %@",response2);
+
+        [self startAnswerProcess:response2];
+      
     }
-    else
+    if (buttonIndex == 1)
     {
-        NSLog(@"truc %@",[searchs objectAtIndex:sender.tag]);
-        NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[searchs objectAtIndex:sender.tag] objectForKey:@"id"]];
-        [self startInviteProcess:protegeId];
+  NSDictionary *response = [[NSDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:idSelected,@"1" , nil]forKeys:[[NSArray alloc]initWithObjects:@"id",@"answer", nil ]];
+        NSArray *response2 = [[NSArray alloc]initWithObjects:response, nil];
+        NSLog(@"ResponseArray : %@",response2);
+       [self startAnswerProcess:response2];
     }
 }
 
-- (void)startInviteProcess:(NSString *)tab
+
+- (void)startAnswerProcess:(NSArray *)tab
 {
-    [SVProgressHUD showWithStatus:@"Envoie de l'invitation" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:@"Envoie de la réponse" maskType:SVProgressHUDMaskTypeBlack];
     
-    [self performSelector:@selector(invite:) withObject:tab afterDelay:0.2];
+    [self performSelector:@selector(answer:) withObject:tab afterDelay:0.2];
     
 }
 
-- (void)invite: (NSString *)tab
+- (void)answer:(NSArray *)tab
 {
-   [WebServices sendInvit:tab];
+    [WebServices answerInvitation:tab];
     
     //[self updateContactsFromAddressBook];
 }
-
 - (void)sendInvitation:(UIButton *)sender
 {
     
@@ -395,19 +377,20 @@
         NSString *phone = [[[arrays objectAtIndex:1] objectAtIndex:sender.tag] objectForKey:@"phone"];
         if (phone != NULL)
         {
-        NSLog(@"tag : %li phone : %@",(long)sender.tag, phone);
-        controller.recipients = [NSArray arrayWithObjects:phone, nil];
-        controller.body = @"Bonjour, je vous invite à découvrir Feelsafe.";
-        controller.messageComposeDelegate = self;
-        [self presentModalViewController:controller animated:YES];
-    
+            NSLog(@"tag : %li phone : %@",(long)sender.tag, phone);
+            controller.recipients = [NSArray arrayWithObjects:phone, nil];
+            controller.body = @"Bonjour, je vous invite à découvrir Feelsafe.";
+            controller.messageComposeDelegate = self;
+            [self presentModalViewController:controller animated:YES];
+            
         }
         else
             [[[UIAlertView alloc] initWithTitle:nil message:@"Ce contact n'a pas de numéro enregistré !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-            
+        
     }
     //[self updateContactsFromAddressBook];
 }
+
 
 
 #pragma mark - MessageComposer delegate

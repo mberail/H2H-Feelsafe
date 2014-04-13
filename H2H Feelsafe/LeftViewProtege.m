@@ -1,21 +1,23 @@
 //
-//  NavigationViewController.m
+//  LeftViewProtege.m
 //  H2H Feelsafe
 //
-//  Created by Maxime Berail on 02/01/14.
+//  Created by Pierre perrin on 01/04/2014.
 //  Copyright (c) 2014 Maxime Berail. All rights reserved.
 //
 
 #import "IIViewDeckController.h"
-#import "NavigationViewController.h"
+#import "LeftViewProtege.h"
 
-@interface NavigationViewController ()
+@interface LeftViewProtege ()
 {
     NSArray *textes;
 }
+
+
 @end
 
-@implementation NavigationViewController
+@implementation LeftViewProtege
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,7 +79,7 @@
     else if ([cell.textLabel.text isEqualToString:@"Protégés"])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
         [self.viewDeckController closeLeftView];
@@ -85,14 +87,6 @@
     else if ([cell.textLabel.text isEqualToString:@"Périmètres"])
     {
         
-    }
-    else if ([cell.textLabel.text isEqualToString:@"Mon compte"])
-    {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UpdateAccountViewController"];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-        self.viewDeckController.centerController = navController;
-        [self.viewDeckController closeLeftView];
     }
     [self.tableView reloadData];
 }

@@ -15,5 +15,10 @@
 + (BOOL)signUp:(NSArray *)parameters;
 + (NSArray *)searchInPhoneBook:(NSArray *)contacts;
 + (NSArray *)searchResults:(NSString *)searchText;
++ (BOOL)updatePosition:(NSArray *)parameters;
++ (BOOL)updateAccount:(NSArray *)parameters;
++ (void)sendInvit:(NSString *)registered;
++ (NSArray *)checkInvitation;
++ (void)answerInvitation:(NSArray *)response;
 
 @end

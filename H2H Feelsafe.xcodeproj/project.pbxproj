@@ -51,12 +51,16 @@
 		66DBEA5018DF389900E2D696 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66DBEA4D18DF389900E2D696 /* SVProgressHUD.bundle */; };
 		66DBEA5118DF389900E2D696 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DBEA4F18DF389900E2D696 /* SVProgressHUD.m */; };
 		871CB53218E6DC2B00E094F1 /* Navigation_Pro_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 871CB53118E6DC2B00E094F1 /* Navigation_Pro_ViewController.m */; };
+		878B091518F99E4700D388E7 /* ProAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 878B091418F99E4700D388E7 /* ProAddViewController.m */; };
 		87A6A2FD18E0F31300DC0D4A /* 01_Accueil_IOS7_v2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87A6A2FC18E0F31300DC0D4A /* 01_Accueil_IOS7_v2.jpg */; };
 		87A6A2FF18E0F3C300DC0D4A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 87A6A2FE18E0F3C300DC0D4A /* ViewController.m */; };
 		87A6A30118E0F44900DC0D4A /* 02_Plan_Suivis_IOS7_v3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87A6A30018E0F44900DC0D4A /* 02_Plan_Suivis_IOS7_v3.jpg */; };
 		87A6A30318E0F4A300DC0D4A /* 03_Liste_Suivis_IOS7_v3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87A6A30218E0F4A300DC0D4A /* 03_Liste_Suivis_IOS7_v3.jpg */; };
 		87A6A30518E0F4C300DC0D4A /* 04_Alertes_IOS7_v3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87A6A30418E0F4C300DC0D4A /* 04_Alertes_IOS7_v3.jpg */; };
 		87A6A30718E0F4DC00DC0D4A /* 05_Diaporama_IOS7_v3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 87A6A30618E0F4DC00DC0D4A /* 05_Diaporama_IOS7_v3.jpg */; };
+		87AA231C18EB5D31007381DD /* LeftViewProtege.m in Sources */ = {isa = PBXBuildFile; fileRef = 87AA231B18EB5D31007381DD /* LeftViewProtege.m */; };
+		87DE8E1E18ECBB6B005BCD0B /* UpdateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 87DE8E1D18ECBB6B005BCD0B /* UpdateAccountViewController.m */; };
+		87DE8E2118ECC758005BCD0B /* UptadeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 87DE8E2018ECC758005BCD0B /* UptadeCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,12 +144,20 @@
 		66DBEA4F18DF389900E2D696 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		871CB53018E6DC2B00E094F1 /* Navigation_Pro_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Navigation_Pro_ViewController.h; sourceTree = "<group>"; };
 		871CB53118E6DC2B00E094F1 /* Navigation_Pro_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Navigation_Pro_ViewController.m; sourceTree = "<group>"; };
+		878B091318F99E4700D388E7 /* ProAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProAddViewController.h; sourceTree = "<group>"; };
+		878B091418F99E4700D388E7 /* ProAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProAddViewController.m; sourceTree = "<group>"; };
 		87A6A2FC18E0F31300DC0D4A /* 01_Accueil_IOS7_v2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 01_Accueil_IOS7_v2.jpg; sourceTree = "<group>"; };
 		87A6A2FE18E0F3C300DC0D4A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		87A6A30018E0F44900DC0D4A /* 02_Plan_Suivis_IOS7_v3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 02_Plan_Suivis_IOS7_v3.jpg; sourceTree = "<group>"; };
 		87A6A30218E0F4A300DC0D4A /* 03_Liste_Suivis_IOS7_v3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 03_Liste_Suivis_IOS7_v3.jpg; sourceTree = "<group>"; };
 		87A6A30418E0F4C300DC0D4A /* 04_Alertes_IOS7_v3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 04_Alertes_IOS7_v3.jpg; sourceTree = "<group>"; };
 		87A6A30618E0F4DC00DC0D4A /* 05_Diaporama_IOS7_v3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 05_Diaporama_IOS7_v3.jpg; sourceTree = "<group>"; };
+		87AA231A18EB5D31007381DD /* LeftViewProtege.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeftViewProtege.h; sourceTree = "<group>"; };
+		87AA231B18EB5D31007381DD /* LeftViewProtege.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeftViewProtege.m; sourceTree = "<group>"; };
+		87DE8E1C18ECBB6B005BCD0B /* UpdateAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateAccountViewController.h; sourceTree = "<group>"; };
+		87DE8E1D18ECBB6B005BCD0B /* UpdateAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateAccountViewController.m; sourceTree = "<group>"; };
+		87DE8E1F18ECC758005BCD0B /* UptadeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UptadeCell.h; sourceTree = "<group>"; };
+		87DE8E2018ECC758005BCD0B /* UptadeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UptadeCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +281,7 @@
 		66253DC518572BE100F3F062 /* H2H Feelsafe */ = {
 			isa = PBXGroup;
 			children = (
+				87DE8E1818ECBA19005BCD0B /* InfoCompte */,
 				6603098B1870A51200FD855E /* Connexion */,
 				66030988186EFC3300FD855E /* Inscription */,
 				871CB52E18E6DADC00E094F1 /* Navigations */,
@@ -376,8 +389,23 @@
 			children = (
 				871CB53018E6DC2B00E094F1 /* Navigation_Pro_ViewController.h */,
 				871CB53118E6DC2B00E094F1 /* Navigation_Pro_ViewController.m */,
+				87AA231A18EB5D31007381DD /* LeftViewProtege.h */,
+				87AA231B18EB5D31007381DD /* LeftViewProtege.m */,
+				878B091318F99E4700D388E7 /* ProAddViewController.h */,
+				878B091418F99E4700D388E7 /* ProAddViewController.m */,
 			);
 			name = Navigation_Pro;
+			sourceTree = "<group>";
+		};
+		87DE8E1818ECBA19005BCD0B /* InfoCompte */ = {
+			isa = PBXGroup;
+			children = (
+				87DE8E1C18ECBB6B005BCD0B /* UpdateAccountViewController.h */,
+				87DE8E1D18ECBB6B005BCD0B /* UpdateAccountViewController.m */,
+				87DE8E1F18ECC758005BCD0B /* UptadeCell.h */,
+				87DE8E2018ECC758005BCD0B /* UptadeCell.m */,
+			);
+			name = InfoCompte;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -495,7 +523,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87AA231C18EB5D31007381DD /* LeftViewProtege.m in Sources */,
 				66253E0A18573F7F00F3F062 /* LoginViewController.m in Sources */,
+				87DE8E2118ECC758005BCD0B /* UptadeCell.m in Sources */,
+				87DE8E1E18ECBB6B005BCD0B /* UpdateAccountViewController.m in Sources */,
 				66030984186E38E400FD855E /* ALAssetCell.m in Sources */,
 				66253E05185738BF00F3F062 /* AFOpenFlowView.m in Sources */,
 				66253E06185738BF00F3F062 /* AFUIImageReflection.m in Sources */,
@@ -503,6 +534,7 @@
 				6603097A186DF31600FD855E /* ALGroupViewController.m in Sources */,
 				664059E31875A83F00BA60F7 /* NavigationViewController.m in Sources */,
 				66253DD018572BE100F3F062 /* AppDelegate.m in Sources */,
+				878B091518F99E4700D388E7 /* ProAddViewController.m in Sources */,
 				66DBEA5118DF389900E2D696 /* SVProgressHUD.m in Sources */,
 				6603097D186E1AA400FD855E /* ALGroupCell.m in Sources */,
 				664059E81875AB1700BA60F7 /* ListViewController.m in Sources */,
@@ -644,12 +676,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Maxime Berail (BE28NGSZT8)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Pierre perrin (RU3Y69QJ9N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pierre perrin (RU3Y69QJ9N)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "H2H Feelsafe/H2H Feelsafe-Prefix.pch";
 				INFOPLIST_FILE = "H2H Feelsafe/H2H Feelsafe-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2188ABE5-CC26-4B62-B689-630DD73C0A14";
+				PROVISIONING_PROFILE = "19315D2D-CAB2-44BD-918E-5C12E1E44270";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -659,12 +692,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Maxime Berail (BE28NGSZT8)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Pierre perrin (RU3Y69QJ9N)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "H2H Feelsafe/H2H Feelsafe-Prefix.pch";
 				INFOPLIST_FILE = "H2H Feelsafe/H2H Feelsafe-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2188ABE5-CC26-4B62-B689-630DD73C0A14";
+				PROVISIONING_PROFILE = "19315D2D-CAB2-44BD-918E-5C12E1E44270";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

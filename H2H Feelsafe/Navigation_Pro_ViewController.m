@@ -8,8 +8,12 @@
 
 #import "Navigation_Pro_ViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreLocation/CoreLocation.h>
+#import "IIViewDeckController.h"
 
-@interface Navigation_Pro_ViewController ()
+@interface Navigation_Pro_ViewController ()<CLLocationManagerDelegate>
+
+@property (nonatomic, strong) CLLocationManager *locationManager;
 
 @end
 
@@ -30,9 +34,36 @@
     self.navigationItem.title = @"Protégé";
     self.StatutView.layer.borderColor =[UIColor blackColor].CGColor;
     self.StatutView.layer.borderWidth = 2.0f;
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIImage *profile = [UIImage imageNamed:@"19-gear.png"];
+    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width, profile.size.height)];
+    [profileButton setBackgroundImage:profile forState:UIControlStateNormal];
+    [profileButton addTarget:self.viewDeckController action:@selector(toggleLeftView) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *profilItem =[[UIBarButtonItem alloc] initWithCustomView:profileButton];
+    
+    
+    UIImage *add = [UIImage imageNamed:@"user_add.png"];
+    UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, add.size.width, add.size.height)];
+    [addButton setBackgroundImage:add forState:UIControlStateNormal];
+    [addButton addTarget:self action:@selector(addContact)  forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *addItem =[[UIBarButtonItem alloc] initWithCustomView:addButton];
+    self.navigationItem.rightBarButtonItem = addItem;
+    
+    self.navigationItem.leftBarButtonItem = profilItem;
+  
     //self.navigationItem.title = @"Protégé";
     
 	// Do any additional setup after loading the view.
+}
+
+- (void)addContact
+{
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ProAddViewController"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)didReceiveMemoryWarning

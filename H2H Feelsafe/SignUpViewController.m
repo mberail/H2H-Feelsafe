@@ -44,6 +44,8 @@
     [SVProgressHUD dismiss];
     if (signUp)
     {
+        if(self.segmentedControl.selectedSegmentIndex == 0)
+        {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
         UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -52,6 +54,18 @@
         viewDeck.leftSize = 65;
         viewDeck.panningMode = IIViewDeckNavigationBarPanning;
         [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+        }
+        else
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
+            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+            viewDeck.leftSize = 65;
+            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+            [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+        }
     }
     else
     {

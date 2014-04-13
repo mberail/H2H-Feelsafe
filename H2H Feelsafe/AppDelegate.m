@@ -45,7 +45,12 @@
         {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
-            self.window.rootViewController = vc;
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"LeftViewProtege"];
+            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+            viewDeck.leftSize = 65;
+            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+            self.window.rootViewController = viewDeck;
         }
     }
     else

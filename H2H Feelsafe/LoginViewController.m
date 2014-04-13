@@ -75,7 +75,7 @@
 
 - (void)startLoginProcess:(NSArray *)tab
 {
-    [SVProgressHUD showWithStatus:@"Vérification Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:@"Vérification du Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(login:) withObject:tab afterDelay:0.2];
 }
 
@@ -101,17 +101,21 @@
         [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
         }
         else if ([status isEqual:@"protege"])
-                 {
-                     [SVProgressHUD dismiss];
-                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                     UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
-                     [self.navigationController pushViewController:vc animated:YES];
+        {[SVProgressHUD showSuccessWithStatus:@"Bienvenue"];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"LeftViewProtege"];
+            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+            viewDeck.leftSize = 65;
+            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+            [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
           //  [[[UIAlertView alloc] initWithTitle:nil message:@"Page protégé en cours de conception" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                  }
     }
     else
     {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"Email ou mot-de-passe incorrects, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [SVProgressHUD showErrorWithStatus:@"Mot-de-passe incorrect"];
     }
 
 }

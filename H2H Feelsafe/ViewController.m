@@ -164,7 +164,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [SVProgressHUD showWithStatus:@"Vérification Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:@"Vérification du mail" maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(checkEmail:) withObject:textField.text afterDelay:0.2];
     
     return YES;

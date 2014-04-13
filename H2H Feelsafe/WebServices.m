@@ -8,6 +8,7 @@
 
 #import "WebServices.h"
 #import <AddressBookUI/AddressBookUI.h>
+#import "SVProgressHUD.h"
 
 @implementation WebServices
 
@@ -93,9 +94,10 @@
 
 + (NSData *)getData:(NSString *)url
 {
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSDictionary *dictTemp = [[NSUserDefaults standardUserDefaults] objectForKey:@"infos"];
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[dictTemp objectForKey:@"password"]];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[pref objectForKey:@"password"]];
     NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
     NSString *authValue = [NSString stringWithFormat:@"Basic %@", [self base64forData:authData]];
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
@@ -104,6 +106,7 @@
     NSHTTPURLResponse *response = nil;
     NSError *errors = nil;
     NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&errors];
+     NSLog(@"data : %@",[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
     return responseData;
 }
 
@@ -179,8 +182,22 @@
             }
             else if ([status isEqual:@"protege"])
             {
+                NSNull *rien = [[NSNull alloc]init];
                 NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+                if ([[infos_protege objectForKey:@"latitude"] isEqual:rien])
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"latitude"];
+                }
+                if ([[infos_protege objectForKey:@"longitude"]  isEqual:rien])
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"longitude"];
+                }
+                if ([infos_protege objectForKey:@"address"]  == rien)
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"address"];
+                }
                 NSLog(@"infos : %@", infos_protege);
+                 [pref setObject:infos_protege forKey:@"infos"];
             }
             return 1;
         }
@@ -219,9 +236,22 @@
             }
             else if ([Status isEqual:@"protege"])
             {
-                //NSArray *infos = [dictData objectForKey:@"message"];
-               // [pref setObject:infos forKey:@"infos"];
-                NSLog(@"infos :  ");
+                NSNull *rien = [[NSNull alloc]init];
+                NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+                if ([[infos_protege objectForKey:@"latitude"] isEqual:rien])
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"latitude"];
+                }
+                if ([[infos_protege objectForKey:@"longitude"]  isEqual:rien])
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"longitude"];
+                }
+                if ([infos_protege objectForKey:@"address"]  == rien)
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"address"];
+                }
+                NSLog(@"infos : %@", infos_protege);
+                [pref setObject:infos_protege forKey:@"infos"];
             }
             return 1;
         }
@@ -262,7 +292,7 @@
                 continue;
             
         }
-        NSLog(@"truc truc %@",contactList);
+//NSLog(@"truc truc %@",contactList);
         return contactList;
         
     }
@@ -272,6 +302,36 @@
 
 + (NSArray *)searchResults:(NSString *)searchText
 {
+   
+    NSArray *objects = [NSArray arrayWithObject:searchText];
+    NSArray *keys = [NSArray arrayWithObject:@"login"];
+    NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
+    //NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/searchbylogin",kURL];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            return infos;
+        }
+        if (code == 4119)
+        {
+            [SVProgressHUD dismiss];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"Minimum 4 catatères en minuscule !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            
+
+        }
+        if (code == 404)
+        {
+            [SVProgressHUD dismiss];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"Aucun protégé trouvé" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        }
+       
+    }
     return nil;
 }
 
@@ -294,9 +354,167 @@
                 NSLog(@"infos : %@", infos_protege);
                 // [pref setObject:infos forKey:@"infos"];
             }
+        
             return 1;
     }
     return 0;
 }
+
++ (BOOL)updateAccount:(NSMutableDictionary *)infosDict
+{
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    //NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
+    NSString *phoneos = [pref objectForKey:@"phoneos"];
+    [infosDict setObject:phoneos forKey:@"phoneos"];
+    NSString *phoneid = [pref objectForKey:@"phoneid"];
+    [infosDict setObject:phoneid forKey:@"phoneid"];
+    NSString *Status = [pref objectForKey:@"status"];
+    [infosDict setObject:Status forKey:@"status"];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/updateaccount",kURL];
+    NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
+    if (response != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            if ([Status isEqual:@"referent"])
+            {
+                
+                NSDictionary *infos = [dictData objectForKey:@"message"];
+                NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+                [pref setObject:infos forKey:@"infos"];
+           
+                NSLog(@"infos : %@",infos);
+                
+            }
+            else if ([Status isEqual:@"protege"])
+            {
+                NSNull *rien = [[NSNull alloc]init];
+                NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+                if ([[infos_protege objectForKey:@"latitude"] isEqual:rien])
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"latitude"];
+                }
+                if ([[infos_protege objectForKey:@"longitude"]  isEqual:rien])
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"longitude"];
+                }
+                if ([infos_protege objectForKey:@"address"]  == rien)
+                {
+                    [infos_protege setValue:@"Rien"forKey:@"address"];
+                }
+                NSLog(@"infos : %@", infos_protege);
+                [pref setObject:infos_protege forKey:@"infos"];
+            }
+            return 1;
+        }
+        if (code == 4128)
+        {
+            [SVProgressHUD dismiss];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"L'identifiant est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        }
+        if (code == 4129)
+        {
+            [SVProgressHUD dismiss];
+            [[[UIAlertView alloc] initWithTitle:nil message:@"L'addresse Mail est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        }
+    }
+    return 0;
+}
+
++(void)sendInvit: (NSString *)registered
+{
+    NSArray *protegeId = [[NSArray alloc]initWithObjects:registered, nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"id", nil];
+    
+    //NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:registered forKeys:keys];
+    NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:protegeId forKeys:keys];
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/invite",kURL];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+           // NSString *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            //NSLog(@"marche = %@",infos);
+            [SVProgressHUD showSuccessWithStatus:@"Invitation envoyée"];
+            //return infos;
+            
+        }
+        if (code == 500)
+        {
+            [SVProgressHUD showErrorWithStatus:@"Invitation déjà envoyée"];
+        }
+        else
+            NSLog(@"casser");
+    }
+    //return nil;
+}
+
++(NSArray *) checkInvitation
+{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/checkinvitations",kURL];
+    NSData *responseData = [self getData:stringUrl ];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            NSLog(@"marche = %@",infos);
+            //[SVProgressHUD showSuccessWithStatus:@"Invitation envoyée"];
+            return infos;
+            
+        }
+        if (code == 500)
+        {
+           // [SVProgressHUD showErrorWithStatus:@"Invitation déjà envoyée"];
+            NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            NSLog(@"marche = %@",infos);
+        }
+        else
+        {
+            //NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+           // NSLog(@"marche = %@",dictData);
+        }
+           
+    }
+    return nil;
+}
+
++(void) answerInvitation: (NSArray *)response
+{
+    NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] init];
+    NSData *JsonData = [NSJSONSerialization dataWithJSONObject:response options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *jsonString = [[NSString alloc]initWithData:JsonData encoding:NSUTF8StringEncoding];
+    [infosDict setObject:jsonString forKey:@"invitations"];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/respondinvitation",kURL];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:YES];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            
+           
+            //NSLog(@"marche = %@",infos);
+            [SVProgressHUD showSuccessWithStatus:@"Réponse envoyée"];
+            //return infos;
+            
+        }
+        else
+        {
+            [SVProgressHUD dismiss];
+        }
+
+    }
+}
+
 
 @end
