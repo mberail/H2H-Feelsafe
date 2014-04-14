@@ -12,6 +12,7 @@
 @interface NavigationViewController ()
 {
     NSArray *textes;
+
 }
 @end
 

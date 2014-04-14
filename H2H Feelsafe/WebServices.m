@@ -335,12 +335,12 @@
     return nil;
 }
 
-+ (BOOL)updatePosition:(NSArray *)parameters
++ (BOOL)updateInformations:(NSArray *)parameters
 {
+      NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [NSArray arrayWithObjects:@"alert",@"lon",@"lat",@"address",@"message",nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/updateposition",kURL,[pref objectForKey:@"status"]];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (responseData != nil)
     {
@@ -349,13 +349,14 @@
         if (code == 200)
         {
    
-                NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+                NSDictionary *infos = [dictData objectForKey:@"message"];
               //  NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-                NSLog(@"infos : %@", infos_protege);
+                NSLog(@"infos : %@", infos);
                 // [pref setObject:infos forKey:@"infos"];
+             return 1;
             }
         
-            return 1;
+        
     }
     return 0;
 }
@@ -501,12 +502,7 @@
         int code = [[dictData objectForKey:@"code"] intValue];
         if (code == 200)
         {
-            
-           
-            //NSLog(@"marche = %@",infos);
             [SVProgressHUD showSuccessWithStatus:@"Réponse envoyée"];
-            //return infos;
-            
         }
         else
         {
@@ -515,6 +511,26 @@
 
     }
 }
+
++(NSArray *) protegesInfos
+{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/getprotegeinformations",kURL];
+    NSData *responseData = [self getData:stringUrl ];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            return infos;
+            
+        }
+    }
+    return nil;
+}
+
+
 
 
 @end

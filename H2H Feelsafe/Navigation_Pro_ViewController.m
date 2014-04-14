@@ -10,8 +10,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreLocation/CoreLocation.h>
 #import "IIViewDeckController.h"
+#import "SVProgressHUD.h"
+#import "WebServices.h"
 
 @interface Navigation_Pro_ViewController ()<CLLocationManagerDelegate>
+{
+    NSString *alert;
+    CLLocationManager *locationManager;
+}
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
@@ -30,7 +36,9 @@
 
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
+    alert = @"0";
     self.navigationItem.title = @"Protégé";
     self.StatutView.layer.borderColor =[UIColor blackColor].CGColor;
     self.StatutView.layer.borderWidth = 2.0f;
@@ -43,19 +51,18 @@
     [profileButton addTarget:self.viewDeckController action:@selector(toggleLeftView) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *profilItem =[[UIBarButtonItem alloc] initWithCustomView:profileButton];
     
-    
     UIImage *add = [UIImage imageNamed:@"user_add.png"];
     UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, add.size.width, add.size.height)];
     [addButton setBackgroundImage:add forState:UIControlStateNormal];
     [addButton addTarget:self action:@selector(addContact)  forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *addItem =[[UIBarButtonItem alloc] initWithCustomView:addButton];
+    
     self.navigationItem.rightBarButtonItem = addItem;
     
     self.navigationItem.leftBarButtonItem = profilItem;
   
-    //self.navigationItem.title = @"Protégé";
+    locationManager = [[CLLocationManager alloc]init];
     
-	// Do any additional setup after loading the view.
 }
 
 - (void)addContact
@@ -74,15 +81,53 @@
 
 - (IBAction)OK:(id)sender {
     self.SecondStatutView.backgroundColor = [UIColor greenColor];
+    alert = @"1";
+    [self startUpdateProcess];
 }
 
 - (IBAction)Imprevu:(id)sender {
     self.SecondStatutView.backgroundColor = [UIColor orangeColor];
+    alert = @"2";
+  [self startUpdateProcess];
 }
 
 - (IBAction)Danger:(id)sender {
     self.SecondStatutView.backgroundColor = [UIColor redColor];
+    alert = @"3";
+    [self startUpdateProcess];
 }
 - (IBAction)send:(id)sender {
 }
+
+-(void)StartUpdate: (NSArray *)tab
+{
+    BOOL Update = [WebServices updateInformations:tab] ;
+    
+    if (Update)
+    {
+        [SVProgressHUD showSuccessWithStatus:@"Informations mise à jours"];
+        
+    }
+    else
+    {
+        [SVProgressHUD showErrorWithStatus:@"La mise à jour des informations à échouée..."];
+    
+    }
+}
+
+
+- (void)startUpdateProcess
+{
+   
+    [SVProgressHUD showWithStatus:@"Mise à jour des informations" maskType:SVProgressHUDMaskTypeBlack];
+    [locationManager startUpdatingLocation];
+    NSNull  *rien = [[NSNull alloc]init];
+    NSString *latitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.latitude];
+    NSString *longitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.longitude];
+    NSArray *infos = [[NSArray alloc]initWithObjects:alert,longitude,latitude,@"inconue",rien,nil];
+    NSLog(@" update : %@",infos);
+   [self performSelector:@selector(StartUpdate:) withObject:infos afterDelay:0.2];
+    
+}
+
 @end

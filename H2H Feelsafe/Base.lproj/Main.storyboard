@@ -198,7 +198,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="430"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="Iow-jT-wQX">
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="Iow-jT-wQX">
                                         <rect key="frame" x="0.0" y="109" width="320" height="321"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <connections>
