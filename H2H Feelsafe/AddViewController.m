@@ -18,6 +18,8 @@
     NSArray *searchs;
     NSArray*contactsFromAddressBook;
     NSArray *ContactsChecked;
+    NSMutableArray *idInvitations;
+    NSString *idSelected;
 
 }
 @end
@@ -46,7 +48,8 @@
     self.navigationItem.title = @"Ajouter un protégé";
     arrays = [[NSArray alloc] init];
     searchs = [[NSArray alloc] init];
-  
+    idInvitations = [[NSMutableArray alloc]init];
+    
     contactsFromAddressBook = [self getAllContactsFromAddressBook];
    
     //ContactsChecked = [self proceedWithSearch: contactsFromAddressBook];
@@ -60,6 +63,7 @@
 {
     
      [self updateContactsFromAddressBook];
+    
 }
 
 
@@ -70,6 +74,14 @@
     //NSLog(@"tructruc : %@",contacts);
     NSMutableArray *alreadyRegistered = [[NSMutableArray alloc] init];
     NSMutableArray *notRegistered = [[NSMutableArray alloc] init];
+    NSMutableArray *invitations =  [[NSMutableArray alloc]initWithArray:[WebServices checkInvitation]];
+    for (int i = 0; i<[invitations count];i++)
+    {
+        [[invitations objectAtIndex:i] setValue:[[invitations objectAtIndex:i]objectForKey:@"username"] forKey:@"name"];
+        [idInvitations setObject:[[invitations objectAtIndex:i]objectForKey:@"id"] atIndexedSubscript:i];
+    }
+    NSLog(@"initations : %@",invitations);
+    [SVProgressHUD dismiss];
     [SVProgressHUD dismiss];
     for (NSDictionary *dict in contacts)
     {
@@ -83,7 +95,7 @@
         }
     }
     
-    arrays = [NSArray arrayWithObjects:alreadyRegistered, notRegistered, nil];
+    arrays = [NSArray arrayWithObjects:invitations,alreadyRegistered,notRegistered, nil];
     
     [self.tableView reloadData];
 }
@@ -304,11 +316,15 @@
     NSString *title = nil;
     if (self.segmentedControl.selectedSegmentIndex == 0)
     {
-        if (section == 0)
+        if(section == 0)
+        {
+            title = @"invitations en attente";
+        }
+        else if (section == 1)
         {
             title = @"Amis protégés";
         }
-        else if (section == 1)
+        else if (section == 2)
         {
             title = @"Inviter des amis";
         }
@@ -337,21 +353,47 @@
         cell.textLabel.text = [contact objectForKey:@"username"];
     }
    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.backgroundColor = [UIColor whiteColor];
-    button.frame = CGRectMake(280, 8, 28, 28);
-    button.tag = indexPath.row;
+  
     if (indexPath.section == 0)
     {
-        [button setBackgroundImage:[UIImage imageNamed:@"user_add.png"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(addContactFromAddressBook:) forControlEvents:UIControlEventTouchUpInside];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.backgroundColor = [UIColor whiteColor];
+        button.frame = CGRectMake(280, 4,39, 39);
+        button.tag = indexPath.row;
+        [button setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
+        
+        if (self.segmentedControl.selectedSegmentIndex == 0)
+        {
+              [button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
+        }
+        else
+        {
+            [button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
+        }
+       [cell addSubview:button];
+        //[button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
     }
-    else if (indexPath.section == 1)
+    if (indexPath.section == 1)
     {
-        [button setBackgroundImage:[UIImage imageNamed:@"19-gear.png"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
+        UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+        button2.backgroundColor = [UIColor whiteColor];
+        button2.frame = CGRectMake(280, 4,39, 39);
+        button2.tag = indexPath.row;
+        [button2 setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
+        [cell addSubview:button2];
     }
-    [cell addSubview:button];
+    if (indexPath.section == 2)
+    {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.backgroundColor = [UIColor whiteColor];
+        button.frame = CGRectMake(280, 4,39, 39);
+        button.tag = indexPath.row;
+        button.frame = CGRectMake(279, 4, 40, 35);
+        [button setImage:[UIImage imageNamed:@"sms.png"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addSubview:button];
+    }
+    
     return cell;
 }
 
@@ -365,7 +407,7 @@
     }
     else
     {
-        NSLog(@"truc %@",[searchs objectAtIndex:sender.tag]);
+      //  NSLog(@"bug %@",searchs);
         NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[searchs objectAtIndex:sender.tag] objectForKey:@"id"]];
         [self startInviteProcess:protegeId];
     }
@@ -408,7 +450,48 @@
     }
     //[self updateContactsFromAddressBook];
 }
+- (void) idSlctd:(UIButton *)sender
+{
+    idSelected = [[NSString alloc]initWithFormat:@"%@",[idInvitations objectAtIndex:sender.tag]];
+    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"Réponse à l'invitation" delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:@"Refuser" otherButtonTitles:@"Accepter", nil];
+    action.actionSheetStyle = UIActionSheetStyleAutomatic;
+    [action showInView:self.view];
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+    {
+        NSDictionary *response = [[NSDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:idSelected,@"-1" , nil]forKeys:[[NSArray alloc]initWithObjects:@"id",@"answer", nil ]];
+        NSArray *response2 = [[NSArray alloc]initWithObjects:response, nil];
+        NSLog(@"ResponseArray : %@",response2);
+        
+        [self startAnswerProcess:response2];
+        
+    }
+    if (buttonIndex == 1)
+    {
+        NSDictionary *response = [[NSDictionary alloc]initWithObjects:[[NSArray alloc]initWithObjects:idSelected,@"1" , nil]forKeys:[[NSArray alloc]initWithObjects:@"id",@"answer", nil ]];
+        NSArray *response2 = [[NSArray alloc]initWithObjects:response, nil];
+        NSLog(@"ResponseArray : %@",response2);
+        [self startAnswerProcess:response2];
+    }
+}
 
+
+- (void)startAnswerProcess:(NSArray *)tab
+{
+    [SVProgressHUD showWithStatus:@"Envoie de la réponse" maskType:SVProgressHUDMaskTypeBlack];
+    
+    [self performSelector:@selector(answer:) withObject:tab afterDelay:0.2];
+    
+}
+
+- (void)answer:(NSArray *)tab
+{
+    [WebServices answerInvitation:tab];
+    
+    //[self updateContactsFromAddressBook];
+}
 
 #pragma mark - MessageComposer delegate
 

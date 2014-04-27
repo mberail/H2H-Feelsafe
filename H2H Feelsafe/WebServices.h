@@ -21,4 +21,8 @@
 + (NSArray *)checkInvitation;
 + (void)answerInvitation:(NSArray *)response;
 + (NSArray *)protegesInfos;
++(void)stopAlert: (NSString *)idProtege;
++(void)resetPassword;
++(UIImage *)getPicture: (NSString *)userId;
+
 @end

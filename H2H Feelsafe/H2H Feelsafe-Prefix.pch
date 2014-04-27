@@ -15,4 +15,7 @@
     #import <Foundation/Foundation.h>
 #define hURL @"http://www.virtua-vista.fr/geoloc2/public/index.php/api"
 #define kURL @"https://h2h-mobility.com/geoloc2/public/index.php/api"
+#define picTESTURL @"http://virtua-vista.fr/geoloc2/module/Api/pictures"
+#define picURL @"https://h2h-mobility.com/geoloc2/module/Api/pictures/"
+
 #endif

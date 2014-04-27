@@ -37,6 +37,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+   
+    
     self.navigationItem.title = @"Mise à jour du compte";
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
     
@@ -99,17 +102,34 @@
     
     if (Update)
     {
+        
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
         [pref setObject:pass forKey:@"password"];
-        [SVProgressHUD showSuccessWithStatus:@"Informations mises à jour !"];
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
-        UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
-        UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
-        IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
-        viewDeck.leftSize = 65;
-        viewDeck.panningMode = IIViewDeckNavigationBarPanning;
-        [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+        if([[pref objectForKey:@"staus"]isEqualToString:@"referent"])
+        {
+            [SVProgressHUD showSuccessWithStatus:@"Informations mises à jour !"];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"NavigationViewController"];
+            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+            viewDeck.leftSize = 65;
+            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+            [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+        }
+        else
+        {
+            [SVProgressHUD showSuccessWithStatus:@"Informations mises à jour !"];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
+            UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
+            UIViewController *leftvc = [storyboard instantiateViewControllerWithIdentifier:@"LeftViewProtege"];
+            IIViewDeckController *viewDeck = [[IIViewDeckController alloc] initWithCenterViewController:nvc leftViewController:leftvc];
+            viewDeck.leftSize = 65;
+            viewDeck.panningMode = IIViewDeckNavigationBarPanning;
+            [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
+        }
+        
         
     }
     else
@@ -444,4 +464,18 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    CGRect frameCell = textField.superview.superview.superview.frame;
+    if (frameCell.origin.y > 0 && self.view.frame.origin.y == -180)
+    {
+        [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
+            tabFrame.origin.y += 180;
+            self.view.frame = tabFrame;}];
+    }
+    [textField resignFirstResponder];
+    return YES;
+}
+
 @end

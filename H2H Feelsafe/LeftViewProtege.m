@@ -76,6 +76,14 @@
         action.actionSheetStyle = UIActionSheetStyleAutomatic;
         [action showInView:self.view];
     }
+    else if ([cell.textLabel.text isEqualToString:@"Mon compte"])
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UpdateAccountViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.viewDeckController.centerController = navController;
+        [self.viewDeckController closeLeftView];
+    }
     else if ([cell.textLabel.text isEqualToString:@"Protégés"])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];

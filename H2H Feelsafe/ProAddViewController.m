@@ -68,8 +68,10 @@
     
     NSArray *contacts = [self startsearchInPhoneBookProcess:contactsFromAddressBook];
     //NSLog(@"tructruc : %@",contacts);
-    NSMutableArray *invitations =  [[NSMutableArray alloc]initWithArray:[WebServices checkInvitation]];
+   
     NSMutableArray *notRegistered = [[NSMutableArray alloc] init];
+    NSMutableArray *alreadyRegistered = [[NSMutableArray alloc] init];
+     NSMutableArray *invitations =  [[NSMutableArray alloc]initWithArray:[WebServices checkInvitation]];
     for (int i = 0; i<[invitations count];i++)
     {
         [[invitations objectAtIndex:i] setValue:[[invitations objectAtIndex:i]objectForKey:@"username"] forKey:@"name"];
@@ -79,21 +81,27 @@
     [SVProgressHUD dismiss];
     for (NSDictionary *dict in contacts)
     {
-
+        NSLog(@"bte %@", dict);
+        if ([[dict objectForKey:@"registered"] integerValue]== 0)
+        {
+            
             [notRegistered addObject:dict];
-        
+
+        }
+        else
+        {
+            [alreadyRegistered addObject:dict];
+        }
     }
    
-    arrays = [NSArray arrayWithObjects:invitations,notRegistered, nil];
-    
+    arrays = [NSArray arrayWithObjects:invitations,alreadyRegistered,notRegistered, nil];
     [self.tableView reloadData];
 }
 
 - (NSArray *)startsearchInPhoneBookProcess:(NSArray *)tab
 {
     
-    NSArray *ContactsCheck = tab;
-    //[WebServices searchInPhoneBook:tab];
+    NSArray *ContactsCheck = [WebServices searchInPhoneBook:tab];
     [SVProgressHUD dismiss];
     return ContactsCheck;
     // NSLog(@"contact %@" , ContactsChecked);
@@ -285,7 +293,9 @@
 {
      NSString *title = nil;
     if(section == 0)
-        title = @"Rélérents qui vous ont ajouté";
+        title = @"Référents qui vous ont ajouté";
+    if(section == 1 )
+        title = @"Référents à inviter";
     else
        title = @"Inviter des amis depuis mes contacts";
    
@@ -314,16 +324,45 @@
     button.tag = indexPath.row;
     if (indexPath.section == 0)
     {
-        [button setBackgroundImage:[UIImage imageNamed:@"user_add.png"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
     }
-    else if (indexPath.section == 1)
+    if (indexPath.section == 1)
     {
-        [button setBackgroundImage:[UIImage imageNamed:@"19-gear.png"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
+    }
+    else if (indexPath.section == 2)
+    {
+        button.frame = CGRectMake(280, 4, 40, 35);
+        [button setImage:[UIImage imageNamed:@"sms.png"] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
     }
     [cell addSubview:button];
     return cell;
+}
+- (void)addContactFromAddressBook:(UIButton *)sender
+{
+        NSLog(@"truc %@",[[arrays objectAtIndex:1] objectAtIndex:sender.tag]);
+        NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[[arrays objectAtIndex:1] objectAtIndex:sender.tag] objectForKey:@"registered"]];
+        [self startInviteProcess:protegeId];
+    
+ 
+}
+
+- (void)startInviteProcess:(NSString *)tab
+{
+    [SVProgressHUD showWithStatus:@"Envoie de l'invitation" maskType:SVProgressHUDMaskTypeBlack];
+    
+    [self performSelector:@selector(invite:) withObject:tab afterDelay:0.2];
+    
+}
+
+- (void)invite: (NSString *)tab
+{
+    [WebServices sendInvit:tab];
+    
+    //[self updateContactsFromAddressBook];
 }
 
 - (void) idSlctd:(UIButton *)sender

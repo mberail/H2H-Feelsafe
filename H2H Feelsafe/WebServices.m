@@ -110,6 +110,23 @@
     return responseData;
 }
 
++ (UIImage *)getPictureData:(NSString *)url
+{
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSDictionary *dictTemp = [[NSUserDefaults standardUserDefaults] objectForKey:@"infos"];
+    NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[pref objectForKey:@"password"]];
+    NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [self base64forData:authData]];
+    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
+    [request setHTTPMethod:@"GET"];
+
+    NSData *responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+    UIImage *pic = [[UIImage alloc] initWithData:responseData];
+    NSLog(@"data : %@",[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+    return pic;
+}
+
 + (BOOL)checkEmail:(NSString *)emailAddress
 {
     //return 1;
@@ -198,6 +215,7 @@
                 }
                 NSLog(@"infos : %@", infos_protege);
                  [pref setObject:infos_protege forKey:@"infos"];
+                
             }
             return 1;
         }
@@ -424,6 +442,35 @@
     return 0;
 }
 
++(void)stopAlert: (NSString *)idProtege
+{
+    NSArray *protegeId = [[NSArray alloc]initWithObjects:idProtege, nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"id", nil];
+    
+    //NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:registered forKeys:keys];
+    NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:protegeId forKeys:keys];
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/decreasealert",kURL];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+             //NSString *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            //NSLog(@"marche = %@",infos);
+            [SVProgressHUD showSuccessWithStatus:@"Alerte danger desactivée"];
+            //return infos;
+        }
+        else
+            [SVProgressHUD showSuccessWithStatus:@"Alerte danger desactivée"];
+    }
+    //return nil;
+    
+}
+
+
 +(void)sendInvit: (NSString *)registered
 {
     NSArray *protegeId = [[NSArray alloc]initWithObjects:registered, nil];
@@ -529,6 +576,66 @@
     }
     return nil;
 }
+
+
++(void)resetPassword
+{
+    
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"mail", nil];
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    
+    NSString *truc = [NSString stringWithFormat:@"%@",[pref objectForKey:@"email"]];
+    NSArray *param = [[NSArray alloc]initWithObjects:truc, nil];
+    NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:param forKeys:keys];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/resetpassword",kURL];
+    NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            // NSString *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            //NSLog(@"marche = %@",infos);
+            [SVProgressHUD showSuccessWithStatus:@"Un e-mail vous a été envoyer"];
+            //return infos;
+            
+        }
+        else
+            NSLog(@"casser");
+    }
+    //return nil;
+}
+
++(UIImage *) getPicture: (NSString*) userId
+{
+    
+    
+    NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId]]];
+    NSLog(@"par ici %@",userId);
+    NSString *data = [NSString stringWithFormat:@"%@",thedata];
+    NSLog(@"les photo %@",data );
+    if ([data isEqualToString:@"(null)"])
+    {
+        NSLog(@"Success");
+        return [UIImage imageNamed:@"no_img.jpg"];
+    }
+    else
+    {
+        UIImage *img = [[UIImage alloc] initWithData:thedata];
+        return img;
+    }
+        
+    
+
+}
+
+
+
+
+
+
 
 
 

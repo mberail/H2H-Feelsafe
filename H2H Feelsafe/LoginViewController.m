@@ -18,6 +18,7 @@
 @interface LoginViewController ()
 {
     NSArray *labels;
+    
 }
 @end
 
@@ -28,9 +29,14 @@
     [super viewDidLoad];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(proceedWithLogin)];
     self.navigationItem.rightBarButtonItem = item;
+    
+   // self.recup.image = [UIImage imageNamed:@"no_img"];
     self.navigationItem.title = @"Connexion";
-	
+	self.navigationItem.leftBarButtonItem =nil;
     labels = [[NSArray alloc] initWithObjects:@"Email",@"Mot de passe", nil];
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
 }
 
 - (void)proceedWithLogin
@@ -169,4 +175,25 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)Mailpassword:(id)sender {
+     [SVProgressHUD show];
+    [self performSelector:@selector(startresetProcess) withObject:nil afterDelay:0.2];
+}
+
+- (IBAction)test:(id)sender
+{
+    NSLog(@"bordel");
+    NSString *truc = [NSString stringWithFormat:@"59"];
+    self.recup.image = [WebServices getPicture:truc];
+}
+
+- (void)startresetProcess
+{
+    [self performSelector:@selector(reset)];
+}
+
+- (void)reset
+{
+    [WebServices resetPassword];
+}
 @end

@@ -17,38 +17,39 @@
 @end
 
 @implementation ViewController
-@synthesize slides, scrollView, pageControl;
+@synthesize slides, scrollView;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     self.navigationItem.title = @"H2H Feelsafe";
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
+  
+   // self.Visite.layer.borderColor =[UIColor purpleColor].CGColor;
+    //self.Visite.layer.borderWidth = 2.0f;
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
     self.navigationItem.rightBarButtonItem = item;
     UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];
     self.navigationItem.leftBarButtonItem = item2;
     
-    slides = [[NSArray alloc] initWithObjects:@"01_Accueil_IOS7_v2.jpg",@"02_Plan_Suivis_IOS7_v3.jpg",@"03_Liste_Suivis_IOS7_v3.jpg",@"04_Alertes_IOS7_v3.jpg",@"05_Diaporama_IOS7_v3.jpg",nil];
-    
-    for (int i = 0; i < slides.count; i++)
+    if(  [ [ UIScreen mainScreen ] bounds ].size.height== 568)
     {
-        CGRect frame;
-        frame.origin.x = self.scrollView.frame.size.width * i;
-        frame.origin.y = 0;
-        frame.size = self.scrollView.frame.size;
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        imageView.image = [UIImage imageNamed:[slides objectAtIndex:i]];
-        [scrollView addSubview:imageView];
+        CGRect frame2 = self.logo2.frame;
+        frame2.origin.y = 200;
+        self.logo2.frame = frame2;
+        
+        CGRect frame3 = self.logo.frame;
+        frame3.origin.y = 50;
+        self.logo.frame = frame3;
+        
     }
     
-    //self.flowView.dataSource = self;
-    //self.flowView.numberOfImages = slides.count;
-    [scrollView setContentSize:CGSizeMake(scrollView.frame.size.width * slides.count, scrollView.frame.size.height)];
-    pageControl.numberOfPages = slides.count;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    self.navigationController.navigationBarHidden = YES ;
 }
 
 - (void)didReceiveMemoryWarning
@@ -72,11 +73,13 @@
         [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter une adresse mail valide." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
     }
 }
+
 -(void)StartCheckEmailProcess: (NSString *)mail
 {
     [SVProgressHUD showWithStatus:@"Vérification de l'adresse mail" maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(checkEmail:) withObject:mail afterDelay:0.2];
 }
+
 - (void)checkEmail: (NSString *)mail
 {
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
@@ -99,8 +102,6 @@
             vc = [storyboard instantiateViewControllerWithIdentifier:@"SignUpViewController"];
         }
         [self.navigationController pushViewController:vc animated:YES];
-    
-    
 }
 
 - (void)cancelEmail
@@ -109,33 +110,44 @@
     [UIView animateWithDuration:0 animations:
      ^{//[self.flowView setHidden:NO];
          [self.scrollView setHidden:NO];
-         [self.pageControl setHidden:NO];
+         [self.logo setHidden:NO];
+         [self.logo2 setHidden:NO];
          CGRect frame = self.emailTextField.frame;
          frame.origin.y = self.view.frame.size.height - 64;
          self.emailTextField.frame = frame;}];
     self.navigationController.navigationBarHidden = YES;
 }
 
+
+
+
 - (IBAction)changeSlide:(id)sender
 {
     CGRect frame;
-    frame.origin.x = self.scrollView.frame.size.width * self.pageControl.currentPage;
+   // frame.origin.x = self.scrollView.frame.size.width * self.pageControl.currentPage;
     frame.origin.y = 0;
     frame.size = self.scrollView.frame.size;
     [self.scrollView scrollRectToVisible:frame animated:YES];
     pageControlBeingUsed = YES;
 }
 
+- (IBAction)Visite:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *vc = [[UIViewController alloc] init];
+    vc = [storyboard instantiateViewControllerWithIdentifier:@"UIGuideViewController"];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 #pragma mark - Scroll view delegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)sender
+/*- (void)scrollViewDidScroll:(UIScrollView *)sender
 {
     if (!pageControlBeingUsed)
     {
         int page = (scrollView.contentOffset.x / scrollView.frame.size.width);
         self.pageControl.currentPage = page;
     }
-}
+}*/
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
@@ -155,7 +167,9 @@
     [UIView animateWithDuration:0 animations:
      ^{//[self.flowView setHidden:YES];
          [self.scrollView setHidden:YES];
-         [self.pageControl setHidden:YES];
+         [self.logo setHidden:YES];
+         //[self.logo2 setHidden:YES];
+        // [self.pageControl setHidden:YES];
          CGRect frame = self.emailTextField.frame;
          frame.origin.y = 83;
          self.emailTextField.frame = frame;}];

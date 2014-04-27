@@ -15,8 +15,13 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (nonatomic, strong) NSArray *slides;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
+@property (strong, nonatomic) IBOutlet UIImageView *logo;
+@property (strong, nonatomic) IBOutlet UIImageView *logo2;
+@property (strong, nonatomic) IBOutlet UILabel *texte;
 
-- (IBAction)changeSlide:(id)sender;
+
+
+- (IBAction)Visite:(id)sender;
+@property (strong, nonatomic) IBOutlet UIButton *Visite;
 
 @end

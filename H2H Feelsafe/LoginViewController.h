@@ -11,5 +11,9 @@
 @interface LoginViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+- (IBAction)Mailpassword:(id)sender;
+- (IBAction)test:(id)sender;
+@property (strong, nonatomic) IBOutlet UIImageView *recup;
+
 
 @end

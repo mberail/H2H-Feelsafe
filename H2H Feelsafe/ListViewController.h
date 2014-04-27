@@ -19,5 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIView *mapSuperView;
 @property (weak, nonatomic) IBOutlet UIView *listSuperView;
 
+
+
 - (IBAction)changeInterface:(id)sender;
 @end
