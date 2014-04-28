@@ -51,6 +51,7 @@
             viewDeck.leftSize = 65;
             viewDeck.panningMode = IIViewDeckNavigationBarPanning;
             self.window.rootViewController = viewDeck;
+            
         }
     }
     else
@@ -62,6 +63,7 @@
     }
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    self.window.tintColor = [[UIColor alloc]initWithRed:(142.0/255.0) green:(20./255.0) blue:(129./255.0) alpha:1.0];
     return YES;
 }
 

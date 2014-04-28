@@ -19,6 +19,7 @@
     NSArray *labels;
     UIAlertView *Check;
     NSString *pass;
+    UIImagePickerController *picker;
 }
 @end
 
@@ -58,14 +59,28 @@
 	//UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Terminé" style:UIBarButtonItemStylePlain target:self action:@selector(signup)];
     //self.navigationItem.rightBarButtonItem = item;
     [self.tableView setUserInteractionEnabled:NO];
+    [self.PictureView setUserInteractionEnabled:NO];
+    
     Check =  [[UIAlertView alloc] initWithTitle:@"Mot de passe" message:@"Veuiller inscrire votre mot de passe utilisateur" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles:@"Ok", nil];
     Check.alertViewStyle = UIAlertViewStylePlainTextInput;
     [Check textFieldAtIndex:0].delegate = self;
     [Check textFieldAtIndex:0].secureTextEntry = YES;
-    UIButton *picture = [[UIButton alloc]init];
-    picture.enabled = NO;
+   
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     pass = [pref objectForKey:@"password"];
+    
+    if([pref objectForKey:@"picture"])
+       {
+           self.PictureView.image = [[UIImage alloc]initWithData:[pref objectForKey:@"picture"]];
+           
+       }
+    else
+    {
+        self.PictureView.image = [UIImage imageNamed:@"default_profile.jpg"];
+    }
+        
+    
+    
     
 }
 -(void)Annuler
@@ -88,6 +103,7 @@
         {
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(Update)];
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStyleBordered target:self action:@selector(Annuler)];
+            [self.Picture setEnabled:YES];
             [self.tableView setUserInteractionEnabled:YES];
         }
     else
@@ -105,7 +121,7 @@
         
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
         [pref setObject:pass forKey:@"password"];
-        if([[pref objectForKey:@"staus"]isEqualToString:@"referent"])
+        if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
         {
             [SVProgressHUD showSuccessWithStatus:@"Informations mises à jour !"];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -363,11 +379,20 @@
         }
     }
     
-
-        NSLog(@"mutDict : %@",mutDict);
-        
-        
-        [self startUpdateProcess:mutDict];
+        if ([pref objectForKey:@"picture"])
+        {
+            NSData *photoData = [pref objectForKey:@"picture"];
+            NSString *Image64 = [WebServices base64forData:photoData];
+            [mutDict setObject:Image64 forKey:@"picture"];
+            NSLog(@"mutDict : %@",mutDict);
+            [self startUpdateProcess:mutDict];
+        }
+        else
+        {
+            NSLog(@"mutDict : %@",mutDict);
+            [self startUpdateProcess:mutDict];
+        }
+    
     
 }
 
@@ -396,6 +421,8 @@
     action.actionSheetStyle = UIActionSheetStyleAutomatic;
     [action showInView:self.view];
 }
+
+
 #pragma mark - ActionSheet delegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -403,9 +430,14 @@
     NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
     if ([title isEqualToString:@"Choisir une photo"])
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+      /*  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ALGroupViewController"];
-        [self.navigationController pushViewController:vc animated:YES];
+        [self.navigationController pushViewController:vc animated:YES];*/
+        
+        picker = [[UIImagePickerController alloc]init];
+        picker.delegate =self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self.navigationController pushViewController:picker animated:YES];
     }
     else if ([title isEqualToString:@"Prendre une photo"])
     {
@@ -446,7 +478,7 @@
                  UIImage *image = [UIImage imageWithCGImage:ref];
                  self.PictureView.image = image;
                  NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-                 [pref setObject:UIImagePNGRepresentation(image) forKey:@"picture"];
+                 [pref setObject:UIImageJPEGRepresentation(image, 1.0)forKey:@"picture"];
              }
          };
          ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error){NSLog(@"error : %@",error.localizedDescription);};

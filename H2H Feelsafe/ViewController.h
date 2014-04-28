@@ -18,6 +18,10 @@
 @property (strong, nonatomic) IBOutlet UIImageView *logo;
 @property (strong, nonatomic) IBOutlet UIImageView *logo2;
 @property (strong, nonatomic) IBOutlet UILabel *texte;
+@property (strong, nonatomic) IBOutlet UILabel *Texte1;
+@property (strong, nonatomic) IBOutlet UILabel *Texte2;
+@property (strong, nonatomic) IBOutlet UIButton *Valider;
+- (IBAction)valid:(id)sender;
 
 
 

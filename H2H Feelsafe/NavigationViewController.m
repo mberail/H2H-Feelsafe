@@ -105,7 +105,8 @@
     if (buttonIndex == 0)
     {
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isConnected"];
-        
+        NSUserDefaults *pref = [NSUserDefaults standardUserDefaults]    ;
+        [pref removeObjectForKey:@"picture"];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -115,5 +116,6 @@
         NSLog(@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"isConnected"]);
     }
 }
+
 
 @end

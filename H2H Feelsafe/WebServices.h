@@ -16,7 +16,7 @@
 + (NSArray *)searchInPhoneBook:(NSArray *)contacts;
 + (NSArray *)searchResults:(NSString *)searchText;
 + (BOOL)updateInformations:(NSArray *)parameters;
-+ (BOOL)updateAccount:(NSArray *)parameters;
++ (BOOL)updateAccount:(NSMutableDictionary *)parameters;
 + (void)sendInvit:(NSString *)registered;
 + (NSArray *)checkInvitation;
 + (void)answerInvitation:(NSArray *)response;
@@ -24,5 +24,5 @@
 +(void)stopAlert: (NSString *)idProtege;
 +(void)resetPassword;
 +(UIImage *)getPicture: (NSString *)userId;
-
++ (NSString *)base64forData:(NSData *)theData;
 @end

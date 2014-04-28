@@ -55,22 +55,28 @@
     //self.tableView.allowsSelection = NO;
     self.navigationItem.title = @"H2H Feelsafe";
     
-    UIImage *profile = [UIImage imageNamed:@"19-gear.png"];
-    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width, profile.size.height)];
+    //UIImage *profile = [UIImage imageNamed:@"19-gear.png"];
+    //UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width, profile.size.height)];
     
     
     
    // [profileButton setBackgroundImage:profile forState:UIControlStateNormal];
  //   [profileButton addTarget:self.viewDeckController action:@selector(toggleLeftView) forControlEvents:UIControlEventTouchUpInside];
-   // UIBarButtonItem *profilItem =[[UIBarButtonItem alloc] initWithCustomView:profileButton];
+
 
     //UIBarButtonItem *Settings = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(toggleLeftView)];
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self.viewDeckController action:@selector(toggleLeftView)];
+   // self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self.viewDeckController action:@selector(toggleLeftView)];
     
     UIBarButtonItem *contactButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addContact)];
     
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
+    UIImage *profile = [UIImage imageNamed:@"LeftBut.png"];
+    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width/1.5, profile.size.height/1.5)];
+    [profileButton setBackgroundImage:profile forState:UIControlStateNormal];
+    [profileButton addTarget:self.viewDeckController action:@selector(toggleLeftView) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *profilItem =[[UIBarButtonItem alloc] initWithCustomView:profileButton];
+    
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(proceedRefreshing)];
     
    /* UIImage *add = [UIImage imageNamed:@"user_add.png"];
     UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, add.size.width, add.size.height)];
@@ -82,7 +88,7 @@
     
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:contactButton,refreshButton, nil];
   
-    
+    self.navigationItem.leftBarButtonItem = profilItem;
     
     
 }
@@ -92,18 +98,25 @@
 {
     if (arrays == nil)
     {
-        arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
-        [self.tableView reloadData];
-        [self displayPins];
+        [SVProgressHUD show];
+        [self performSelector:@selector(refresh) withObject:nil afterDelay:0.2];
     }
     
     
 }
 
+-(void)proceedRefreshing
+{
+    
+    [SVProgressHUD show];
+    arrays = nil;
+    [self.tableView reloadData];
+    [self performSelectorInBackground:@selector(refresh) withObject:nil];
+   
+}
+
 -(void)refresh
 {
-    if (arrays != nil)
-    {
         //[WebServices getPicture];
         arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
         [self.tableView reloadData];
@@ -113,7 +126,7 @@
         [self.segmentedControl setSelectedSegmentIndex:0];
         [self.listSuperView setHidden:YES];
         [self.mapSuperView setHidden:NO];
-    }
+ 
 }
 
 - (void)addContact
@@ -173,9 +186,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
     NSDictionary *protege = [[NSDictionary alloc] init];
-    if (self.segmentedControl.selectedSegmentIndex == 0)
-    {
+    
         protege = [arrays objectAtIndex:indexPath.row];
+       
         UILabel *nom = [[UILabel alloc ] initWithFrame:CGRectMake(120, 30, 130, 25)];
         
         nom.font = [nom.font fontWithSize:22];
@@ -187,10 +200,14 @@
         
         
         UIImageView *photo=[[UIImageView alloc]init];
+
+    if(photo.image == nil)
+    {
         photo.frame = CGRectMake(60, 10, 46,40);
         photo.image = [UIImage imageNamed:@"no_img.jpg"];
-        
         photo.image = [WebServices getPicture:[protege objectForKey:@"id"]];
+    }
+    
         
         NSLog(@"protege : %@",protege);
         if ([[protege objectForKey:@"mail"] isEqual:rien])
@@ -259,6 +276,7 @@
             nom.text = name;
             
                       // [cell.contentView addSubview:Dist];
+            
             [cell.contentView addSubview:nom];
             //cell.textLabel.text = name;
             [cell.contentView addSubview:messageView];
@@ -272,7 +290,7 @@
         
         
        
-    }
+    
     return cell;
 }
 
@@ -347,18 +365,19 @@
             {
                 UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé Ok" message:[NSString stringWithFormat:@"Dernier message:\n%@",[protege2 objectForKey:@"message"]] delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles: nil];
                 [etatProtege show];
+                
             }
         }
-        [tableView reloadData];
+      //[tableView reloadData];
     }
    
     else
     {
         UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protege en attente de confirmation" message:nil delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles: nil];
         [etatProtege show];
-        [tableView reloadData];
+      //  [tableView reloadData];
     }
-    [tableView reloadData];
+    //[tableView reloadData];
     
 }
 

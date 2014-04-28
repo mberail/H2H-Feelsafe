@@ -28,7 +28,7 @@
    // self.Visite.layer.borderColor =[UIColor purpleColor].CGColor;
     //self.Visite.layer.borderWidth = 2.0f;
     
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Valider" style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
     self.navigationItem.rightBarButtonItem = item;
     UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];
     self.navigationItem.leftBarButtonItem = item2;
@@ -112,6 +112,10 @@
          [self.scrollView setHidden:NO];
          [self.logo setHidden:NO];
          [self.logo2 setHidden:NO];
+         [self.Texte1 setHidden:YES];
+         [self.Texte2 setHidden:YES];
+         [self.Valider setHidden:YES];
+         [self.Valider setEnabled:NO];
          CGRect frame = self.emailTextField.frame;
          frame.origin.y = self.view.frame.size.height - 64;
          self.emailTextField.frame = frame;}];
@@ -129,6 +133,10 @@
     frame.size = self.scrollView.frame.size;
     [self.scrollView scrollRectToVisible:frame animated:YES];
     pageControlBeingUsed = YES;
+}
+
+- (IBAction)valid:(id)sender {
+    [self ProceedWithEmail];
 }
 
 - (IBAction)Visite:(id)sender {
@@ -168,7 +176,11 @@
      ^{//[self.flowView setHidden:YES];
          [self.scrollView setHidden:YES];
          [self.logo setHidden:YES];
-         //[self.logo2 setHidden:YES];
+         [self.logo2 setHidden:YES];
+         [self.Texte1 setHidden:NO];
+         [self.Texte2 setHidden:NO];
+         [self.Valider setHidden:NO];
+         [self.Valider setEnabled:YES];
         // [self.pageControl setHidden:YES];
          CGRect frame = self.emailTextField.frame;
          frame.origin.y = 83;

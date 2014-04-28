@@ -34,7 +34,8 @@
     self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:@"< retour" style:UIBarButtonSystemItemCancel target:self action:@selector(Return)];
-    
+    scrollView.contentSize = CGSizeMake(scrollView.contentSize.width,scrollView.frame.size.height);
+   
     
     slides = [[NSArray alloc] initWithObjects:@"01_Accueil_IOS7_v2.jpg",@"02_Plan_Suivis_IOS7_v3.jpg",@"03_Liste_Suivis_IOS7_v3.jpg",@"04_Alertes_IOS7_v3.jpg",@"05_Diaporama_IOS7_v3.jpg",nil];
     

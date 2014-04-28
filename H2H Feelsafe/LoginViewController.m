@@ -37,6 +37,7 @@
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+
 }
 
 - (void)proceedWithLogin
@@ -157,6 +158,7 @@
     if (indexPath.row == 1)
     {
         cell.theTextField.secureTextEntry = YES;
+       
     }
     if (indexPath.row == 0)
     {
@@ -166,6 +168,7 @@
         cell.theTextField.textColor = [UIColor grayColor];
         [cell.theTextField setUserInteractionEnabled:false];
     }
+    
     return cell;
 }
 
@@ -180,12 +183,7 @@
     [self performSelector:@selector(startresetProcess) withObject:nil afterDelay:0.2];
 }
 
-- (IBAction)test:(id)sender
-{
-    NSLog(@"bordel");
-    NSString *truc = [NSString stringWithFormat:@"59"];
-    self.recup.image = [WebServices getPicture:truc];
-}
+
 
 - (void)startresetProcess
 {
@@ -195,5 +193,8 @@
 - (void)reset
 {
     [WebServices resetPassword];
+}
+- (IBAction)Valid:(id)sender {
+    [self proceedWithLogin];
 }
 @end

@@ -570,6 +570,7 @@
         if (code == 200)
         {
             NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            [SVProgressHUD dismiss];
             return infos;
             
         }

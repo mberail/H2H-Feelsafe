@@ -87,22 +87,23 @@
        [self.alertLabel  setHidden:NO];
    }
     
+    UIBarButtonItem *contactButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addContact)];
+
     
     
-    
-    UIImage *profile = [UIImage imageNamed:@"19-gear.png"];
-    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width * 2, profile.size.height *2)];
+    UIImage *profile = [UIImage imageNamed:@"LeftBut.png"];
+    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width /1.5, profile.size.height /1.5)];
     [profileButton setBackgroundImage:profile forState:UIControlStateNormal];
     [profileButton addTarget:self.viewDeckController action:@selector(toggleLeftView) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *profilItem =[[UIBarButtonItem alloc] initWithCustomView:profileButton];
     
-    UIImage *add = [UIImage imageNamed:@"user_add.png"];
+    /*UIImage *add = [UIImage imageNamed:@"user_add.png"];
     UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, add.size.width * 2, add.size.height *2)];
     [addButton setBackgroundImage:add forState:UIControlStateNormal];
     [addButton addTarget:self action:@selector(addContact)  forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *addItem =[[UIBarButtonItem alloc] initWithCustomView:addButton];
+    UIBarButtonItem *addItem =[[UIBarButtonItem alloc] initWithCustomView:addButton];*/
     
-    self.navigationItem.rightBarButtonItem = addItem;
+    self.navigationItem.rightBarButtonItem = contactButton;
     
     self.navigationItem.leftBarButtonItem = profilItem;
   
@@ -180,6 +181,19 @@
     
 }
 
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    CGRect frameCell = textField.superview.superview.superview.frame;
+    if (frameCell.origin.y > 170 && self.view.frame.origin.y == 0)
+    {
+        [UIView animateWithDuration:0.2 animations:^{CGRect frame = self.view.frame;
+            frame.origin.y -= 180;
+            self.view.frame = frame;}];
+    }
+    return YES;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     CGRect frameCell = textField.superview.superview.superview.frame;
@@ -190,19 +204,6 @@
             self.view.frame = tabFrame;}];
     }
     [textField resignFirstResponder];
-    return YES;
-}
-
--(BOOL)textViewShouldReturn:(UITableView *)textView
-{
-    CGRect frameCell = textView.superview.superview.superview.frame;
-    if (frameCell.origin.y > 0 && self.view.frame.origin.y == -180)
-    {
-        [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
-            tabFrame.origin.y += 180;
-            self.view.frame = tabFrame;}];
-    }
-    [textView resignFirstResponder];
     return YES;
 }
 

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface Navigation_Pro_ViewController : UIViewController <UITextViewDelegate>
+@interface Navigation_Pro_ViewController : UIViewController <UITextFieldDelegate>
 @property (strong, nonatomic) IBOutlet UIView *StatutView;
 @property (strong, nonatomic) IBOutlet UIView *SecondStatutView;
 - (IBAction)OK:(id)sender;
