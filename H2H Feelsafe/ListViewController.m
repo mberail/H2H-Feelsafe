@@ -100,8 +100,8 @@
     {
         [SVProgressHUD show];
         [self performSelector:@selector(refresh) withObject:nil afterDelay:0.2];
+        
     }
-    
     
 }
 
@@ -109,8 +109,6 @@
 {
     
     [SVProgressHUD show];
-    arrays = nil;
-    [self.tableView reloadData];
     [self performSelectorInBackground:@selector(refresh) withObject:nil];
    
 }
@@ -118,8 +116,12 @@
 -(void)refresh
 {
         //[WebServices getPicture];
-        arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
+    
+    
+        arrays = [[NSArray alloc]init];
         [self.tableView reloadData];
+        arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
+    
         [_mapView removeAnnotations:_mapView.annotations];
 
         [self displayPins];

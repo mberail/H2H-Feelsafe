@@ -383,8 +383,8 @@
         {
             NSData *photoData = [pref objectForKey:@"picture"];
             NSString *Image64 = [WebServices base64forData:photoData];
-            [mutDict setObject:Image64 forKey:@"picture"];
-            NSLog(@"mutDict : %@",mutDict);
+            [mutDict setObject:photoData forKey:@"picture"];
+            NSLog(@"mutDict : %@",photoData);
             [self startUpdateProcess:mutDict];
         }
         else
