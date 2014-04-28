@@ -40,7 +40,6 @@
     [super viewDidLoad];
     
    
-    
     self.navigationItem.title = @"Mise à jour du compte";
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
     
@@ -430,14 +429,10 @@
     NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
     if ([title isEqualToString:@"Choisir une photo"])
     {
-      /*  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ALGroupViewController"];
-        [self.navigationController pushViewController:vc animated:YES];*/
+        [self.navigationController pushViewController:vc animated:YES];
         
-        picker = [[UIImagePickerController alloc]init];
-        picker.delegate =self;
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        [self.navigationController pushViewController:picker animated:YES];
     }
     else if ([title isEqualToString:@"Prendre une photo"])
     {

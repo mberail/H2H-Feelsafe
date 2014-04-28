@@ -612,25 +612,34 @@
 
 + (UIImage *)getPicture:(NSString*)userId
 {
-    NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId];
     UIImage *imgCache = [[UIImage alloc] init];
-    if ([[ImageCache sharedImageCache] doesExist:pictureString] == YES)
+    if([userId isEqualToString:@"134"])
     {
-        imgCache = [[ImageCache sharedImageCache] getImage:pictureString];
+        imgCache = [UIImage imageNamed:@"default_profile.jpg"];
     }
     else
     {
-        NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:pictureString]];
-        NSString *data = [NSString stringWithFormat:@"%@",thedata];
-        if ([data isEqualToString:@"(null)"])
+        NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId];
+        
+        if ([[ImageCache sharedImageCache] doesExist:pictureString] == YES)
         {
-            imgCache = [UIImage imageNamed:@"default_profile.jpg"];
+            imgCache = [[ImageCache sharedImageCache] getImage:pictureString];
         }
         else
         {
-            imgCache = [UIImage imageWithData:thedata];
-            [[ImageCache sharedImageCache] addImage:pictureString with:imgCache];
+            NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:pictureString]];
+            NSString *data = [NSString stringWithFormat:@"%@",thedata];
+            if ([data isEqualToString:@"(null)"] || data == nil)
+            {
+                imgCache = [UIImage imageNamed:@"default_profile.jpg"];
+            }
+            else
+            {
+                imgCache = [UIImage imageWithData:thedata];
+                [[ImageCache sharedImageCache] addImage:pictureString with:imgCache];
+            }
         }
+        return imgCache;
     }
     return imgCache;
 }

@@ -37,6 +37,8 @@
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+    
+
 
 }
 
@@ -158,6 +160,7 @@
     if (indexPath.row == 1)
     {
         cell.theTextField.secureTextEntry = YES;
+        [cell.theTextField becomeFirstResponder ];
        
     }
     if (indexPath.row == 0)
@@ -168,7 +171,7 @@
         cell.theTextField.textColor = [UIColor grayColor];
         [cell.theTextField setUserInteractionEnabled:false];
     }
-    
+    self.tableView.scrollEnabled = NO;
     return cell;
 }
 

@@ -119,9 +119,9 @@
     
     
         arrays = [[NSArray alloc]init];
-        [self.tableView reloadData];
-        arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
     
+        arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
+        [self.tableView reloadData];
         [_mapView removeAnnotations:_mapView.annotations];
 
         [self displayPins];
@@ -255,19 +255,18 @@
                 //[alertView setTitle:@"Ok" forState:UIControlStateNormal];
                 //alertView.text = @"OK";
             }
-            else if ([[protege objectForKey:@"alert"]isEqualToString:@"3"])
+            if ([[protege objectForKey:@"alert"]isEqualToString:@"3"])
             {
                // alertView.backgroundColor = [UIColor redColor];
-                
                  alertView.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
                 alertView.image = [UIImage imageNamed:@"alert.png"];
                 //[alertView setTitle:@"En danger" forState:UIControlStateNormal];
                // alertView.text = @"En danger";
             }
-            else if ([[protege objectForKey:@"alert"]isEqualToString:@"2"])
+            if ([[protege objectForKey:@"alert"]isEqualToString:@"2"])
             {
                 //alertView.backgroundColor = [UIColor orangeColor];
-                alertView.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
+               alertView.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
                 alertView.image = [UIImage imageNamed:@"warning.png"];
                 //[alertView setTitle:@"Imprévu" forState:UIControlStateNormal];
                // alertView.text = @"Imprévu";

@@ -36,6 +36,10 @@
     self.navigationItem.rightBarButtonItem = item;
     accepted = NO;
     
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(CGUaccepted) name:@"CGUaccepted" object:nil];
 }
 -(void)StartSignUp: (NSArray *)tab
