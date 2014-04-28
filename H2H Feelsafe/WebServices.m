@@ -9,6 +9,7 @@
 #import "WebServices.h"
 #import <AddressBookUI/AddressBookUI.h>
 #import "SVProgressHUD.h"
+#import "ImageCache.h"
 
 @implementation WebServices
 
@@ -609,27 +610,29 @@
     //return nil;
 }
 
-+(UIImage *) getPicture: (NSString*) userId
++ (UIImage *)getPicture:(NSString*)userId
 {
-    
-    
-    NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId]]];
-    NSLog(@"par ici %@",userId);
-    NSString *data = [NSString stringWithFormat:@"%@",thedata];
-    NSLog(@"les photo %@",data );
-    if ([data isEqualToString:@"(null)"])
+    NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId];
+    UIImage *imgCache = [[UIImage alloc] init];
+    if ([[ImageCache sharedImageCache] doesExist:pictureString] == YES)
     {
-        NSLog(@"Success");
-        return [UIImage imageNamed:@"no_img.jpg"];
+        imgCache = [[ImageCache sharedImageCache] getImage:pictureString];
     }
     else
     {
-        UIImage *img = [[UIImage alloc] initWithData:thedata];
-        return img;
+        NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:pictureString]];
+        NSString *data = [NSString stringWithFormat:@"%@",thedata];
+        if ([data isEqualToString:@"(null)"])
+        {
+            imgCache = [UIImage imageNamed:@"default_profile.jpg"];
+        }
+        else
+        {
+            imgCache = [UIImage imageWithData:thedata];
+            [[ImageCache sharedImageCache] addImage:pictureString with:imgCache];
+        }
     }
-        
-    
-
+    return imgCache;
 }
 
 

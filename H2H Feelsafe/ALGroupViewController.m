@@ -58,8 +58,15 @@
     };
     
     NSUInteger groupTypes = ALAssetsGroupAll;
-    [assetsLibrary enumerateGroupsWithTypes:groupTypes usingBlock:listGroupBlock failureBlock:failureBlock];
-    
+    if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized)
+    {
+        [assetsLibrary enumerateGroupsWithTypes:groupTypes usingBlock:listGroupBlock failureBlock:failureBlock];
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Restriction accès" message:@"Veuillez activer l'accès à la photothèque pour l'application. Réglages -> Confidentialité -> Photos -> Fitted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)didReceiveMemoryWarning
