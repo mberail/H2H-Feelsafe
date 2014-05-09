@@ -20,11 +20,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSUUID *phoneuuid = [[UIDevice currentDevice] identifierForVendor];
-    NSString *phoneid = [phoneuuid UUIDString];
+    
+   
+    
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    [pref setObject:phoneid forKey:@"phoneid"];
-    NSLog(@"PhoneID : %@",phoneid);
     NSString *phoneos = @"iphone";
     [pref setObject:phoneos forKey:@"phoneos"];
     
@@ -64,10 +63,41 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.window.tintColor = [[UIColor alloc]initWithRed:(142.0/255.0) green:(20./255.0) blue:(129./255.0) alpha:1.0];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
     return YES;
 }
 
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
+//enregistrement de l'UDID dans la mémoire de l'appli
+{
+    NSLog(@"My token is: %@",[newDeviceToken description]); //numéro de série de l'iPhone (UDID)
+    NSString *newToken = @"";
+    for (int i = 0; i < newDeviceToken.description.length; i++) //fonction pour supprimer les espaces et caractères incorrects de l'UDID
+    {
+        NSRange range = NSMakeRange(i, 1);
+        NSString *subString = [newDeviceToken.description substringWithRange:range];
+        if ([subString isEqualToString:@" "] || [subString isEqualToString:@"<"] || [subString isEqualToString:@">"])
+            newToken = [NSString stringWithFormat:@"%@",newToken];
+        else
+            newToken = [NSString stringWithFormat:@"%@%@",newToken,subString];
+    }
+    NSLog(@"newToken : %@",newToken);
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    [pref setObject:newToken forKey:@"phoneid"];
+}
+
+
+
+
+
+
+
+
+/*
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     NSLog(@"to background");
@@ -117,9 +147,9 @@
                        }
                    });
     NSLog(@"backgroundTimeRemaining: %.0f",[[UIApplication sharedApplication] backgroundTimeRemaining]);
-}
+}*/
 
-- (void)setPosition //envoie des coord GPS à la BDD
+/*- (void)setPosition //envoie des coord GPS à la BDD
 {
     CLLocation *location = self.locationManager.location;
     //ajouter appel à la méthode updateLocation WebServices
@@ -175,5 +205,5 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
+*/
 @end

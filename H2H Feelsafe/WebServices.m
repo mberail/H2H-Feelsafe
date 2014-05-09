@@ -111,7 +111,7 @@
     return responseData;
 }
 
-+ (UIImage *)getPictureData:(NSString *)url
++ (NSData *)getPictureData:(NSString *)url
 {
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -123,9 +123,9 @@
     [request setHTTPMethod:@"GET"];
 
     NSData *responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-    UIImage *pic = [[UIImage alloc] initWithData:responseData];
+  //  UIImage *pic = [[UIImage alloc] initWithData:responseData];
     NSLog(@"data : %@",[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
-    return pic;
+    return responseData;
 }
 
 + (BOOL)checkEmail:(NSString *)emailAddress
@@ -175,8 +175,18 @@
     NSArray *keys = [NSArray arrayWithObjects:@"mail",@"password", nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *phoneid = [pref objectForKey:@"phoneid"];
-    [infosDict setObject:phoneid forKey:@"phoneid"]; //mise en cache du phoneid
+    NSString *phoneid = [[NSString alloc]init];
+    if ([pref objectForKey:@"phoneid"] == nil)
+    {
+        phoneid = @"000000000";
+    }
+    else
+    {
+      phoneid =  [pref objectForKey:@"phoneid"];
+        //mise en cache du phoneid
+    }
+    [infosDict setObject:phoneid forKey:@"phoneid"];
+  
     NSString *phoneos = [pref objectForKey:@"phoneos"];
     [infosDict setObject:phoneos forKey:@"phoneos"]; //mise en cache de phoneos
     NSString *MDP = [infosDict objectForKey:@"password"];
@@ -214,7 +224,11 @@
                 {
                     [infos_protege setValue:@"Rien"forKey:@"address"];
                 }
+                NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,[infos_protege objectForKey:@"id"]];
+                [pref setObject:[self getPictureData:pictureString] forKey:@"picture"];
+                
                 NSLog(@"infos : %@", infos_protege);
+            
                  [pref setObject:infos_protege forKey:@"infos"];
                 
             }
@@ -232,7 +246,17 @@
     //NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
     NSString *phoneos = [pref objectForKey:@"phoneos"];
     [infosDict setObject:phoneos forKey:@"phoneos"];
-    NSString *phoneid = [pref objectForKey:@"phoneid"];
+    
+    NSString *phoneid = [[NSString alloc]init];
+    if ([pref objectForKey:@"phoneid"] == nil)
+    {
+        phoneid = @"000000000";
+    }
+    else
+    {
+        phoneid =  [pref objectForKey:@"phoneid"];
+        //mise en cache du phoneid
+    }
     [infosDict setObject:phoneid forKey:@"phoneid"];
     NSString *Status = [pref objectForKey:@"status"];
     [infosDict setObject:Status forKey:@"status"];
@@ -347,7 +371,16 @@
         if (code == 404)
         {
             [SVProgressHUD dismiss];
+            NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
+            if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
+            {
             [[[UIAlertView alloc] initWithTitle:nil message:@"Aucun protégé trouvé" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            }
+            else
+            {
+                [[[UIAlertView alloc] initWithTitle:nil message:@"Aucun référent trouvé" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            }
+            
         }
        
     }
@@ -479,7 +512,6 @@
     
     //NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:registered forKeys:keys];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:protegeId forKeys:keys];
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSString *stringUrl = [NSString stringWithFormat:@"%@/user/invite",kURL];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (responseData != nil)
@@ -573,11 +605,41 @@
             NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
             [SVProgressHUD dismiss];
             return infos;
-            
+        }
+        if(code == 404)
+        {
+           // NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            [SVProgressHUD showErrorWithStatus:@"Aucun protege trouvé, appuyez sur \"+\" pour en ajouter !"];
+            return nil;
         }
     }
     return nil;
 }
+
++(NSArray *) referentsInfos
+{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/protege/getreferentinformations",kURL];
+    NSData *responseData = [self getData:stringUrl ];
+    if (responseData != nil)
+    {
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            [SVProgressHUD dismiss];
+            return infos;
+        }
+        if(code == 404)
+        {
+            // NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            [SVProgressHUD showErrorWithStatus:@"Aucun réferents trouvé, appuyez sur \"+\" pour en ajouter !"];
+            return nil;
+        }
+    }
+    return nil;
+}
+
 
 
 +(void)resetPassword
@@ -613,12 +675,12 @@
 + (UIImage *)getPicture:(NSString*)userId
 {
     UIImage *imgCache = [[UIImage alloc] init];
-    if([userId isEqualToString:@"134"])
-    {
-        imgCache = [UIImage imageNamed:@"default_profile.jpg"];
-    }
-    else
-    {
+    //if([userId isEqualToString:@"134"])
+    //{
+      //  imgCache = [UIImage imageNamed:@"default_profile.jpg"];
+    //}
+   // else
+    //{
         NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId];
         
         if ([[ImageCache sharedImageCache] doesExist:pictureString] == YES)
@@ -629,6 +691,7 @@
         {
             NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:pictureString]];
             NSString *data = [NSString stringWithFormat:@"%@",thedata];
+            NSLog(@"Picture Data, %@", thedata);
             if ([data isEqualToString:@"(null)"] || data == nil)
             {
                 imgCache = [UIImage imageNamed:@"default_profile.jpg"];
@@ -638,13 +701,47 @@
                 imgCache = [UIImage imageWithData:thedata];
                 [[ImageCache sharedImageCache] addImage:pictureString with:imgCache];
             }
-        }
+       // }
         return imgCache;
     }
     return imgCache;
 }
 
 
++(void)Share: (NSMutableDictionary *)params
+{
+    
+    
+    
+    NSData *JsonData = [NSJSONSerialization dataWithJSONObject:[params objectForKey:@"json_protege"] options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *jsonString = [[NSString alloc]initWithData:JsonData encoding:NSUTF8StringEncoding];
+    [params setObject:jsonString forKey:@"json_protege"];
+
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/share",kURL];
+    NSData *responseData = [self sendData:params atUrl:stringUrl withAuthorization:YES Json:YES];
+    if (responseData != nil)
+    {
+        
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil]; 
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            NSArray *Data = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            int code2 = [[[[Data objectAtIndexedSubscript:0] objectAtIndexedSubscript:1] objectForKey:@"code"] integerValue];
+           
+            if (code2 == 200)
+            {
+                 [SVProgressHUD showSuccessWithStatus:@"Protégé partagé"];
+            }
+            else
+            {
+                [SVProgressHUD showErrorWithStatus:@"Comptes déjà appariés"];
+            }
+        }
+        else
+           [SVProgressHUD showErrorWithStatus:@"Référents non trouvé"];
+    }
+}
 
 
 

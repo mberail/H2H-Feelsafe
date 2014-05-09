@@ -10,7 +10,8 @@
 #import "WebServices.h"
 #import <AddressBookUI/AddressBookUI.h>
 #import "SVProgressHUD.h"
-
+#import "ContactCell.h"
+#import "IIViewDeckController.h"
 
 @interface AddViewController ()
 {
@@ -235,6 +236,7 @@
         
     }
    // NSLog(@"Contacts : %@",theContacts);
+    [self.tableView reloadData];
     return theContacts;
 }
 
@@ -254,6 +256,11 @@
         self.tableView.frame = frame;
     }
     [self.tableView reloadData];
+}
+
+- (IBAction)Send:(id)sender
+{
+ 
 }
 
 #pragma mark - Search display delegate
@@ -313,32 +320,53 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
     NSString *title = nil;
     if (self.segmentedControl.selectedSegmentIndex == 0)
     {
-        if(section == 0)
+        if ([[pref objectForKey:@"status"]isEqualToString:@"referent"])
         {
-            title = @"invitations en attente";
+            if(section == 0)
+            {
+                title = @"invitations en attente";
+            }
+            else if (section == 1)
+            {
+                title = @"Amis protégés";
+            }
+            else if (section == 2)
+            {
+                title = @"Inviter des amis";
+            }
         }
-        else if (section == 1)
+        else
         {
-            title = @"Amis protégés";
+            if(section == 0)
+            {
+                title = @"invitations en attente";
+            }
+            else if (section == 1)
+            {
+                title = @"Amis référents";
+            }
+            else if (section == 2)
+            {
+                title = @"Inviter des amis";
+            }
         }
-        else if (section == 2)
-        {
-            title = @"Inviter des amis";
-        }
+        
     }
     return title;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell"];
+    ContactCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell"];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ContactCell"];
+        cell = [[ContactCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ContactCell"];
     }
+    cell.Button.imageView.image = [[UIImage alloc]init];
     NSDictionary *contact = [[NSDictionary alloc] init];
     if (self.segmentedControl.selectedSegmentIndex == 0)
     {
@@ -356,42 +384,54 @@
   
     if (indexPath.section == 0)
     {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.backgroundColor = [UIColor whiteColor];
-        button.frame = CGRectMake(280, 4,39, 39);
-        button.tag = indexPath.row;
-        [button setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
+        //UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        //button.backgroundColor = [UIColor whiteColor];
+        //button.frame = CGRectMake(280, 4,39, 39);
+        cell.Button.tag = indexPath.row;
         
+       //[cell.Button setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
+        //[cell.Button setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
+        cell.Button.imageView.image =[UIImage imageNamed:@"bouton_notif_ajout_sent.png"];
         if (self.segmentedControl.selectedSegmentIndex == 0)
         {
-              [button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
+            [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+              [cell.Button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
         }
         else
         {
-            [button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
+            [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+            [cell.Button removeTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.Button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
+           
         }
-       [cell addSubview:button];
+       
         //[button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
     }
-    if (indexPath.section == 1)
+    
+   else  if (indexPath.section == 1)
     {
-        UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
-        button2.backgroundColor = [UIColor whiteColor];
-        button2.frame = CGRectMake(280, 4,39, 39);
-        button2.tag = indexPath.row;
-        [button2 setImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"] forState:UIControlStateNormal];
-        [cell addSubview:button2];
+       
+        cell.Button.tag = indexPath.row;
+       // cell.Button.imageView.image =[UIImage imageNamed:@"bouton_notif_ajout_sent.png"];
+        [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+        [cell.Button removeTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
+      [cell.Button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
     }
-    if (indexPath.section == 2)
+    
+    else if (indexPath.section == 2)
     {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.backgroundColor = [UIColor whiteColor];
-        button.frame = CGRectMake(280, 4,39, 39);
-        button.tag = indexPath.row;
-        button.frame = CGRectMake(279, 4, 40, 35);
-        [button setImage:[UIImage imageNamed:@"sms.png"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addSubview:button];
+        //UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        //button.backgroundColor = [UIColor whiteColor];
+        //button.frame = CGRectMake(280, 4,39, 39);
+        cell.Button.tag = indexPath.row;
+        //button.frame = CGRectMake(279, 4, 40, 35);
+       // cell.Button.imageView.image =[UIImage imageNamed:@"sms.png"] ;
+         [cell.Button removeTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
+        [cell.Button setBackgroundImage:[UIImage imageNamed:@"sms.png"]forState:UIControlStateNormal];
+      [cell.Button addTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
+        
+       
+        
     }
     
     return cell;
@@ -401,17 +441,18 @@
 {
     if( self.segmentedControl.selectedSegmentIndex == 0)
     {
-        NSLog(@"truc %@",[[arrays objectAtIndex:0] objectAtIndex:sender.tag]);
-        NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[[arrays objectAtIndex:0] objectAtIndex:sender.tag] objectForKey:@"registered"]];
+        NSLog(@"truc %@",[[arrays objectAtIndex:1] objectAtIndex:sender.tag]);
+        NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[[arrays objectAtIndex:1] objectAtIndex:sender.tag] objectForKey:@"registered"]];
         [self startInviteProcess:protegeId];
     }
     else
     {
-      //  NSLog(@"bug %@",searchs);
+        //  NSLog(@"bug %@",searchs);
         NSString *protegeId = [[NSString alloc]initWithFormat:@"%@",[[searchs objectAtIndex:sender.tag] objectForKey:@"id"]];
         [self startInviteProcess:protegeId];
     }
 }
+
 
 - (void)startInviteProcess:(NSString *)tab
 {
@@ -434,15 +475,15 @@
     MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
     if ([MFMessageComposeViewController canSendText])
     {
-        NSString *phone = [[[arrays objectAtIndex:1] objectAtIndex:sender.tag] objectForKey:@"phone"];
+        NSString *phone = [[[arrays objectAtIndex:2] objectAtIndex:sender.tag] objectForKey:@"phone"];
         if (phone != NULL)
         {
         NSLog(@"tag : %li phone : %@",(long)sender.tag, phone);
         controller.recipients = [NSArray arrayWithObjects:phone, nil];
         controller.body = @"Bonjour, je vous invite à découvrir Feelsafe.";
         controller.messageComposeDelegate = self;
-        [self presentModalViewController:controller animated:YES];
-    
+        [self presentViewController:controller animated:YES completion:nil];
+            
         }
         else
             [[[UIAlertView alloc] initWithTitle:nil message:@"Ce contact n'a pas de numéro enregistré !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];

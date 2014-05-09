@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIImageView *PictureView;
 - (IBAction)picture:(id)sender;
+@property (strong, nonatomic) IBOutlet UIView *picView;
 
  
 @property (strong, nonatomic) IBOutlet UIButton *Picture;

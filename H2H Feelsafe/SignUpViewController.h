@@ -12,10 +12,12 @@
 
 @interface SignUpViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
+@property (strong, nonatomic) IBOutlet UIView *PicView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIImageView *pictureView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property BOOL accepted;
+- (IBAction)statusChange:(id)sender;
 
 - (IBAction)picture:(id)sender;
 

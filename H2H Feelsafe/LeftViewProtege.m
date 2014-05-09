@@ -31,7 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSArray *first = [NSArray arrayWithObjects:@"Protégés"/*@",Périmètres"*/, nil];
+    NSArray *first = [NSArray arrayWithObjects:@"Accueil",@"Mes référents"/*@",Périmètres"*/, nil];
     NSArray *second = [NSArray arrayWithObjects:@"Notifications",@"Mon compte", nil];
     NSArray *third = [NSArray arrayWithObjects:@"Aide",@"Déconnexion", nil];
     textes = [NSArray arrayWithObjects:first,second,third, nil];
@@ -76,6 +76,14 @@
         action.actionSheetStyle = UIActionSheetStyleAutomatic;
         [action showInView:self.view];
     }
+    else if ([cell.textLabel.text isEqualToString:@"Mes référents"])
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"RefListViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.viewDeckController.centerController = navController;
+        [self.viewDeckController closeLeftView];
+    }
     else if ([cell.textLabel.text isEqualToString:@"Mon compte"])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -84,7 +92,7 @@
         self.viewDeckController.centerController = navController;
         [self.viewDeckController closeLeftView];
     }
-    else if ([cell.textLabel.text isEqualToString:@"Protégés"])
+    else if ([cell.textLabel.text isEqualToString:@"Accueil"])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
@@ -95,6 +103,14 @@
     else if ([cell.textLabel.text isEqualToString:@"Périmètres"])
     {
         
+    }
+    else if ([cell.textLabel.text isEqualToString:@"Aide"])
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UIGuideViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.viewDeckController.centerController = navController;
+        [self.viewDeckController closeLeftView];
     }
     [self.tableView reloadData];
 }

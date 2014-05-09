@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
-@interface ListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate>
+@interface ListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate, UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -18,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *mapSearchBar;
 @property (weak, nonatomic) IBOutlet UIView *mapSuperView;
 @property (weak, nonatomic) IBOutlet UIView *listSuperView;
+@property (strong, nonatomic) IBOutlet UIImageView *picture;
 
 
 

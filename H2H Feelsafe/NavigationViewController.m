@@ -8,6 +8,7 @@
 
 #import "IIViewDeckController.h"
 #import "NavigationViewController.h"
+#import "SVProgressHUD.h"
 
 @interface NavigationViewController ()
 {
@@ -95,6 +96,14 @@
         self.viewDeckController.centerController = navController;
         [self.viewDeckController closeLeftView];
     }
+    else if ([cell.textLabel.text isEqualToString:@"Aide"])
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UIGuideViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.viewDeckController.centerController = navController;
+        [self.viewDeckController closeLeftView];
+    }
     [self.tableView reloadData];
 }
 
@@ -104,6 +113,7 @@
 {
     if (buttonIndex == 0)
     {
+        [SVProgressHUD dismiss];
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isConnected"];
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults]    ;
         [pref removeObjectForKey:@"picture"];

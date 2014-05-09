@@ -24,6 +24,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+     [self.PicView setHidden:YES];
+    [self.navigationController setNavigationBarHidden:NO];
     self.navigationItem.title = @"Inscription";
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
     
@@ -99,6 +101,8 @@
 {
     [super didReceiveMemoryWarning];
 }
+
+
 
 - (void)signup
 {
@@ -193,6 +197,19 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"CGUViewController"];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)statusChange:(id)sender {
+    UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
+    if (segmentedControl.selectedSegmentIndex == 0)
+    {
+        [self.PicView setHidden:YES];
+    }
+    else if (segmentedControl.selectedSegmentIndex == 1)
+    {
+        
+        [self.PicView setHidden:NO];
+    }
 }
 
 - (IBAction)picture:(id)sender
@@ -378,7 +395,7 @@
                 UIImage *image = [UIImage imageWithCGImage:ref];
                 self.pictureView.image = image;
                 NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-                [pref setObject:UIImagePNGRepresentation(image) forKey:@"picture"];
+                [pref setObject:UIImageJPEGRepresentation(image, 1.0) forKey:@"picture"];
             }
         };
         ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error){NSLog(@"error : %@",error.localizedDescription);};

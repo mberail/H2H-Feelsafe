@@ -17,5 +17,6 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 
 - (IBAction)changeSearch:(id)sender;
+- (IBAction)Send:(id)sender;
 
 @end

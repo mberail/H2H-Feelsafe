@@ -10,8 +10,9 @@
 #import "ListViewController.h"
 #import "SVProgressHUD.h"
 #import "WebServices.h"
-#import "markerAlert.h"
-#import "markerAlertAnnodationView.h"
+#import "ListCell.h"
+#import "JPSThumbnailAnnotationView.h"
+#import "JPSThumbnailAnnotation.h"
 
 
 #define degreesToRadians( degrees ) ( ( degrees ) / 180.0 * M_PI )
@@ -22,7 +23,11 @@
     CLLocationManager *locationManager;
     CLLocationCoordinate2D userLoc;
     NSString *proAlert;
- 
+    NSMutableArray *classArray;
+    NSInteger x;
+    UIAlertView *alert;
+    NSMutableDictionary *share;
+    NSMutableArray *pins;
 }
 @end
 
@@ -47,6 +52,10 @@
 {
     [super viewDidLoad];
 
+    alert = [[UIAlertView alloc]init];
+    share = [[NSMutableDictionary alloc] init];
+    pins = [[NSMutableArray alloc]init];
+    
     locationManager = [[CLLocationManager alloc] init];
     [locationManager startUpdatingLocation];
     NSLog(@"userLoc : %f %f",locationManager.location.coordinate.latitude,locationManager.location.coordinate.longitude);
@@ -87,21 +96,21 @@
     proAlert = [[NSString alloc]init];
     
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:contactButton,refreshButton, nil];
-  
     self.navigationItem.leftBarButtonItem = profilItem;
-    
-    
 }
 
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if (arrays == nil)
-    {
+   
+        classArray = [[NSMutableArray alloc ]init];
         [SVProgressHUD show];
-        [self performSelector:@selector(refresh) withObject:nil afterDelay:0.2];
         
-    }
+        [self performSelector:@selector(proceedRefreshing) withObject:nil afterDelay:0.2];
+    
+    
+        
+    
     
 }
 
@@ -117,11 +126,28 @@
 {
         //[WebServices getPicture];
     
-    
+    NSNull *rien = [[NSNull alloc]init];
         arrays = [[NSArray alloc]init];
-    
         arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
+    
+    NSMutableDictionary *pro = [[NSMutableDictionary alloc]init];
+    NSInteger i = 0;
+        for(pro in arrays)
+        {
+            if ([[pro objectForKey:@"mail"] isEqual:rien])
+            {
+                continue;
+            }
+            else
+            {
+                [pro setObject:[WebServices getPicture:[pro objectForKey:@"id"]] forKey:@"picture"];
+                [classArray setObject:pro atIndexedSubscript:i];
+                i ++;
+            }
+        }
+
         [self.tableView reloadData];
+    
         [_mapView removeAnnotations:_mapView.annotations];
 
         [self displayPins];
@@ -168,7 +194,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [arrays count];
+    return [classArray count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -180,60 +206,56 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSNull *rien = [[NSNull alloc]init];
-    NSLog( @"arrays : %@", arrays);
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    
+    ListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ListCell"];
+    
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell = [[ListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ListCell"];
     }
+    
+    
+    
     NSDictionary *protege = [[NSDictionary alloc] init];
     
-        protege = [arrays objectAtIndex:indexPath.row];
-       
-        UILabel *nom = [[UILabel alloc ] initWithFrame:CGRectMake(120, 30, 130, 25)];
+    protege = [classArray objectAtIndex:indexPath.row];
+    
+    NSNull *rien = [[NSNull alloc]init];
+    NSLog( @"arrays : %@", arrays);
+    NSLog(@"callArray  %@",classArray);
+   
+    
         
-        nom.font = [nom.font fontWithSize:22];
-        nom.adjustsFontSizeToFitWidth = YES;
-        nom.frame = CGRectMake(120, (cell.frame.size.height/2 - nom.frame.size.height/2)+7, 130, 25);
+        //cell.Name.font = [cell.textLabel.font fontWithSize:22];
+        cell.Name.adjustsFontSizeToFitWidth = YES;
+       cell.address.adjustsFontSizeToFitWidth = YES;
         
-        cell.textLabel.font = [cell.textLabel.font fontWithSize:22];
-        cell.textLabel.adjustsFontSizeToFitWidth = YES;
-        
-        
-        UIImageView *photo=[[UIImageView alloc]init];
-
-    if(photo.image == nil)
+        cell.Picture.contentMode = UIViewContentModeScaleAspectFit;
+    
+    if ([[protege objectForKey:@"address"]isEqualToString:@"inconue"])
     {
-        photo.frame = CGRectMake(60, 10, 46,40);
-        photo.image = [UIImage imageNamed:@"no_img.jpg"];
-        photo.image = [WebServices getPicture:[protege objectForKey:@"id"]];
+        cell.address.text = [NSString stringWithFormat:@"addresse %@",[protege objectForKey:@"address"] ];
+    }
+    else{
+         cell.address.text = [protege objectForKey:@"address"];
     }
     
+        //cell.Picture.frame = CGRectMake(60,0, 46,60);
+        cell.Picture.image = [UIImage imageNamed:@"no_img.jpg"];
+        cell.Picture.image = [protege objectForKey:@"picture"];
+
         
         NSLog(@"protege : %@",protege);
         if ([[protege objectForKey:@"mail"] isEqual:rien])
         {
-            NSString *name = [[NSString alloc]initWithFormat:@"%@ (Invitation en attente...)",[protege objectForKey:@"username"]];
-             cell.textLabel.text = name;
+           // NSString *name = [[NSString alloc]initWithFormat:@"%@ (Invitation en attente...)",[protege objectForKey:@"username"]];
+             //cell.textLabel.text = name;
             
         }
         else
         {
-            UIImageView *alertView = [[UIImageView alloc]init];
-            alertView.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 28, 35);
             
-            UIButton *messageView = [[UIButton alloc]init];
-            messageView.frame = CGRectMake(250, (cell.bounds.size.height/2)-15, 60, 45);
-            
-           	[messageView addTarget:self action:@selector(messages:) forControlEvents:UIControlEventTouchUpInside];
-            
-            cell.textLabel.frame = CGRectMake(120, cell.textLabel.frame.origin.y, 130, 25);
-            
-            //messageView.imageView.image  = [UIImage imageNamed:@"letter_off"];
-            [messageView setImage:[UIImage imageNamed:@"letter_off"] forState:UIControlStateNormal];
-            //[alertView setTextAlignment:UITextAlignmentCenter];
-            
+            cell.Alert.contentMode = UIViewContentModeScaleAspectFit;
             float distance = 0;
             NSString *dist = [[NSString alloc]init];
             if ([[protege objectForKey:@"distance"]floatValue]<1)
@@ -250,43 +272,46 @@
           
             if ([[protege objectForKey:@"alert"]isEqualToString:@"1"])
             {
+                NSLog(@"tailles %f %f",cell.Alert.frame.origin.x ,cell.Alert.frame.origin.y);
              //   alertView.backgroundColor = [UIColor greenColor];
-                alertView.image = [UIImage imageNamed:@"good.png"];
+              //  cell.Alert.frame = CGRectMake(25 , cell.Alert.frame.origin.y,28,35 );
+                cell.Alert.image = [UIImage imageNamed:@"good.png"];
                 //[alertView setTitle:@"Ok" forState:UIControlStateNormal];
                 //alertView.text = @"OK";
             }
             if ([[protege objectForKey:@"alert"]isEqualToString:@"3"])
             {
                // alertView.backgroundColor = [UIColor redColor];
-                 alertView.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
-                alertView.image = [UIImage imageNamed:@"alert.png"];
+               //  cell.Alert.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
+                cell.Alert.image = [UIImage imageNamed:@"alert.png"];
                 //[alertView setTitle:@"En danger" forState:UIControlStateNormal];
                // alertView.text = @"En danger";
             }
             if ([[protege objectForKey:@"alert"]isEqualToString:@"2"])
             {
                 //alertView.backgroundColor = [UIColor orangeColor];
-               alertView.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
-                alertView.image = [UIImage imageNamed:@"warning.png"];
+               //cell.Alert.frame = CGRectMake(20, (cell.bounds.size.height/2)-10, 35, 35);
+                cell.Alert.image = [UIImage imageNamed:@"warning.png"];
                 //[alertView setTitle:@"Imprévu" forState:UIControlStateNormal];
                // alertView.text = @"Imprévu";
                 
             }
             NSString *name = [NSString stringWithFormat:@"%@ à %@",[protege objectForKey:@"username"],dist];
-            messageView.tag = indexPath.row;
-            nom.text = name;
             
-                      // [cell.contentView addSubview:Dist];
+   
+            cell.Name.text = name;
             
-            [cell.contentView addSubview:nom];
+            //[cell reloadInputViews];
+         
+            //[cell.contentView addSubview:photo];
+            
+            //[cell.contentView addSubview:nom];
             //cell.textLabel.text = name;
-            [cell.contentView addSubview:messageView];
-            [cell.contentView addSubview:alertView];
-            [cell.contentView addSubview:photo];
-            
-            
+           // [cell.contentView addSubview:messageView];
+           // [cell.contentView addSubview:alertView];
           //  cell.textLabel.text = name;
-            
+            //[cell.contentView removeFromSuperview];
+          
         }
         
         
@@ -295,36 +320,15 @@
     return cell;
 }
 
--(void)messages:(UIButton*)sender
-{
-    NSDictionary  *protege2 = [[NSDictionary alloc]init];
-    protege2 = [arrays objectAtIndex:sender.tag];
-    NSString *msg = [[NSString alloc]init];
 
-    if ([[protege2 objectForKey:@"message"] isEqualToString:@"<null>"])
-    {
-        msg = [NSString stringWithFormat:@"Il n'y a pas de messages"]  ;
-    }
-    else
-    {
-        msg = [NSString stringWithFormat:@"%@",[protege2 objectForKey:@"message"]]  ;
-    }
-   
-    
-    NSLog(@"ici il y a des messages, %@",[protege2 objectForKey:@"message"]);
-    
-    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"message" message:[NSString stringWithFormat:@"%@",msg] delegate:self cancelButtonTitle:@"ok" otherButtonTitles: nil];
-    [message show];
-    
-}
 
 #pragma mark - TableView delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    x = 0;
     NSDictionary  *protege2 = [[NSDictionary alloc]init];
-    protege2 = [arrays objectAtIndex:indexPath.row];
+    protege2 = [classArray objectAtIndex:indexPath.row];
     if ([[protege2 objectForKey:@"allow"]isEqualToString:@"1"])
     {
         if ([[protege2 objectForKey:@"alert"]isEqualToString:@"3"])
@@ -378,22 +382,41 @@
         [etatProtege show];
       //  [tableView reloadData];
     }
-    //[tableView reloadData];
+    [tableView reloadData];
     
 }
+
+
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(buttonIndex == 0)
     {
-        
+       
     }
     else
     {
-        [SVProgressHUD showWithStatus:@"Changement d'état du protégé"];
-        [self startUnlockProcess];
-        
+        if (x == 0)
+        {
+            [SVProgressHUD showWithStatus:@"Changement d'état du protégé"];
+             [self startUnlockProcess];
+        }
+        else if ( x == 1)
+        {
+           
+            [share setValue:[alert textFieldAtIndex:0].text forKey:@"recipient"];
+            [SVProgressHUD showWithStatus:@"Partage du protégé en cours"];
+            [self performSelector:@selector(startShareProcess) withObject:nil afterDelay:0.2];
+        }
+      
+      
     }
+}
+
+-(void)startShareProcess
+{
+    NSLog(@"Sharing %@",share);
+    [WebServices Share:share];
 }
 
 -(void )startUnlockProcess
@@ -419,18 +442,25 @@
 
 
 
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
-{
-    NSLog(@"annotation : %@",annotation);
-    if ([annotation isKindOfClass:[MKUserLocation class]])
-        return nil;
-    
-    
- markerAlertAnnodationView *annotationView = [[markerAlertAnnodationView alloc] initWithAnnotation:annotation reuseIdentifier:@"alert"];
- annotationView.canShowCallout = YES;
-        return annotationView;
-    
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    if ([view conformsToProtocol:@protocol(JPSThumbnailAnnotationViewProtocol)]) {
+        [((NSObject<JPSThumbnailAnnotationViewProtocol> *)view) didSelectAnnotationViewInMap:mapView];
+    }
 }
+
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
+    if ([view conformsToProtocol:@protocol(JPSThumbnailAnnotationViewProtocol)]) {
+        [((NSObject<JPSThumbnailAnnotationViewProtocol> *)view) didDeselectAnnotationViewInMap:mapView];
+    }
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    if ([annotation conformsToProtocol:@protocol(JPSThumbnailAnnotationProtocol)]) {
+        return [((NSObject<JPSThumbnailAnnotationProtocol> *)annotation) annotationViewInMap:mapView];
+    }
+    return nil;
+}
+
 
 - (void)displayPins
 {
@@ -450,12 +480,8 @@
     NSNull *rien = [[NSNull alloc]init];
     int i = 0;
     // création d'un dicto avec les id des bornes et les distances
-    for (NSDictionary *dictTemp in arrays)
+    for (NSDictionary *dictTemp in classArray)
     {
-      
-      
-     
-        
         //chope les coordonnées des stations
         if ([[dictTemp objectForKey:@"latitude"]isEqual:rien])
         {
@@ -469,7 +495,7 @@
             CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([[dictTemp objectForKey:@"latitude"] floatValue], [[dictTemp objectForKey:@"longitude"] floatValue]);
             //calcul la distance
             NSNumber *dist = [NSNumber numberWithFloat:6378 * acos(cos(degreesToRadians(locationManager.location.coordinate.latitude))*cos(degreesToRadians(coord.latitude))*cos(degreesToRadians(coord.longitude)-degreesToRadians(locationManager.location.coordinate.longitude))+sin(degreesToRadians(locationManager.location.coordinate.latitude))*sin(degreesToRadians(coord.latitude)))];
-            markerAlert *pin = [[markerAlert alloc]init];
+            JPSThumbnail *pin = [[JPSThumbnail alloc]init];
             
             
            
@@ -479,41 +505,73 @@
             
             if ([[dictTemp objectForKey:@"alert"] isEqualToString:@"1"])
             {
-                pin.img.image = [UIImage imageNamed:@"alert"];
-                pin.type = AlertGreen;
+                
+                pin.point = [UIImage imageNamed:@"point_vert.png"];
                 NSLog(@"green");
             }
             else if ([[dictTemp objectForKey:@"alert"] isEqualToString:@"2"])
             {
-                pin.img.image = [UIImage imageNamed:@"alert"];
-                pin.type = AlertOrange;
+               pin.point = [UIImage imageNamed:@"point_orange.png"];
                 NSLog(@"orange");
             }
             else if ([[dictTemp objectForKey:@"alert"] isEqualToString:@"3"])
             {
-                pin.img.image = [UIImage imageNamed:@"alert"];
-                pin.type = AlertRed;
+               pin.point = [UIImage imageNamed:@"point_rouge.png"];
                 NSLog(@"red");
             }
-          
+            
             
            
-            [self.mapView removeAnnotation:pin];
+        
             pin.coordinate = coord;
             pin.title = [dictTemp objectForKey:@"username"];
-            pin.subtitle = [NSString stringWithFormat:@"%ld km",(long)[[mutDict objectForKey:@"dist"]integerValue]];
+            pin.subtitle = [NSString stringWithFormat:@"%@",[dictTemp objectForKey:@"message"]];
             
-            [_mapView addAnnotation:pin];
+           
+            
+          
+            pin.image = [dictTemp objectForKey:@"picture"];
+            pin.disclosureBlock = nil;
               NSLog(@"countcount %d",i );
             [[arrays objectAtIndex:i]setObject:[mutDict objectForKey:@"dist"] forKey:@"distance"];
+            [pins setObject:[JPSThumbnailAnnotation annotationWithThumbnail:pin] atIndexedSubscript:i];
+            
             i++;
         }
-      
+       [_mapView addAnnotations:pins];
     }
   
     
     
 }
+
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"Partager";
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    x = 1;
+   
+    alert =  [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Partagé \"%@\"", [[classArray objectAtIndex:indexPath.row]objectForKey:@"username"]] message:@"Veuiller inscrire le username du referent" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles:@"Ok", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert textFieldAtIndex:0].delegate = self;
+    [alert show];
+    //json_protege : json array des ids
+    NSString *toShare = [NSString stringWithFormat:@"%@", [[classArray objectAtIndex:indexPath.row] objectForKey:@"id"]];
+    NSArray *ids = [[NSArray alloc]initWithObjects:toShare, nil];
+    [share setValue:ids forKey:@"json_protege"];
+}
+
+
 
 /*- (void)loadSelectedOptions {
     [self.mapView removeAnnotations:self.mapView.annotations];

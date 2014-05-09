@@ -37,6 +37,12 @@
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+    if(  [ [ UIScreen mainScreen ] bounds ].size.height== 568)
+    {
+        self.tableView.rowHeight = 44.0;
+        self.Valider.frame = CGRectMake(self.Valider.frame.origin.x, self.Valider.frame.origin.y +40, self.Valider.frame.size.width, self.Valider.frame.size.height);
+        
+    }
     
 
 
@@ -152,6 +158,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     signUpCell *cell = [tableView dequeueReusableCellWithIdentifier:@"signUpCell"];
+    if(  [ [ UIScreen mainScreen ] bounds ].size.height== 568)
+    {
+        cell.leftLabel.frame = CGRectMake(cell.leftLabel.frame.origin.x, 10, cell.leftLabel.frame.size.width, cell.leftLabel.frame.size.height);
+        cell.theTextField.frame = CGRectMake(cell.theTextField.frame.origin.x, 10, cell.theTextField.frame.size.width, cell.theTextField.frame.size.height);
+    }
+    
     if (cell == nil)
     {
         cell = [[signUpCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"signUpCell"];

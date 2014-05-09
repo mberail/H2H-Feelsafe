@@ -39,24 +39,22 @@
 {
     [super viewDidLoad];
     
+
    
+    
     self.navigationItem.title = @"Mise à jour du compte";
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
     
     NSArray *labelsFirst = [[NSArray alloc] initWithObjects:@"Identifiant",@"Nouveau mot de passe",@"Confirmation mot de passe", nil];
     NSArray *labelsSecond = [[NSArray alloc] initWithObjects:@"E-mail",@"Mobile",@"Nom",@"Prénom", nil];
       labels = [[NSArray alloc] initWithObjects:labelsFirst,labelsSecond, nil];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(Edit)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStyleBordered target:self.viewDeckController action:@selector(toggleLeftView)];
-   /* UIImage *profile = [UIImage imageNamed:@"19-gear.png"];
-    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width, profile.size.height)];
+    UIImage *profile = [UIImage imageNamed:@"LeftBut.png"];
+    UIButton *profileButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, profile.size.width/1.5, profile.size.height/1.5)];
     [profileButton setBackgroundImage:profile forState:UIControlStateNormal];
     [profileButton addTarget:self.viewDeckController action:@selector(toggleLeftView) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *profilItem =[[UIBarButtonItem alloc] initWithCustomView:profileButton];
-    self.navigationItem.leftBarButtonItem = profilItem;*/
-    
-	//UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Terminé" style:UIBarButtonItemStylePlain target:self action:@selector(signup)];
-    //self.navigationItem.rightBarButtonItem = item;
+    self.navigationItem.leftBarButtonItem = profilItem;
     [self.tableView setUserInteractionEnabled:NO];
     [self.PictureView setUserInteractionEnabled:NO];
     
@@ -68,6 +66,8 @@
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     pass = [pref objectForKey:@"password"];
     
+    self.PictureView.contentMode = UIViewContentModeScaleAspectFit;
+    
     if([pref objectForKey:@"picture"])
        {
            self.PictureView.image = [[UIImage alloc]initWithData:[pref objectForKey:@"picture"]];
@@ -77,6 +77,10 @@
     {
         self.PictureView.image = [UIImage imageNamed:@"default_profile.jpg"];
     }
+    if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
+    {
+        [self.picView setHidden:YES];
+    }
         
     
     
@@ -84,11 +88,24 @@
 }
 -(void)Annuler
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
-    self.viewDeckController.centerController = navController;
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
+    {
+    
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.viewDeckController.centerController = navController;
+    }
+    else
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.viewDeckController.centerController = navController;
+    }
 }
+
 -(void)Edit
 {
     [Check show];
@@ -230,6 +247,7 @@
             cell.rightLabel.text = @"";
         }
     }
+     [cell.rightLabel setHidden:YES];
       return cell;
 }
 
@@ -380,11 +398,14 @@
     
         if ([pref objectForKey:@"picture"])
         {
-            NSData *photoData = [pref objectForKey:@"picture"];
-            NSString *Image64 = [WebServices base64forData:photoData];
-            [mutDict setObject:photoData forKey:@"picture"];
-            NSLog(@"mutDict : %@",photoData);
-            [self startUpdateProcess:mutDict];
+            
+            UIImage *imageToSend = [UIImage imageWithData:[pref objectForKey:@"picture"]];
+            
+            NSData *photoData = [[pref objectForKey:@"picture"] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];;
+            NSString *Image64 = [NSString stringWithUTF8String:[photoData bytes]];
+          //  [mutDict setObject:Image64 forKey:@"picture"];
+            NSLog(@"mutDict : %@",Image64);
+            //[self startUpdateProcess:mutDict];
         }
         else
         {
@@ -432,7 +453,6 @@
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ALGroupViewController"];
         [self.navigationController pushViewController:vc animated:YES];
-        
     }
     else if ([title isEqualToString:@"Prendre une photo"])
     {

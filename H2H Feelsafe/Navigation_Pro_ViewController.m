@@ -13,10 +13,16 @@
 #import "SVProgressHUD.h"
 #import "WebServices.h"
 
+
 @interface Navigation_Pro_ViewController ()<CLLocationManagerDelegate>
 {
     NSString *alert;
     CLLocationManager *locationManager;
+    NSTimer *decompte;
+    int compte;
+    UIAlertView *dangerView;
+
+    NSString *address;
 }
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
@@ -45,12 +51,21 @@
     
     [super viewDidLoad];
     
+    address = [[NSString alloc]initWithFormat:@"%@",[[pref objectForKey:@"infos"]objectForKey:@"address" ]];
     
+ 
+    
+    decompte = [[NSTimer alloc]init];
+    decompte = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(TimerCount) userInfo:nil repeats:YES];
+    
+    compte = 10;
+    dangerView = [[UIAlertView alloc]initWithTitle:@"Alerte danger dans:" message:@"8" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles: nil];
+
     
     NSDictionary *infos = [pref objectForKey:@"infos"];
     alert = [infos  objectForKey:@"alert"];
     NSLog(@"%@",alert);
-    
+    self.alert.contentMode   = UIViewContentModeScaleAspectFit;
    if ([alert isEqualToString:@"1"])
    {
        self.alert.image = [UIImage imageNamed:@"good.png"];
@@ -58,6 +73,7 @@
     else if ([alert isEqualToString:@"2"])
     {
         self.alert.image = [UIImage imageNamed:@"warning.png"];
+        
     }
    else  if ([alert isEqualToString:@"3"])
     {
@@ -65,26 +81,39 @@
     }
     
     self.navigationItem.title = @"Protégé";
+    
     self.StatutView.layer.borderColor =[UIColor blackColor].CGColor;
     self.StatutView.layer.borderWidth = 2.0f;
-    self.dangerView.layer.borderColor = [UIColor redColor].CGColor;
-    self.dangerView.layer.borderWidth = 10.0f;
     
-   
+    self.dangerView.layer.borderColor = [UIColor redColor].CGColor;
+    self.dangerView.layer.borderWidth = 15.0f;
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
     
+    self.Prenom.adjustsFontSizeToFitWidth = YES;
     self.Prenom.text = [[pref objectForKey:@"infos"]objectForKey:@"firstname"];
+    
     self.Name.text = [[pref objectForKey:@"infos"]objectForKey:@"lastname"];
-    self.adresse.text = [[pref objectForKey:@"infos"]objectForKey:@"adress" ];
+    self.adresse.adjustsFontSizeToFitWidth = YES;
+    self.adresse.text = [infos  objectForKey:@"address"];
     self.Phone.text = [[pref objectForKey:@"infos"]objectForKey:@"phone"];
+    
+   
+    self.Picture.contentMode = UIViewContentModeScaleAspectFit;
+    UIImage *pic = [[UIImage alloc] initWithData:[pref objectForKey:@"picture"]];
+    self.Picture.image = pic ;
     
         [self.alertLabel  setHidden:YES];
    if(  [ [ UIScreen mainScreen ] bounds ].size.height== 568)
    {
        [self.alertLabel  setHidden:NO];
+      
+       self.DangerBut.frame = CGRectMake(self.DangerBut.frame.origin.x, self.DangerBut.frame.origin.y +40, self.DangerBut.frame.size.width, self.DangerBut.frame.size.height-32);
+       
+       
    }
     
     UIBarButtonItem *contactButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addContact)];
@@ -111,11 +140,14 @@
     
 }
 
+
+
+
 - (void)addContact
 {
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ProAddViewController"];
+    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"AddViewController"];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -126,23 +158,72 @@
 }
 
 - (IBAction)OK:(id)sender {
-    self.alert.image = [UIImage imageNamed:@"good.png"];
-    alert = @"1";
-    [self startUpdateProcess];
+    if([alert isEqualToString:@"3"])
+    {
+        [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
+    }
+    else
+    {
+        self.alert.image = [UIImage imageNamed:@"good.png"];
+        alert = @"1";
+        [self startUpdateProcess];
+    }
+  
 }
 
 - (IBAction)Imprevu:(id)sender {
-    self.alert.image = [UIImage imageNamed:@"warning.png"];
-    alert = @"2";
-  [self startUpdateProcess];
+    if([alert isEqualToString:@"3"])
+    {
+        [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
+    }
+    else
+    {
+        self.alert.image = [UIImage imageNamed:@"warning.png"];
+        alert = @"2";
+        [self startUpdateProcess];
+    }
+    
 }
 
 - (IBAction)Danger:(id)sender {
-   self.alert.image = [UIImage imageNamed:@"alert.png"];
-    alert = @"3";
-    self.AlertButton.highlighted = YES;
-    [self startUpdateProcess];
+    
+    if([alert isEqualToString:@"3"])
+    {
+        [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
+    }
+    else
+    {
+
+        dangerView.message = [NSString stringWithFormat:@"%d",10];
+        [dangerView show];
+
+    }
 }
+
+-(void)TimerCount
+{
+    if(dangerView.visible)
+    {
+        
+        dangerView.message = [NSString stringWithFormat:@"%d",compte];
+        compte -=1;
+    }    else
+    {
+        compte = 10;
+
+    }
+    if(compte == -1)
+    {
+        
+        [dangerView dismissWithClickedButtonIndex:0 animated:YES];
+        self.alert.image = [UIImage imageNamed:@"alert.png"];
+        alert = @"3";
+        [self startUpdateProcess];
+    }
+
+}
+
+
 - (IBAction)send:(id)sender {
     [self.message endEditing:YES];
     NSLog(@"message %@", self.message.text);
@@ -150,14 +231,17 @@
 
 
 
--(void)StartUpdate: (NSArray *)tab
+-(void)StartUpdate
 {
-    BOOL Update = [WebServices updateInformations:tab] ;
-    
+    NSString *latitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.latitude];
+    NSString *longitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.longitude];
+    NSArray *infos = [[NSArray alloc]initWithObjects:alert,longitude,latitude,address,self.message.text,nil];
+    BOOL Update = [WebServices updateInformations:infos] ;
+    NSLog(@"Update %@",infos);
     if (Update)
     {
         [SVProgressHUD showSuccessWithStatus:@"Informations mise à jours"];
-        
+        self.adresse.text = address;
     }
     else
     {
@@ -169,16 +253,35 @@
 
 - (void)startUpdateProcess
 {
+    
    
     [SVProgressHUD showWithStatus:@"Mise à jour des informations" maskType:SVProgressHUDMaskTypeBlack];
-    [locationManager startUpdatingLocation];
-    NSNull  *rien = [[NSNull alloc]init];
-    NSString *latitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.latitude];
-    NSString *longitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.longitude];
-    NSArray *infos = [[NSArray alloc]initWithObjects:alert,longitude,latitude,@"inconue",self.message.text,nil];
-    NSLog(@" update : %@",infos);
-   [self performSelector:@selector(StartUpdate:) withObject:infos afterDelay:0.2];
     
+    
+    [locationManager startUpdatingLocation];
+   // [self performSelectorOnMainThread:@selector(GetAdress) withObject:Nil waitUntilDone:YES];
+    [self performSelector:@selector(GetAdress)  withObject:nil afterDelay:0];
+    [self performSelector:@selector(StartUpdate) withObject:nil afterDelay:2];
+    
+}
+
+-(void) GetAdress
+{
+    self.geocoder = [[CLGeocoder alloc] init];
+    [self.geocoder reverseGeocodeLocation: locationManager.location completionHandler:
+     ^(NSArray *placemarks, NSError *error) {
+         
+         //Get address
+         CLPlacemark *placemark = [placemarks objectAtIndex:0];
+         
+         NSLog(@"Placemark array: %@",placemark.addressDictionary );
+         
+         //String to address
+         NSString *locatedaddress = [[placemark.addressDictionary valueForKey:@"FormattedAddressLines"] componentsJoinedByString:@", "];
+         address = locatedaddress ;
+         NSLog(@"putain %@",locatedaddress);
+     }];
+
 }
 
 

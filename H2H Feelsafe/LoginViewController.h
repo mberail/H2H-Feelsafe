@@ -14,5 +14,6 @@
 - (IBAction)Mailpassword:(id)sender;
 
 - (IBAction)Valid:(id)sender;
+@property (strong, nonatomic) IBOutlet UIButton *Valider;
 
 @end

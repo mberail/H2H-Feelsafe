@@ -7,8 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 
-@interface Navigation_Pro_ViewController : UIViewController <UITextFieldDelegate>
+
+@interface Navigation_Pro_ViewController : UIViewController <UITextFieldDelegate, CLLocationManagerDelegate>
+
+
+
+@property (strong, nonatomic) CLGeocoder *geocoder;
+
+
 @property (strong, nonatomic) IBOutlet UIView *StatutView;
 @property (strong, nonatomic) IBOutlet UIView *SecondStatutView;
 - (IBAction)OK:(id)sender;
@@ -28,6 +36,8 @@
 
 @property (strong, nonatomic) IBOutlet UIView *dangerView;
 @property (strong, nonatomic) IBOutlet UIButton *goodView;
+@property (strong, nonatomic) IBOutlet UIImageView *Picture;
+@property (strong, nonatomic) IBOutlet UIButton *DangerBut;
 
 - (IBAction)send:(id)sender;
 

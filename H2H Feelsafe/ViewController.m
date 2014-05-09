@@ -43,6 +43,11 @@
         frame3.origin.y = 50;
         self.logo.frame = frame3;
         
+         self.Valider.frame = CGRectMake(self.Valider.frame.origin.x, self.Valider.frame.origin.y +35, self.Valider.frame.size.width, self.Valider.frame.size.height);
+        
+        self.Texte1.frame =CGRectMake(self.Texte1.frame.origin.x, self.Texte1.frame.origin.y +10, self.Texte1.frame.size.width, self.Texte1.frame.size.height);
+        
+        self.Texte2.frame = CGRectMake(self.Texte2.frame.origin.x, self.Texte2.frame.origin.y +15, self.Texte2.frame.size.width, self.Texte2.frame.size.height);
     }
     
 }
@@ -109,6 +114,7 @@
     [self.emailTextField resignFirstResponder];
     [UIView animateWithDuration:0 animations:
      ^{//[self.flowView setHidden:NO];
+         [self.navigationController setNavigationBarHidden:YES];
          [self.scrollView setHidden:NO];
          [self.logo setHidden:NO];
          [self.logo2 setHidden:NO];
@@ -119,7 +125,7 @@
          CGRect frame = self.emailTextField.frame;
          frame.origin.y = self.view.frame.size.height - 64;
          self.emailTextField.frame = frame;}];
-    self.navigationController.navigationBarHidden = YES;
+   
 }
 
 
@@ -171,9 +177,10 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    self.navigationController.navigationBarHidden = NO;
+   
     [UIView animateWithDuration:0 animations:
      ^{//[self.flowView setHidden:YES];
+         [self.navigationController setNavigationBarHidden:NO];
          [self.scrollView setHidden:YES];
          [self.logo setHidden:YES];
          [self.logo2 setHidden:YES];

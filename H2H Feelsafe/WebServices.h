@@ -25,4 +25,6 @@
 +(void)resetPassword;
 +(UIImage *)getPicture: (NSString *)userId;
 + (NSString *)base64forData:(NSData *)theData;
++(void)Share: (NSMutableDictionary *)params;
++(NSArray *) referentsInfos;
 @end
