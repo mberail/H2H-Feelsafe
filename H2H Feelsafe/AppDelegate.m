@@ -50,7 +50,6 @@
             viewDeck.leftSize = 65;
             viewDeck.panningMode = IIViewDeckNavigationBarPanning;
             self.window.rootViewController = viewDeck;
-            
         }
     }
     else
@@ -90,7 +89,10 @@
     [pref setObject:newToken forKey:@"phoneid"];
 }
 
-
+- (void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"%@",error);
+}
 
 
 
