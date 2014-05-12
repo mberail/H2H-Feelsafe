@@ -302,9 +302,17 @@
         {
             [[[UIAlertView alloc] initWithTitle:nil message:@"L'identifiant est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
+        if (code == 4120)
+        {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"Le Username ne doit contenir que des minuscules et au minimum 4 caractères !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        }
         if (code == 4129)
         {
             [[[UIAlertView alloc] initWithTitle:nil message:@"L'addresse Mail est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        }
+        if (code == 4122)
+        {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"Les mots de passes sont différents !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
     }
     return 0;

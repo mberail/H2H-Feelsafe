@@ -23,6 +23,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *Valider;
 - (IBAction)valid:(id)sender;
 
+@property (strong, nonatomic) IBOutlet UITextField *mailText;
 
 
 - (IBAction)Visite:(id)sender;

@@ -28,6 +28,8 @@
    // self.Visite.layer.borderColor =[UIColor purpleColor].CGColor;
     //self.Visite.layer.borderWidth = 2.0f;
     
+    self.mailText.placeholder = [NSString stringWithFormat:NSLocalizedString(@"Votre adresse mail", nil)];
+    
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Valider" style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
     self.navigationItem.rightBarButtonItem = item;
     UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];

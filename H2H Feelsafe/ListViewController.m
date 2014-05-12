@@ -295,6 +295,10 @@
                // alertView.text = @"Imprévu";
                 
             }
+            if ([[protege objectForKey:@"message"]isEqualToString:@"<null>"])
+            {
+                cell.message.image = [UIImage imageNamed:@"letter_off.png"];
+            }
             NSString *name = [NSString stringWithFormat:@"%@ à %@",[protege objectForKey:@"username"],dist];
             
    

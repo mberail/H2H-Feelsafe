@@ -8,11 +8,19 @@
       "scale" : "2x"
     },
     {
-      "orientation" : "portrait",
+      "extent" : "full-screen",
       "idiom" : "iphone",
       "subtype" : "retina4",
-      "extent" : "full-screen",
+      "filename" : "Capture d’écran du Simulateur iOS 12 mai 2014 17.03.21.png",
       "minimum-system-version" : "7.0",
+      "orientation" : "portrait",
+      "scale" : "2x"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "filename" : "Capture d’écran du Simulateur iOS 12 mai 2014 17.00.52.png",
       "scale" : "2x"
     }
   ],
