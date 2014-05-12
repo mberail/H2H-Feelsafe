@@ -158,6 +158,8 @@
 }
 
 - (IBAction)OK:(id)sender {
+    if([CLLocationManager locationServicesEnabled])
+    {
     if([alert isEqualToString:@"3"])
     {
         [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
@@ -168,10 +170,16 @@
         alert = @"1";
         [self startUpdateProcess];
     }
-  
+    }
+    else
+    {
+        [SVProgressHUD showErrorWithStatus:@"Veuillez activer les services de localisation"];
+    }
 }
 
 - (IBAction)Imprevu:(id)sender {
+    if([CLLocationManager locationServicesEnabled])
+    {
     if([alert isEqualToString:@"3"])
     {
         [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
@@ -182,11 +190,16 @@
         alert = @"2";
         [self startUpdateProcess];
     }
-    
+    }
+    else
+    {
+        [SVProgressHUD showErrorWithStatus:@"Veuillez activer les services de localisation"];
+    }
 }
 
 - (IBAction)Danger:(id)sender {
-    
+    if([CLLocationManager locationServicesEnabled])
+    {
     if([alert isEqualToString:@"3"])
     {
         [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
@@ -197,6 +210,11 @@
         dangerView.message = [NSString stringWithFormat:@"%d",10];
         [dangerView show];
 
+    }
+    }
+    else
+    {
+        [SVProgressHUD showErrorWithStatus:@"Veuillez activer les services de localisation"];
     }
 }
 

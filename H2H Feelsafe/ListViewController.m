@@ -272,7 +272,6 @@
           
             if ([[protege objectForKey:@"alert"]isEqualToString:@"1"])
             {
-                NSLog(@"tailles %f %f",cell.Alert.frame.origin.x ,cell.Alert.frame.origin.y);
              //   alertView.backgroundColor = [UIColor greenColor];
               //  cell.Alert.frame = CGRectMake(25 , cell.Alert.frame.origin.y,28,35 );
                 cell.Alert.image = [UIImage imageNamed:@"good.png"];
@@ -466,15 +465,15 @@
 {
   
     
-    MKCoordinateRegion region;
+   /* MKCoordinateRegion region;
     region.center = locationManager.location.coordinate;
     MKCoordinateSpan span;
     span.latitudeDelta  = 0.15;
     span.longitudeDelta = 0.15;
     region.span = span;
-    [_mapView setRegion:region animated:YES];
-    // comte les éléments
-    NSLog(@"count : %d",arrays.count);
+    [_mapView setRegion:region animated:YES];*/
+    
+
     // récupération des données du tableau dans un dic
     NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
     NSNull *rien = [[NSNull alloc]init];
@@ -540,8 +539,17 @@
         }
        [_mapView addAnnotations:pins];
     }
-  
     
+    MKMapRect zoomRect = MKMapRectNull;
+    for (id <MKAnnotation> annotation in _mapView.annotations)
+    {
+        MKMapPoint annotationPoint = MKMapPointForCoordinate(annotation.coordinate);
+        MKMapRect pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0.1,0.1);
+        NSLog(@"annodationpoint.x %f", annotationPoint.x);
+        zoomRect = MKMapRectUnion(zoomRect, pointRect);
+    }
+    [_mapView setVisibleMapRect:zoomRect edgePadding:UIEdgeInsetsMake(75, 30, 30, 30) animated:YES];
+
     
 }
 

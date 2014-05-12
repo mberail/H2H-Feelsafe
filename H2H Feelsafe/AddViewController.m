@@ -362,6 +362,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ContactCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell"];
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
     if (cell == nil)
     {
         cell = [[ContactCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ContactCell"];
@@ -394,11 +395,22 @@
         cell.Button.imageView.image =[UIImage imageNamed:@"bouton_notif_ajout_sent.png"];
         if (self.segmentedControl.selectedSegmentIndex == 0)
         {
-            [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+         
+            if([[contact objectForKey:@"step"] integerValue]==0)
+            {
+                [cell.Button setBackgroundImage:[UIImage imageNamed:@"h2h2.png"]forState:UIControlStateNormal];
+            }
+            else
+            {
+                [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+            }
+            
+            
               [cell.Button addTarget:self action:@selector(idSlctd:)  forControlEvents:UIControlEventTouchUpInside];
         }
         else
         {
+          
             [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
             [cell.Button removeTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
             [cell.Button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
@@ -412,8 +424,17 @@
     {
        
         cell.Button.tag = indexPath.row;
+        if([[contact objectForKey:@"step"] integerValue]==0)
+        {
+            [cell.Button setBackgroundImage:[UIImage imageNamed:@"h2h2.png"]forState:UIControlStateNormal];
+        }
+        else
+        {
+            [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+        }
+        
        // cell.Button.imageView.image =[UIImage imageNamed:@"bouton_notif_ajout_sent.png"];
-        [cell.Button setBackgroundImage:[UIImage imageNamed:@"bouton_notif_ajout_sent.png"]forState:UIControlStateNormal];
+  
         [cell.Button removeTarget:self action:@selector(sendInvitation:) forControlEvents:UIControlEventTouchUpInside];
       [cell.Button addTarget:self action:@selector(addContactFromAddressBook:)  forControlEvents:UIControlEventTouchUpInside];
     }
