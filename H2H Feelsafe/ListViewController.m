@@ -28,6 +28,7 @@
     UIAlertView *alert;
     NSMutableDictionary *share;
     NSMutableArray *pins;
+    NSNull *rien;
 }
 @end
 
@@ -55,7 +56,7 @@
     alert = [[UIAlertView alloc]init];
     share = [[NSMutableDictionary alloc] init];
     pins = [[NSMutableArray alloc]init];
-    
+    rien = [[NSNull alloc]init];
     locationManager = [[CLLocationManager alloc] init];
     [locationManager startUpdatingLocation];
     NSLog(@"userLoc : %f %f",locationManager.location.coordinate.latitude,locationManager.location.coordinate.longitude);
@@ -126,7 +127,7 @@
 {
         //[WebServices getPicture];
     
-    NSNull *rien = [[NSNull alloc]init];
+    
         arrays = [[NSArray alloc]init];
         arrays = [[NSArray alloc]initWithArray:[WebServices protegesInfos]];
     
@@ -199,7 +200,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return @"Mes protégés";
+    return NSLocalizedString(@"Mes protégés",nil);
 }
 
 
@@ -220,7 +221,7 @@
     
     protege = [classArray objectAtIndex:indexPath.row];
     
-    NSNull *rien = [[NSNull alloc]init];
+
     NSLog( @"arrays : %@", arrays);
     NSLog(@"callArray  %@",classArray);
    
@@ -231,11 +232,11 @@
        cell.address.adjustsFontSizeToFitWidth = YES;
         
         cell.Picture.contentMode = UIViewContentModeScaleAspectFit;
-    
-    if ([[protege objectForKey:@"address"]isEqualToString:@"inconue"])
-    {
-        cell.address.text = [NSString stringWithFormat:@"addresse %@",[protege objectForKey:@"address"] ];
-    }
+   
+     if ([[protege objectForKey:@"address"]isEqual:rien])
+             {
+                  cell.address.text = [NSString stringWithFormat:NSLocalizedString(@"addresse inconue",nil) ];
+             }
     else{
          cell.address.text = [protege objectForKey:@"address"];
     }
@@ -295,11 +296,11 @@
                // alertView.text = @"Imprévu";
                 
             }
-            if ([[protege objectForKey:@"message"]isEqualToString:@"<null>"])
+            if ([[protege objectForKey:@"message"]isEqual:rien])
             {
                 cell.message.image = [UIImage imageNamed:@"letter_off.png"];
             }
-            NSString *name = [NSString stringWithFormat:@"%@ à %@",[protege objectForKey:@"username"],dist];
+            NSString *name = [NSString stringWithFormat:@"%@ %@ %@",[protege objectForKey:@"username"],NSLocalizedString(@"à",nil),dist];
             
    
             cell.Name.text = name;
@@ -336,52 +337,52 @@
     {
         if ([[protege2 objectForKey:@"alert"]isEqualToString:@"3"])
         {
-            if ([[protege2 objectForKey:@"message"]isEqualToString:@"<null>"])
+            if ([[protege2 objectForKey:@"message"]isEqual:rien])
             {
-                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé en Danger" message:@"Pas de message" delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles:@"Débloquer", nil];
+                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protégé en Danger",nil) message:NSLocalizedString(@"Pas de message",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles:NSLocalizedString(@"Débloquer",nil), nil];
                 proAlert = [protege2 objectForKey:@"id"];
                 [etatProtege show];
             }
             else
             {
-                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé en Danger" message:[NSString stringWithFormat:@"Dernier message:\n%@",[protege2 objectForKey:@"message"]] delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles:@"Débloquer", nil];
+                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protégé en Danger",nil) message:[NSString stringWithFormat:NSLocalizedString(@"Dernier message:\n%@",@"text after the : must be kept"),[protege2 objectForKey:NSLocalizedString(@"message",nil)]] delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles:NSLocalizedString(@"Débloquer",nil), nil];
                 proAlert = [protege2 objectForKey:@"id"];
                 [etatProtege show];
             }
         }
         else if ([[protege2 objectForKey:@"alert"]isEqualToString:@"2"] )
         {
-            if ([[protege2 objectForKey:@"message"]isEqualToString:@"<null>"])
+            if ([[protege2 objectForKey:@"message"]isEqual:rien])
             {
-                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé en situation imprévue" message:@"Pas de message" delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles:nil];
+                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protégé en situation imprévue",nil) message:NSLocalizedString(@"Pas de message",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles:nil];
                 [etatProtege show];
             }
             else
             {
-                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé en situation imprévue" message:[NSString stringWithFormat:@"Dernier message:\n%@",[protege2 objectForKey:@"message"]] delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles: nil];
+                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protégé en situation imprévue",nil) message:[NSString stringWithFormat:NSLocalizedString(@"Dernier message:\n%@",nil),[protege2 objectForKey:@"message"]] delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles: nil];
                 [etatProtege show];
             }
         }
         else if ([[protege2 objectForKey:@"alert"]isEqualToString:@"1"] )
         {
-            if ([[protege2 objectForKey:@"message"]isEqualToString:@"<null>"])
+            if ([[protege2 objectForKey:@"message"]isEqual:rien])
             {
-                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé Ok" message:@"Pas de message" delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles:nil];
+                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protégé Ok",nil) message:NSLocalizedString(@"Pas de message",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles:nil];
                 [etatProtege show];
             }
             else
             {
-                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protégé Ok" message:[NSString stringWithFormat:@"Dernier message:\n%@",[protege2 objectForKey:@"message"]] delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles: nil];
+                UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protégé Ok",nil) message:[NSString stringWithFormat:NSLocalizedString(@"Dernier message:\n%@",nil),[protege2 objectForKey:@"message"]] delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles: nil];
                 [etatProtege show];
                 
             }
         }
       //[tableView reloadData];
     }
-   
+  //le "else" n'est pas utilisé, seul les protégés qui ont accepté l'invitation sont affiché maintenant
     else
     {
-        UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:@"Protege en attente de confirmation" message:nil delegate:self cancelButtonTitle:@"Quitter" otherButtonTitles: nil];
+        UIAlertView *etatProtege = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Protege en attente de confirmation",nil) message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Quitter",nil) otherButtonTitles: nil];
         [etatProtege show];
       //  [tableView reloadData];
     }
@@ -401,14 +402,14 @@
     {
         if (x == 0)
         {
-            [SVProgressHUD showWithStatus:@"Changement d'état du protégé"];
+            [SVProgressHUD showWithStatus:NSLocalizedString(@"Changement d'état du protégé",nil)];
              [self startUnlockProcess];
         }
         else if ( x == 1)
         {
            
             [share setValue:[alert textFieldAtIndex:0].text forKey:@"recipient"];
-            [SVProgressHUD showWithStatus:@"Partage du protégé en cours"];
+            [SVProgressHUD showWithStatus:NSLocalizedString(@"Partage du protégé en cours",nil)];
             [self performSelector:@selector(startShareProcess) withObject:nil afterDelay:0.2];
         }
       
@@ -478,14 +479,13 @@
     [_mapView setRegion:region animated:YES];*/
     
 
-    // récupération des données du tableau dans un dic
     NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
-    NSNull *rien = [[NSNull alloc]init];
+  
     int i = 0;
-    // création d'un dicto avec les id des bornes et les distances
+  
     for (NSDictionary *dictTemp in classArray)
     {
-        //chope les coordonnées des stations
+       
         if ([[dictTemp objectForKey:@"latitude"]isEqual:rien])
         {
             NSLog(@"countcount %d",i );
@@ -532,8 +532,10 @@
             
            
             
-          
-            pin.image = [dictTemp objectForKey:@"picture"];
+            NSData *photoData = UIImageJPEGRepresentation([dictTemp objectForKey:@"picture"], 0.000001);
+            UIImage *photo = [[UIImage alloc]initWithData:photoData];
+            
+            pin.image = photo;
             pin.disclosureBlock = nil;
               NSLog(@"countcount %d",i );
             [[arrays objectAtIndex:i]setObject:[mutDict objectForKey:@"dist"] forKey:@"distance"];
@@ -558,7 +560,7 @@
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return @"Partager";
+    return NSLocalizedString(@"Partager",nil);
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -573,14 +575,14 @@
 {
     x = 1;
    
-    alert =  [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Partagé \"%@\"", [[classArray objectAtIndex:indexPath.row]objectForKey:@"username"]] message:@"Veuiller inscrire le username du referent" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles:@"Ok", nil];
+    alert =  [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"Partagé \"%@\"","all characters must be copied"), [[classArray objectAtIndex:indexPath.row]objectForKey:@"username"]] message:NSLocalizedString(@"Veuiller inscrire le username du referent",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Annuler",nil) otherButtonTitles:@"Ok", nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alert textFieldAtIndex:0].delegate = self;
     [alert show];
     //json_protege : json array des ids
     NSString *toShare = [NSString stringWithFormat:@"%@", [[classArray objectAtIndex:indexPath.row] objectForKey:@"id"]];
     NSArray *ids = [[NSArray alloc]initWithObjects:toShare, nil];
-    [share setValue:ids forKey:@"json_protege"];
+    [share setValue:ids forKey:@"proteges"];
 }
 
 

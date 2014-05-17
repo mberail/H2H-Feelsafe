@@ -38,6 +38,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *goodView;
 @property (strong, nonatomic) IBOutlet UIImageView *Picture;
 @property (strong, nonatomic) IBOutlet UIButton *DangerBut;
+@property (strong, nonatomic) IBOutlet UIButton *SendBut;
 
 - (IBAction)send:(id)sender;
 

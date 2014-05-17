@@ -1,0 +1,337 @@
+/* 
+  Localizable.strings
+  H2H Feelsafe
+
+  Created by Pierre perrin on 13/05/2014.
+  Copyright (c) 2014 Maxime Berail. All rights reserved.
+*/
+
+/* No comment provided by engineer. */
+"Accepter" = "Ậćçềƥʈểɾ";
+
+/* No comment provided by engineer. */
+"Accueil" = "Ḁƈćȕḕíĺ";
+
+/* No comment provided by engineer. */
+"addresse %@" = "ɑḏḏȓėṥʂē %@";
+
+/* No comment provided by engineer. */
+"Adresse Mail idenftifié" = "Áƌȑȅśśê Ḿɐïĺ ǐḏễńƒẗĭᶂḭé";
+
+/* No comment provided by engineer. */
+"afin de vous identifier ou de créer votre profil H2H FeelSafe." = "åᵮìṇ ḑ∈ ṽo͘ȕṩ iƌėṉẗïᵮīēɾ ȏǜ ȡẹ ḉṙéḕṟ ᶌỡʈȓē p̃ṟỏƒȉļ Ⱨ2Ḫ ƑȇḕłŚɑḟè.";
+
+/* No comment provided by engineer. */
+"Aide" = "Åìḏễ";
+
+/* No comment provided by engineer. */
+"Ajouter un protégé" = "Ậɉốưṯếṟ ůn̈ ᵱȓỏʈéᶃé";
+
+/* No comment provided by engineer. */
+"Alerte danger dans:" = "Ậŀëŗțȩ đḁńğéř ɖåňṧ:";
+
+/* No comment provided by engineer. */
+"Alerte danger desactivée" = "Åḷḙɾṭẹ ɖâńğềŕ ď∈ṧ@ĉțḭᶌéȅ";
+
+/* No comment provided by engineer. */
+"Amis protégés" = "Ặᵯḯṧ ᶈɾồṫéǧéș";
+
+/* No comment provided by engineer. */
+"Amis référents" = "Ḁḿiș řéᵮéȓềṅṭś";
+
+/* No comment provided by engineer. */
+"Annuler" = "Ặņǹŭḽḝɾ";
+
+/* No comment provided by engineer. */
+"Aucun protege trouvé, appuyez sur \"+\" pour en ajouter !" = "Ặűċûǹ ᶈŕōťⱸḡē ṫɾóᶙṽé, ɑp̃ṗừȳèż ṣúŕ \"+\" ṕo͘ᶙɾ ềň ậĵõûṫ∈ȓ !";
+
+/* No comment provided by engineer. */
+"Aucun protégé trouvé" = "Ậǔƈửṅ ṗŗợțéḡé ṫṟȯųʋé";
+
+/* No comment provided by engineer. */
+"Aucun réferents trouvé, appuyez sur \"+\" pour en ajouter !" = "Ậṵĉừń ȑéᵮĕṝêňʈṣ ẗŗỡȗᶌé, âᶈᵱựʏềⱬ ᶊùṝ \"+\" ᶈǒừṝ ểṋ ậɉōůŧếṛ !";
+
+/* No comment provided by engineer. */
+"Aucun référent trouvé" = "Ḁǘċửṅ ṙéᵮéŗěṋṭ ţřọȗⱴé";
+
+/* No comment provided by engineer. */
+"à" = "à";
+
+/* No comment provided by engineer. */
+"Bienvenue" = "Ḅíēñᶌḛṇửḛ";
+
+/* No comment provided by engineer. */
+"Bonjour, je vous invite à découvrir Feelsafe." = "Ƀôƞɉõứṙ, ǰⱸ ṿɵǔŝ ɨñṿịŧḗ à ᶁéɕṍȕʋȑiȑ Ƒẹëḽᵴɑƒė.";
+
+/* No comment provided by engineer. */
+"Ce contact n'a pas de numéro enregistré !" = "Ȼè ḉōṋṱ@ɕť ŋ'ḁ ᵱâs̩ ḑė ṇűᵯéȓö ȩñṙ∈ǵıșțȓé !";
+
+/* No comment provided by engineer. */
+"Champs mal complétés" = "Ƈĥḁɱᶈs̩ ᵯäł ċȏṃṗḻéṭéᵴ";
+
+/* No comment provided by engineer. */
+"Changement d'état du protégé" = "Ḉȟậɲɠḗᶆéŋṭ ȡ'éᵵậṭ ḑứ p̃ŕṏṫéĝé";
+
+/* No comment provided by engineer. */
+"Choisir une photo" = "Čĥǿíšịȓ ṳṇȇ p̃ḩȭțɵ";
+
+/* No comment provided by engineer. */
+"Compte en danger, changement d'état impossible" = "Çỏḿƥʈȇ èņ ḓḁŋğɇṛ, čĥăƞġêṃêṉŧ ƌ'éŧäṱ îᵯṕóşᶊĩḃĺẹ";
+
+/* No comment provided by engineer. */
+"Comptes déjà appariés" = "Ȼṑᶆƥṱḗş ᶑéɉà ḁᶈᵽ@ṟìéᵴ";
+
+/* No comment provided by engineer. */
+"Confirmation mot de passe" = "Ḉŏn̈ḟĩȓᵯäᵵìòɲ ṁṑţ ƌể ᵱáŝȿ∈";
+
+/* No comment provided by engineer. */
+"Connexion" = "Ƈỡɲņ∈ᶍiồṇ";
+
+/* text after the : must be kept */
+"Dernier message:\n%@" = "Ḍḙɾṋịḕŗ ᶆḝȿşåǧė:\ɲ%@";
+
+/* No comment provided by engineer. */
+"Débloquer" = "Ɖéɓĺöƣŭềŗ";
+
+/* No comment provided by engineer. */
+"Déconnexion" = "Ḋéċơn̈ňḝẍîǿƞ";
+
+/* Dismiss Alert Close Button */
+"Dismiss Alert" = "Ɗḭṣḿïšᵴ Áḻěṝẗ";
+
+/* Dismiss Alert close button hint */
+"Dismisses this alert." = "Ɖᶖŝᵯịşṧéʂ ʈḥḯs̩ äļẹṛť.";
+
+/* No comment provided by engineer. */
+"E-mail" = "É-ṁ@ǐḻ";
+
+/* No comment provided by engineer. */
+"Entrez votre adresse e-mail" = "Êƞᵵṙēᵶ ᶌøẗŕĕ ɑḑřḙs̩s̩ē ḕ-ḿăĩĺ";
+
+/* No comment provided by engineer. */
+"Envoie de l'invitation" = "Ɛņⱱỏįɇ ȡě ḽ'iņⱱĭʈâṭȋǭṋ";
+
+/* No comment provided by engineer. */
+"Envoie de la réponse" = "∈ñʋôıȩ ∂ể ḹâ ɾéᵽỏṇʂȅ";
+
+/* No comment provided by engineer. */
+"Identifiant" = "Ĭ∂ểṋţȋƒɨ@ṋʈ";
+
+/* No comment provided by engineer. */
+"Informations mise à jours" = "Ïņḟờȓḿ@ţɨȫn̈ᵴ ᶆis̩ⱸ à ȷȫǚřʂ";
+
+/* No comment provided by engineer. */
+"Informations mises à jour !" = "Íṉᶂộȑṁɑᵵìờņᵴ ɱỉšĕṩ à ȷȍűṟ !";
+
+/* No comment provided by engineer. */
+"Inscription" = "Íƞšĉṙïᶈțįồṇ";
+
+/* No comment provided by engineer. */
+"Invitation déjà envoyée" = "Ïņṽịṫăʈḭổņ ȡéĵà ếṅⱴo͘ȳéẻ";
+
+/* No comment provided by engineer. */
+"Invitation envoyée" = "Ĭńʋıᵵăʈíộñ ɇɲʋõɏéȇ";
+
+/* No comment provided by engineer. */
+"invitations en attente" = "ıɲṽïẗâᵵɨōṇṧ ḕƞ ăẗṯẹŋťễ";
+
+/* No comment provided by engineer. */
+"Inviter des amis" = "Ĭɲṿïŧȅř đḗš @ḿȉṥ";
+
+/* No comment provided by engineer. */
+"J'accepte les CGU" = "Ĵ'âćḉẽᵽᵵề ḻḕŝ ČĠЏ";
+
+/* No comment provided by engineer. */
+"L'addresse Mail est déja utilisé !" = "Ł'âđḑřệṩṩẽ Ɱäǐḷ ệșť ḍéɉá ừťįłîȿé !";
+
+/* No comment provided by engineer. */
+"L'adresse mail n'est pas valide !" = "Ḽ'ḁ∂ṝęȿᵴẹ ḿăíḽ ñ'ęṥᵵ ᵽäʂ ᶌɑļıɗẽ !";
+
+/* No comment provided by engineer. */
+"L'application ne peut pas acceder aux contacts" = "Ľ'ɑᶈᵱḻỉčậṱᶖốɲ ɲȩ ᵱɇùť ᵽɑᵴ åḉɕḗḏèȓ ăüẋ çöɲṫáḉŧş";
+
+/* No comment provided by engineer. */
+"L'identifiant est déja utilisé !" = "Ļ'ïȡẻṇṯɨƒɨäṉṭ ěʂṯ ḋéʝå ȕṭȉļȉᶊé !";
+
+/* No comment provided by engineer. */
+"La mise à jour des informations à échouée..." = "Ḷă ṁįʂệ à ʝồừŕ ᶁêᵴ įƞḟợɾṁ@ṯiöṇᵴ à éḉḫǒŭéḗ...";
+
+/* No comment provided by engineer. */
+"Le meilleur moyen de protéger ceux que vous aimez" = "Ḽ∈ ɱễíḻľėüȑ ᵯõÿḕǹ ḑệ ᵽṝőŧéǧ∈ȓ čèṻẍ ƣṹě ṽṑǔș åįṁȩʐ";
+
+/* No comment provided by engineer. */
+"Le username ne doit contenir au moins 4 lettres minuscules et/ou des chiffres :" = "Ḹẻ ȗṣẹɾǹậᶆể ṇề ḑợḭṭ ḉỡñṭẹñıř âù ṃṑᶖǹş 4 ļęțṯṟɇs̩ ᵯíņǔṧḉǘĺḙṣ ềṭ/ởủ ɖēṡ ɕȟȉᶂḟɾẹᶊ :";
+
+/* No comment provided by engineer. */
+"Le Username ne doit contenir que des minuscules et au minimum 4 caractères !" = "Ḽȇ Џṩểŕɲɑḿē ɲế ɖóïṭ ćǭǹẗḛṅíṟ ʠṹẹ ḋẹš ᶆỉǹừᶊɕūłẻṣ ẽŧ áū ṃĩňḯṃûɱ 4 ḉậɾɐḉţèṛḗṧ !";
+
+/* No comment provided by engineer. */
+"Les mots de passes sont différents !" = "Ŀɇṡ ᵯốŧś ďȩ ƥḁᵴşëᶊ ʂȯņṱ ɗĭᵮᵮéȓ∈ŋṭs̩ !";
+
+/* No comment provided by engineer. */
+"Mail inconue veuillez créer un compte" = "Ṁâịŀ ĩṉĉøṉùě ṿȩṻɨŀḷệź ḉȑéȅř ựƞ ȼồᵯṕṯ∈";
+
+/* No comment provided by engineer. */
+"Mes protégés" = "Ḿềᵴ ᵱȑôţéǧéᶊ";
+
+/* No comment provided by engineer. */
+"Mes référents" = "Ṁêṣ ȓéᵮéŗểńʈʂ";
+
+/* No comment provided by engineer. */
+"message" = "ṁểşșäǥḝ";
+
+/* No comment provided by engineer. */
+"Minimum 4 catatères en minuscule !" = "Ṁḭǹîɱųᵯ 4 ƈâŧäʈèṛẽȿ ën̈ ᵯíņủs̩ḉǚḷȇ !";
+
+/* No comment provided by engineer. */
+"Mise à jour des informations" = "Ɱȉṡḝ à ɉổǘȑ ḍⱸṡ ĭn̈ḟǿɾṁâťḭŏñš";
+
+/* No comment provided by engineer. */
+"Mise à jour du compte" = "Ṃıᵴể à ɉȭǜɾ ȡȗ ċóṁᵱŧé";
+
+/* No comment provided by engineer. */
+"Mobile" = "Ɱọᶀᶖḹĕ";
+
+/* No comment provided by engineer. */
+"Mon compte" = "Ɱôƞ ɕọᵯᶈţė";
+
+/* No comment provided by engineer. */
+"Mot de passe" = "Ṃǿț ɗè ᵽäššⱸ";
+
+/* No comment provided by engineer. */
+"Mot de passe incorrect" = "Ɱṑṭ ɗḕ ƥàṥŝḙ īṅçôṝṛễḉţ";
+
+/* No comment provided by engineer. */
+"Mot-de-passe incorrect" = "Ṃǫť-ḍⱸ-ᵽɐṣșȇ ɨňɕøṙṟëɕț";
+
+/* No comment provided by engineer. */
+"Nom" = "Лọɱ";
+
+/* No comment provided by engineer. */
+"Notifications" = "Лōẗǐᶂĭƈâṫịŏňʂ";
+
+/* No comment provided by engineer. */
+"Nouveau mot de passe" = "Иờủʋềɐȕ ɱỏṱ đȇ ᵱɐšṥḗ";
+
+/* No comment provided by engineer. */
+"Partage du protégé en cours" = "Ϸåřᵵɑĝę ḏǘ ṗȓơťéǥé ḝň ĉṓŭṛᶊ";
+
+/* No comment provided by engineer. */
+"Partager" = "ⓟáɾţậǥḗř";
+
+/* all characters must be copied */
+"Partagé \"%@\"" = "Ƥăřṱɑĝé \"%@\"";
+
+/* No comment provided by engineer. */
+"Pas de message" = "ⓟậș ḑễ ṁẽšʂậǥè";
+
+/* No comment provided by engineer. */
+"Périmètres" = "ⓟéṛįɱèțṙⱸʂ";
+
+/* No comment provided by engineer. */
+"Prendre une photo" = "Ϸṙēṉ∂ṛè ṻṇể ᵽẖốẗò";
+
+/* No comment provided by engineer. */
+"Prénom" = "Ƥṝén̈ȍṁ";
+
+/* No comment provided by engineer. */
+"Protege en attente de confirmation" = "Ϸŕɵʈēᶃễ ęɲ áʈţḗñṫé đễ ĉɵñᵮȉṝṁɐʈĭṑɲ";
+
+/* No comment provided by engineer. */
+"Protégé" = "Ṗŕőțéǥé";
+
+/* No comment provided by engineer. */
+"Protégé en Danger" = "ⓟřo͘ťéġé ềņ Ḏäņɠêṟ";
+
+/* No comment provided by engineer. */
+"Protégé en situation imprévue" = "Ṗṝȏʈéğé ẽň s̩ǐʈüâŧỉởņ ǐᶆᵽŗéṿṷể";
+
+/* No comment provided by engineer. */
+"Protégé Ok" = "ⓟȓȍṯéḡé Øķ";
+
+/* No comment provided by engineer. */
+"Protégé partagé" = "Ṗȑởțéḡé ᵽɑṝṱáğé";
+
+/* No comment provided by engineer. */
+"Protégés" = "Ṗɾờṯéģéș";
+
+/* No comment provided by engineer. */
+"Quitter" = "Q̵ᶙìẗṭẽṛ";
+
+/* No comment provided by engineer. */
+"recherche de protégés" = "ɾẻƈħȩŕćḧȇ ḋɇ ᵱṟọŧéɠéʂ";
+
+/* No comment provided by engineer. */
+"Recherche du Username" = "®ẽĉḣéŕćẖể ɖȕ Ùşèŗŋɐᶆể";
+
+/* No comment provided by engineer. */
+"Refuser" = "яēᵮǚs̩ḝṙ";
+
+/* No comment provided by engineer. */
+"Référents non trouvé" = "яéᶂéṟęǹṭᵴ ňṑṋ ᵵṛõṻṿé";
+
+/* No comment provided by engineer. */
+"Réponse à l'invitation" = "®éṕøňs̩∈ à ḻ'ïŋṿĭẗɐẗǐṑñ";
+
+/* No comment provided by engineer. */
+"Réponse envoyée" = "яéᵱớǹşè ềṉᶌōỳéề";
+
+/* No comment provided by engineer. */
+"Suivant" = "§űȋⱴɐňṯ";
+
+/* No comment provided by engineer. */
+"Supprimer la photo" = "Ⓢữṗᶈɾiṁéɾ ḹḁ ᶈḧṑťọ";
+
+/* No comment provided by engineer. */
+"Terminé" = "Ƭĕṛᶆîɲé";
+
+/* No comment provided by engineer. */
+"Tous les champs ne sont pas correctement remplis, veuillez réessayer." = "Ƭṏȕṩ ḻểṣ ḉḫậɱᵽᵴ n̈ɇ s̩ởñᵵ ᵱậᵴ ĉôɾṛ∈çṯęṃên̈ṫ ɾĕḿṗĺỉş, ⱴĕứiľḹệẑ ɾéềᵴšâẏèŗ.";
+
+/* No comment provided by engineer. */
+"Un e-mail vous a été envoyer" = "Ùň ḙ-ɱăȉļ ᶌōüs̩ ậ éṭé ȅńⱱỡɏėɾ";
+
+/* No comment provided by engineer. */
+"Valider" = "Ṽ@ŀȋḏệŗ";
+
+/* No comment provided by engineer. */
+"Veuiller inscrire le username du referent" = "Ⓥḕŭỉḽłěṝ ǐñʂȼṛǐřệ ļé ǚṧëȑṇăᵯể ḓǔ řểᵮêṝèṋṫ";
+
+/* No comment provided by engineer. */
+"Veuiller inscrire votre mot de passe utilisateur" = "Ʋêưïḻĺẹṟ ȉṇşɕṙᶖŕệ ṿṓṫṟệ ṃǿẗ ᶁè ṕậșṥế ựṫĭḻışäţềȗȑ";
+
+/* No comment provided by engineer. */
+"Veuillez accepter les CGU" = "Ⓥęǜỉĺľⱸż åƈċêᶈᵵȩṟ ḽⱸŝ ĊĞЏ";
+
+/* No comment provided by engineer. */
+"Veuillez activer les services de localisation" = "Ṽęǚɨľłēƶ âƈțḯʋḕṛ ḻéŝ ᵴȅṝᶌȉčėʂ ḍể ḻőȼḁľȋȿăŧiȍń";
+
+/* No comment provided by engineer. */
+"Veuillez autoriser l'application à accéder à vos contact dans les réglages du téléphone !" = "Ʋěǚᶖḷḽềⱬ ậǚᵵǭṛîșéȑ ĺ'ɐᵽṗḹɨɕɑẗîồǹ à äȼċéᶁểṝ à ṽǿš ɕṍŋťáçţ ᶁâņṣ ḹệş ȑéğḹáᶃêʂ ɗṻ ťéḹép̃ħȏɲḝ !";
+
+/* No comment provided by engineer. */
+"Veuillez compléter tous les champs" = "Ṽễǜįĺḻḛź ḉởᶆᵱļéŧëɾ țõǚʂ ḷȇȿ ĉḥăḿᶈȿ";
+
+/* No comment provided by engineer. */
+"Veuillez compléter tous les champs obligatoires." = "Ⓥḙūȉḻĺēᶎ ɕȱɱᵱľéṱȅɾ ťõūṩ ľẽʂ ĉḧ@ᵯṕŝ ȏḅŀḭǧ@ʈṑïŗễŝ.";
+
+/* No comment provided by engineer. */
+"Veuillez compléter une adresse mail valide." = "Ʋěủïĺĺɇż ɕọḿƥḹéʈḙṙ ᶙň∈ ḁᶑṛȩʂᵴè ṁɐîḷ ᶌăĺȉ∂ế.";
+
+/* No comment provided by engineer. */
+"Vérification de l'adresse mail" = "Ⓥéṟỉḟḭɕâťɨöɲ để ḷ'äḏŕɇṡṡ∈ ɱ@ɨḹ";
+
+/* No comment provided by engineer. */
+"Vérification du mail" = "Ṽéṟǐᶂịčáťìṍŋ ḏû ɱɐïḻ";
+
+/* No comment provided by engineer. */
+"Vérification du Mot de passe" = "Ṽéŗĩᵮǐçäţĭộṋ ƌù Ṃǭṱ ȡę ƥḁᵴȿⱸ";
+
+/* No comment provided by engineer. */
+"Vérification Mot de passe" = "Ʋéŕiḟįçậŧḯòɲ Ṃộț ɗè p̃ḁṡśȇ";
+
+/* No comment provided by engineer. */
+"Votre adresse mail" = "Ʋõṯȓẻ áḍṙḕᵴşě ṃåȉľ";
+
+/* No comment provided by engineer. */
+"Voulez-vous vraiment vous déconnecter ?" = "Ʋọṳḻȅɀ-ṿồṷṧ ṿṙäḯɱěṇṯ ᶌởṹᵴ ḏéçơņṉẻɕțệȑ ?";

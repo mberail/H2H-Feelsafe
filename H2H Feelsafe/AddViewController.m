@@ -45,8 +45,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [SVProgressHUD showWithStatus:@"recherche de protégés"];
-    self.navigationItem.title = @"Ajouter un protégé";
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"recherche de protégés",nil)];
+    self.navigationItem.title = NSLocalizedString(@"Ajouter un protégé",nil);
     arrays = [[NSArray alloc] init];
     searchs = [[NSArray alloc] init];
     idInvitations = [[NSMutableArray alloc]init];
@@ -81,8 +81,6 @@
         [[invitations objectAtIndex:i] setValue:[[invitations objectAtIndex:i]objectForKey:@"username"] forKey:@"name"];
         [idInvitations setObject:[[invitations objectAtIndex:i]objectForKey:@"id"] atIndexedSubscript:i];
     }
-    NSLog(@"initations : %@",invitations);
-    [SVProgressHUD dismiss];
     [SVProgressHUD dismiss];
     for (NSDictionary *dict in contacts)
     {
@@ -227,9 +225,9 @@
         }
         else if( ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied)
         {
-    [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez autoriser l'application à accéder à vos contact dans les réglages du téléphone !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez autoriser l'application à accéder à vos contact dans les réglages du téléphone !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             NSMutableDictionary *theContact = [[NSMutableDictionary alloc] init];
-            [theContact setValue:@"L'application ne peut pas acceder aux contacts" forKey:@"firstname"];
+            [theContact setValue:NSLocalizedString(@"L'application ne peut pas acceder aux contacts",nil) forKey:@"firstname"];
             [theContacts addObject:theContact];
             
         }
@@ -271,7 +269,7 @@
     NSString *search = searchBar.text;
    [self.searchDisplayController setActive:NO animated:YES];
     [self.searchBar setHidden:YES];
-    [SVProgressHUD showWithStatus:@"Recherche du Username"];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Recherche du Username",nil)];
     
    [self performSelector:@selector(Searchprocess:) withObject:search afterDelay:0.2];
 }
@@ -328,30 +326,30 @@
         {
             if(section == 0)
             {
-                title = @"invitations en attente";
+                title = NSLocalizedString(@"invitations en attente",nil);
             }
             else if (section == 1)
             {
-                title = @"Amis protégés";
+                title = NSLocalizedString(@"Amis protégés",nil);
             }
             else if (section == 2)
             {
-                title = @"Inviter des amis";
+                title = NSLocalizedString(@"Inviter des amis",nil);
             }
         }
         else
         {
             if(section == 0)
             {
-                title = @"invitations en attente";
+                title = NSLocalizedString(@"invitations en attente",nil);
             }
             else if (section == 1)
             {
-                title = @"Amis référents";
+                title = NSLocalizedString(@"Amis référents",nil);
             }
             else if (section == 2)
             {
-                title = @"Inviter des amis";
+                title = NSLocalizedString(@"Inviter des amis",nil);
             }
         }
         
@@ -477,7 +475,7 @@
 
 - (void)startInviteProcess:(NSString *)tab
 {
-    [SVProgressHUD showWithStatus:@"Envoie de l'invitation" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Envoie de l'invitation",nil) maskType:SVProgressHUDMaskTypeBlack];
     
     [self performSelector:@selector(invite:) withObject:tab afterDelay:0.2];
     
@@ -501,13 +499,13 @@
         {
         NSLog(@"tag : %li phone : %@",(long)sender.tag, phone);
         controller.recipients = [NSArray arrayWithObjects:phone, nil];
-        controller.body = @"Bonjour, je vous invite à découvrir Feelsafe.";
+        controller.body = NSLocalizedString(@"Bonjour, je vous invite à découvrir Feelsafe.",nil);
         controller.messageComposeDelegate = self;
         [self presentViewController:controller animated:YES completion:nil];
             
         }
         else
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Ce contact n'a pas de numéro enregistré !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Ce contact n'a pas de numéro enregistré !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             
     }
     //[self updateContactsFromAddressBook];
@@ -515,7 +513,7 @@
 - (void) idSlctd:(UIButton *)sender
 {
     idSelected = [[NSString alloc]initWithFormat:@"%@",[idInvitations objectAtIndex:sender.tag]];
-    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"Réponse à l'invitation" delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:@"Refuser" otherButtonTitles:@"Accepter", nil];
+  UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Réponse à l'invitation",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Annuler",nil) destructiveButtonTitle:NSLocalizedString(@"Refuser",nil) otherButtonTitles:NSLocalizedString(@"Accepter",nil), nil];
     action.actionSheetStyle = UIActionSheetStyleAutomatic;
     [action showInView:self.view];
 }
@@ -542,7 +540,7 @@
 
 - (void)startAnswerProcess:(NSArray *)tab
 {
-    [SVProgressHUD showWithStatus:@"Envoie de la réponse" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Envoie de la réponse",nil) maskType:SVProgressHUDMaskTypeBlack];
     
     [self performSelector:@selector(answer:) withObject:tab afterDelay:0.2];
     

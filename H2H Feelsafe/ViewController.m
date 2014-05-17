@@ -24,15 +24,17 @@
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     self.navigationItem.title = @"H2H Feelsafe";
-  
+    self.texte.text = NSLocalizedString(@"Le meilleur moyen de protéger ceux que vous aimez", nil);
    // self.Visite.layer.borderColor =[UIColor purpleColor].CGColor;
     //self.Visite.layer.borderWidth = 2.0f;
+    self.Texte1.text = NSLocalizedString(@"Entrez votre adresse e-mail", nil) ;
+    self.Texte2.text = NSLocalizedString(@"afin de vous identifier ou de créer votre profil H2H FeelSafe.", nil);
     
     self.mailText.placeholder = [NSString stringWithFormat:NSLocalizedString(@"Votre adresse mail", nil)];
     
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Valider" style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Valider", nil) style:UIBarButtonItemStylePlain target:self action:@selector(ProceedWithEmail)];
     self.navigationItem.rightBarButtonItem = item;
-    UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:@"Annuler" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];
+    UIBarButtonItem *item2 = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Annuler",nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelEmail)];
     self.navigationItem.leftBarButtonItem = item2;
     
     if(  [ [ UIScreen mainScreen ] bounds ].size.height== 568)
@@ -52,6 +54,11 @@
         self.Texte2.frame = CGRectMake(self.Texte2.frame.origin.x, self.Texte2.frame.origin.y +15, self.Texte2.frame.size.width, self.Texte2.frame.size.height);
     }
     
+    
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"picture"])
+    {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"picture"];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -77,13 +84,13 @@
     }
     else
     {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter une adresse mail valide." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez compléter une adresse mail valide." , nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
     }
 }
 
 -(void)StartCheckEmailProcess: (NSString *)mail
 {
-    [SVProgressHUD showWithStatus:@"Vérification de l'adresse mail" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Vérification de l'adresse mail", nil)  maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(checkEmail:) withObject:mail afterDelay:0.2];
 }
 
@@ -96,7 +103,7 @@
         UIViewController *vc = [[UIViewController alloc] init];
         if (emailExists)
         {
-             [SVProgressHUD showSuccessWithStatus:@"Adresse Mail idenftifié"];
+             [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Adresse Mail idenftifié", nil) ];
             vc = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
         }
         else if ([[pref objectForKey:@"CheckMail"]  isEqual: @"false"])
@@ -105,7 +112,7 @@
         }
         else
         {
-             [SVProgressHUD showSuccessWithStatus:@"Mail inconue veuillez créer un compte"];
+             [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Mail inconue veuillez créer un compte", nil) ];
             vc = [storyboard instantiateViewControllerWithIdentifier:@"SignUpViewController"];
         }
         [self.navigationController pushViewController:vc animated:YES];
@@ -114,7 +121,7 @@
 - (void)cancelEmail
 {
     [self.emailTextField resignFirstResponder];
-    [UIView animateWithDuration:0 animations:
+    [UIView animateWithDuration:0.2 animations:
      ^{//[self.flowView setHidden:NO];
          [self.navigationController setNavigationBarHidden:YES];
          [self.scrollView setHidden:NO];
@@ -180,7 +187,7 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
    
-    [UIView animateWithDuration:0 animations:
+    [UIView animateWithDuration:0.2 animations:
      ^{//[self.flowView setHidden:YES];
          [self.navigationController setNavigationBarHidden:NO];
          [self.scrollView setHidden:YES];
@@ -199,7 +206,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [SVProgressHUD showWithStatus:@"Vérification du mail" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Vérification du mail", nil) maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(checkEmail:) withObject:textField.text afterDelay:0.2];
     
     return YES;

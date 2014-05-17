@@ -7,7 +7,7 @@
 //
 
 #import "UpdateAccountViewController.h"
-#import "SignUpViewController.h"
+//#import "SignUpViewController.h"
 #import "signUpCell.h"
 #import "WebServices.h"
 #import "IIViewDeckController.h"
@@ -19,7 +19,12 @@
     NSArray *labels;
     UIAlertView *Check;
     NSString *pass;
-    UIImagePickerController *picker;
+    //UIImagePickerController *picker;
+    NSMutableArray *nextTArray;
+    NSMutableArray *countries;
+    NSString *currentCountry;
+    
+    int tag;
 }
 @end
 
@@ -39,14 +44,18 @@
 {
     [super viewDidLoad];
     
-
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
+    
+    currentCountry = [NSString stringWithFormat:@"%@",[pref objectForKey:@"country"]];
+    nextTArray = [[NSMutableArray alloc]init];
    
+       countries = [[NSMutableArray alloc]initWithObjects:NSLocalizedString(@"Allemagne", nil),NSLocalizedString(@"Australie", nil),NSLocalizedString(@"Autriche", nil),NSLocalizedString(@"Belgique", nil),NSLocalizedString(@"Danemark", nil),NSLocalizedString(@"Espagne", nil),NSLocalizedString(@"France", nil),NSLocalizedString(@"Inde", nil),NSLocalizedString(@"Italie", nil),NSLocalizedString(@"Pays-Bas", nil), nil];
     
-    self.navigationItem.title = @"Mise à jour du compte";
+    self.navigationItem.title = NSLocalizedString(@"Mise à jour du compte",nil);
     
     
-    NSArray *labelsFirst = [[NSArray alloc] initWithObjects:@"Identifiant",@"Nouveau mot de passe",@"Confirmation mot de passe", nil];
-    NSArray *labelsSecond = [[NSArray alloc] initWithObjects:@"E-mail",@"Mobile",@"Nom",@"Prénom", nil];
+    NSArray *labelsFirst = [[NSArray alloc] initWithObjects:NSLocalizedString(@"Identifiant",nil),NSLocalizedString(@"Nouveau mot de passe",nil),NSLocalizedString(@"Confirmation mot de passe",nil), nil];
+    NSArray *labelsSecond = [[NSArray alloc] initWithObjects:@"E-mail",@"Mobile",NSLocalizedString(@"Pays", nil),NSLocalizedString(@"Nom",nil),NSLocalizedString(@"Prénom",nil), nil];
       labels = [[NSArray alloc] initWithObjects:labelsFirst,labelsSecond, nil];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(Edit)];
     UIImage *profile = [UIImage imageNamed:@"LeftBut.png"];
@@ -58,31 +67,25 @@
     [self.tableView setUserInteractionEnabled:NO];
     [self.PictureView setUserInteractionEnabled:NO];
     
-    Check =  [[UIAlertView alloc] initWithTitle:@"Mot de passe" message:@"Veuiller inscrire votre mot de passe utilisateur" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles:@"Ok", nil];
+    Check =  [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Mot de passe",nil) message:NSLocalizedString(@"Veuiller inscrire votre mot de passe utilisateur",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Annuler",nil) otherButtonTitles:@"Ok", nil];
     Check.alertViewStyle = UIAlertViewStylePlainTextInput;
     [Check textFieldAtIndex:0].delegate = self;
     [Check textFieldAtIndex:0].secureTextEntry = YES;
    
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     pass = [pref objectForKey:@"password"];
     
     self.PictureView.contentMode = UIViewContentModeScaleAspectFit;
     
     if([pref objectForKey:@"picture"])
        {
-           self.PictureView.image = [[UIImage alloc]initWithData:[pref objectForKey:@"picture"]];
+           self.PictureView.image = [self decodeBase64ToImage:[pref objectForKey:@"picture"]];
            
        }
     else
     {
         self.PictureView.image = [UIImage imageNamed:@"default_profile.jpg"];
     }
-    if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
-    {
-        [self.picView setHidden:YES];
-    }
-        
-    
+  
     
     
 }
@@ -113,7 +116,6 @@
 -(void) Verif
 {
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSLog(@"Vérification du mot de passe");
     NSString *truc = [pref objectForKey:@"password"];
     if ([[Check textFieldAtIndex:0].text isEqualToString:truc])
         {
@@ -124,7 +126,7 @@
         }
     else
     {
-        UIAlertView *Faux = [[UIAlertView alloc]initWithTitle:@"Mot de passe incorect" message:nil delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *Faux = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Mot de passe incorrect",nil) message:nil delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [Faux show];
     }
 }
@@ -139,7 +141,7 @@
         [pref setObject:pass forKey:@"password"];
         if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
         {
-            [SVProgressHUD showSuccessWithStatus:@"Informations mises à jour !"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Informations mises à jour !",nil)];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
             UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -151,7 +153,7 @@
         }
         else
         {
-            [SVProgressHUD showSuccessWithStatus:@"Informations mises à jour !"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Informations mises à jour !",nil)];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
             UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -167,14 +169,14 @@
     else
     {
         [SVProgressHUD dismiss];
-        [[[UIAlertView alloc] initWithTitle:nil message:@"Tous les champs ne sont pas correctement remplis, veuillez réessayer." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Tous les champs ne sont pas correctement remplis, veuillez réessayer.",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
     }
 }
 
 
 - (void)startUpdateProcess:(NSMutableDictionary *)tab
 {
-    [SVProgressHUD showWithStatus:@"Mise à jour des informations" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Mise à jour des informations",nil) maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(StartUpdate:) withObject:tab afterDelay:0.2];
     
 }
@@ -225,19 +227,24 @@
         
             cell.theTextField.text = [pref objectForKey:@"email"];
          }
-        if (indexPath.row == 1)
+         if (indexPath.row == 1)
         {
-            
-            cell.rightLabel.text = @"";
-            cell.theTextField.text = [infos objectForKey:@"phone"];
+            cell.theTextField.text = currentCountry;
+            [cell.theTextField setUserInteractionEnabled:false];
         }
         if (indexPath.row == 2)
         {
             
             cell.rightLabel.text = @"";
-            cell.theTextField.text = [infos objectForKey:@"lastname"];
+            cell.theTextField.text = [infos objectForKey:@"phone"];
         }
         if (indexPath.row == 3)
+        {
+            
+            cell.rightLabel.text = @"";
+            cell.theTextField.text = [infos objectForKey:@"lastname"];
+        }
+        if (indexPath.row == 4)
         {
             cell.rightLabel.text = @"";
             cell.theTextField.text = [infos objectForKey:@"firstname"];
@@ -248,8 +255,27 @@
         }
     }
      [cell.rightLabel setHidden:YES];
+    [nextTArray addObject:cell.theTextField    ];
       return cell;
 }
+
+
+#pragma mark - TableView delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 1)
+    {
+        if (indexPath.row == 1)
+        {
+            self.CountrySelector.hidden = false;
+        }
+        
+    }
+        [self.tableView reloadData];
+    
+}
+
 
 - (void)Update
 {
@@ -277,7 +303,7 @@
                 NSTextCheckingResult *match = [regex firstMatchInString:cell.theTextField.text options:0 range:NSMakeRange(0, cell.theTextField.text.length)];
                 if (!match)
                 {
-                    [[[UIAlertView alloc] initWithTitle:nil message:@"Le username ne doit contenir au moins 4 lettres minuscules et/ou des chiffres :" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Le username ne doit contenir au moins 4 lettres minuscules et/ou des chiffres :",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                     reallyBreak = YES;
                     break;
                 }
@@ -290,7 +316,7 @@
                 NSTextCheckingResult *match = [regex firstMatchInString:cell.theTextField.text options:0 range:NSMakeRange(0, cell.theTextField.text.length)];
                 if (!match)
                 {
-                    [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter une adresse mail valide." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez compléter une adresse mail valide.",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                     reallyBreak = YES;
                     break;
                 }
@@ -355,7 +381,21 @@
                         [pref setObject:cell.theTextField.text forKey:@"email"];
                         }
                     }
-                    if(index.row == 1 )
+                    if (index.row == 1 )
+                    {
+                        NSLog(@"on est là mon grand %@  et %@",[pref objectForKey:@"country"],cell.theTextField.text);
+                        if([cell.theTextField.text isEqualToString:[pref objectForKey:@"country"]])
+                            {
+                                continue    ;
+                            }
+                        else
+                        {
+                            [mutDict setObject:cell.theTextField.text forKey:@"country"];
+                            [pref setObject:cell.theTextField.text forKey:@"country"];
+                        }
+                        
+                    }
+                    if(index.row == 2 )
                     {
                         if([cell.theTextField.text isEqualToString:[infos objectForKey:@"phone"]])
                         {
@@ -367,7 +407,7 @@
                              [pref setObject:cell.theTextField.text forKey:@"phone"];
                         }
                     }
-                    if(index.row == 2)
+                    if(index.row == 3)
                     {
                         if([cell.theTextField.text isEqualToString:[infos objectForKey:@"firstname"]])
                         {
@@ -379,7 +419,7 @@
                              [pref setObject:cell.theTextField.text forKey:@"firstname"];
                         }
                     }
-                    if(index.row == 3)
+                    if(index.row == 4)
                     {
                         if([cell.theTextField.text isEqualToString:[infos objectForKey:@"lastname"]])
                         {
@@ -396,25 +436,90 @@
         }
     }
     
+    NSString *country = [mutDict objectForKey:@"country"];
+    
+    
+    void (^selectedCase)() = @{
+                               
+                               NSLocalizedString(@"Allemagne", nil): ^{
+                                   [mutDict setObject:@"49" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Australie", nil): ^{
+                                   [mutDict setObject:@"61" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Autriche", nil): ^{
+                                   [mutDict setObject:@"43" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Belgique", nil): ^{
+                                   [mutDict setObject:@"32" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Danemark", nil): ^{
+                                   [mutDict setObject:@"45" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Espagne", nil): ^{
+                                   [mutDict setObject:@"34" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"France", nil): ^{
+                                   [mutDict setObject:@"33" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Inde", nil): ^{
+                                   [mutDict setObject:@"91" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Italie", nil): ^{
+                                   [mutDict setObject:@"39" forKey:@"country"];
+                               },
+                               NSLocalizedString(@"Pays-Bas", nil): ^{
+                                   [mutDict setObject:@"31" forKey:@"country"];
+                               },
+                               }[country];
+    if (selectedCase != nil)
+        selectedCase();
+
+    
         if ([pref objectForKey:@"picture"])
         {
             
             UIImage *imageToSend = [UIImage imageWithData:[pref objectForKey:@"picture"]];
-            
-            NSData *photoData = [[pref objectForKey:@"picture"] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];;
-            NSString *Image64 = [NSString stringWithUTF8String:[photoData bytes]];
-          //  [mutDict setObject:Image64 forKey:@"picture"];
+        
+           // NSData *photoData = [[pref objectForKey:@"picture"] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];;
+            NSString *Image64 = [[NSString  alloc]init];
+            Image64 =[self encodeToBase64String:imageToSend];
+           [mutDict setObject:Image64 forKey:@"picture"];
             NSLog(@"mutDict : %@",Image64);
-            //[self startUpdateProcess:mutDict];
+            _testImage.image = [self decodeBase64ToImage:Image64];
+            
+            
+               [self performSelector:@selector(startUpdateProcess:) withObject:mutDict afterDelay:0.5];
         }
-        else
-        {
-            NSLog(@"mutDict : %@",mutDict);
-            [self startUpdateProcess:mutDict];
-        }
+    else
+    {
+        [self startUpdateProcess:mutDict];
+    }
+    
+
+    
+   
+    
     
     
 }
+- (NSString *)encodeToBase64String:(UIImage *)image {
+    return [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+}
+- (UIImage *)decodeBase64ToImage:(NSString *)strEncodeData {
+    NSData *data = [[NSData alloc]initWithBase64EncodedString:strEncodeData options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [UIImage imageWithData:data];
+}
+
+-(NSString *)getStringFromImage:(UIImage *)image{
+	if(image){
+		NSData *dataObj = UIImagePNGRepresentation(image);
+		return [dataObj base64Encoding];
+	} else {
+		return @"";
+	}
+}
+
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -435,9 +540,9 @@
     NSString *delete = nil;
     if ([pref objectForKey:@"picture"])
     {
-        delete = @"Supprimer la photo";
+        delete = NSLocalizedString(@"Supprimer la photo",nil);
     }
-    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:delete otherButtonTitles:@"Choisir une photo",@"Prendre une photo", nil];
+    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Annuler",nil) destructiveButtonTitle:delete otherButtonTitles:NSLocalizedString(@"Choisir une photo",nil),NSLocalizedString(@"Prendre une photo",nil), nil];
     action.actionSheetStyle = UIActionSheetStyleAutomatic;
     [action showInView:self.view];
 }
@@ -448,13 +553,17 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
-    if ([title isEqualToString:@"Choisir une photo"])
+    if ([title isEqualToString:NSLocalizedString(@"Choisir une photo",nil)])
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        picker = [[UIImagePickerController alloc ]init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:picker animated:YES completion:nil];
+        /*UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ALGroupViewController"];
-        [self.navigationController pushViewController:vc animated:YES];
+        [self.navigationController pushViewController:vc animated:YES];*/
     }
-    else if ([title isEqualToString:@"Prendre une photo"])
+    else if ([title isEqualToString:NSLocalizedString(@"Prendre une photo",nil)])
     {
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
         {
@@ -467,11 +576,12 @@
             [self presentViewController:imagePicker animated:YES completion:nil];
         }
     }
-    else if ([title isEqualToString:@"Supprimer la photo"])
+    else if ([title isEqualToString:NSLocalizedString(@"Supprimer la photo",nil)])
     {
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
         [pref removeObjectForKey:@"picture"];
         self.PictureView.image = [UIImage imageNamed:@"default_profile.jpg"];
+    
     }
 }
 
@@ -493,7 +603,7 @@
                  UIImage *image = [UIImage imageWithCGImage:ref];
                  self.PictureView.image = image;
                  NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-                 [pref setObject:UIImageJPEGRepresentation(image, 1.0)forKey:@"picture"];
+                 [pref setObject:UIImagePNGRepresentation(image) forKey:@"picture"];
              }
          };
          ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error){NSLog(@"error : %@",error.localizedDescription);};
@@ -512,17 +622,100 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+
+#pragma mark - TextField delegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    
+    CGRect frameCell = textField.superview.superview.superview.frame;
+    if (frameCell.origin.y > 160 && self.view.frame.origin.y == 0)
+    {
+        [UIView animateWithDuration:0.2 animations:^{CGRect frame = self.view.frame;
+            frame.origin.y -= 170;
+            self.view.frame = frame;}];
+    }
+    return YES;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    CGRect frameCell = textField.superview.superview.superview.frame;
-    if (frameCell.origin.y > 0 && self.view.frame.origin.y == -180)
+    
+    int x=tag+1;
+
+    if (x<8)
+    {
+          UITextField *nextTextField = (UITextField *)[nextTArray objectAtIndex:x];
+        if (x<3) {
+            if (self.view.frame.origin.y == -170)
+            {
+                [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
+                    tabFrame.origin.y += 170;
+                    self.view.frame = tabFrame;}];
+            }
+            [nextTextField becomeFirstResponder];
+            tag ++;
+        }
+        
+        else if ( x>=3 )
+        {
+            [nextTextField becomeFirstResponder];
+            if (x == 3)
+            {
+                tag ++;
+            }
+            tag ++;
+        }
+    }
+  
+   
+    else
+    {
+        if (self.view.frame.origin.y == -170)
+        {
+            [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
+                tabFrame.origin.y += 170;
+                self.view.frame = tabFrame;}];
+        }
+        tag = 0;
+        [textField resignFirstResponder ];
+        return YES;
+        
+    }
+    return YES;
+}
+
+
+#pragma mark - PickerView delegate
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return [countries count];
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [countries objectAtIndex:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    currentCountry = [NSString stringWithFormat:@"%@",[countries objectAtIndex:row]];
+    [self.tableView reloadData];
+    if (self.view.frame.origin.y == -180)
     {
         [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
             tabFrame.origin.y += 180;
             self.view.frame = tabFrame;}];
     }
-    [textField resignFirstResponder];
-    return YES;
+    pickerView.hidden = YES;
 }
+
+
 
 @end

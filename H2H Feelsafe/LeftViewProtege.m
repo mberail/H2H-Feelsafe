@@ -31,9 +31,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSArray *first = [NSArray arrayWithObjects:@"Accueil",@"Mes référents"/*@",Périmètres"*/, nil];
-    NSArray *second = [NSArray arrayWithObjects:@"Notifications",@"Mon compte", nil];
-    NSArray *third = [NSArray arrayWithObjects:@"Aide",@"Déconnexion", nil];
+    NSArray *first = [NSArray arrayWithObjects:NSLocalizedString(@"Accueil",nil),NSLocalizedString(@"Mes référents",nil)/*@",Périmètres"*/, nil];
+    NSArray *second = [NSArray arrayWithObjects:NSLocalizedString(@"Mon compte",nil), nil];
+    NSArray *third = [NSArray arrayWithObjects:NSLocalizedString(@"Aide",nil),NSLocalizedString(@"Déconnexion",nil), nil];
     textes = [NSArray arrayWithObjects:first,second,third, nil];
 }
 
@@ -57,6 +57,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NavigationCell"];
+    cell.textLabel.textColor = [[UIColor alloc]initWithRed:(142.0/255.0) green:(20./255.0) blue:(129./255.0) alpha:1.0];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NavigationCell"];
@@ -70,29 +71,32 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if ([cell.textLabel.text isEqualToString:@"Déconnexion"])
+    if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Déconnexion",nil)])
     {
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:@"Voulez-vous vraiment vous déconnecter ?" delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:@"Déconnexion" otherButtonTitles:nil];
+        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Voulez-vous vraiment vous déconnecter ?",nil) delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:NSLocalizedString(@"Déconnexion",nil) otherButtonTitles:nil];
         action.actionSheetStyle = UIActionSheetStyleAutomatic;
         [action showInView:self.view];
     }
-    else if ([cell.textLabel.text isEqualToString:@"Mes référents"])
+    else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Mes référents",nil)])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"RefListViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
+          self.viewDeckController.panningMode = IIViewDeckFullViewPanning;
         [self.viewDeckController closeLeftView];
     }
-    else if ([cell.textLabel.text isEqualToString:@"Mon compte"])
+    else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Mon compte",nil)])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UpdateAccountViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
+          self.viewDeckController.panningMode = IIViewDeckFullViewPanning;
         [self.viewDeckController closeLeftView];
     }
-    else if ([cell.textLabel.text isEqualToString:@"Accueil"])
+ 
+    else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Accueil",nil)])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
@@ -100,16 +104,17 @@
         self.viewDeckController.centerController = navController;
         [self.viewDeckController closeLeftView];
     }
-    else if ([cell.textLabel.text isEqualToString:@"Périmètres"])
+    else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Périmètres",nil)])
     {
         
     }
-    else if ([cell.textLabel.text isEqualToString:@"Aide"])
+    else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Aide",nil)])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UIGuideViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
+        self.viewDeckController.panningMode = IIViewDeckFullViewPanning;
         [self.viewDeckController closeLeftView];
     }
     [self.tableView reloadData];

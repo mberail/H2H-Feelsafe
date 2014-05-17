@@ -27,13 +27,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Suivant" style:UIBarButtonItemStylePlain target:self action:@selector(proceedWithLogin)];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Suivant",nil) style:UIBarButtonItemStylePlain target:self action:@selector(proceedWithLogin)];
     self.navigationItem.rightBarButtonItem = item;
     
    // self.recup.image = [UIImage imageNamed:@"no_img"];
-    self.navigationItem.title = @"Connexion";
+    self.navigationItem.title = NSLocalizedString(@"Connexion",nil);
 	self.navigationItem.leftBarButtonItem =nil;
-    labels = [[NSArray alloc] initWithObjects:@"Email",@"Mot de passe", nil];
+    labels = [[NSArray alloc] initWithObjects:@"Email",NSLocalizedString(@"Mot de passe",nil), nil];
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
@@ -57,7 +57,7 @@
         signUpCell *cell = (signUpCell *)[self.tableView cellForRowAtIndexPath:index];
         if (cell.theTextField.text.length == 0)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter tous les champs" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez compléter tous les champs",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             break;
             
         }
@@ -81,7 +81,7 @@
         NSTextCheckingResult *match = [regex firstMatchInString:mutArray[i] options:0 range:NSMakeRange(0, [mutArray[i] length])];
         if (!match)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Champs mal complétés" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Champs mal complétés",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             return;
         }
     }
@@ -90,7 +90,7 @@
 
 - (void)startLoginProcess:(NSArray *)tab
 {
-    [SVProgressHUD showWithStatus:@"Vérification du Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Vérification du Mot de passe",nil) maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(login:) withObject:tab afterDelay:0.2];
 }
 
@@ -105,7 +105,7 @@
     {
         if ([status isEqual:@"referent"])
         {
-        [SVProgressHUD showSuccessWithStatus:@"Bienvenue"];
+        [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Bienvenue",nil)];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
         UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -116,7 +116,7 @@
         [self.navigationController presentViewController:viewDeck animated:YES completion:nil];
         }
         else if ([status isEqual:@"protege"])
-        {[SVProgressHUD showSuccessWithStatus:@"Bienvenue"];
+        {[SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Bienvenue",nil)];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Navigation_Pro_ViewController"];
             UINavigationController *nvc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -130,7 +130,7 @@
     }
     else
     {
-        [SVProgressHUD showErrorWithStatus:@"Mot-de-passe incorrect"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Mot-de-passe incorrect",nil)];
     }
 
 }

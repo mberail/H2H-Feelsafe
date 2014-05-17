@@ -27,4 +27,5 @@
 + (NSString *)base64forData:(NSData *)theData;
 +(void)Share: (NSMutableDictionary *)params;
 +(NSArray *) referentsInfos;
++(void)updatealerting: (NSMutableDictionary *)params;
 @end

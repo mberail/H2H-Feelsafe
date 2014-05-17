@@ -15,6 +15,10 @@
 @interface SignUpViewController ()
 {
     NSArray *labels;
+    NSMutableArray *nextTFarray;
+    int tag;
+    NSMutableArray *countries;
+    UIImagePickerController *picker;
 }
 @end
 
@@ -23,18 +27,22 @@
 
 - (void)viewDidLoad
 {
+    tag = 0;
     [super viewDidLoad];
-     [self.PicView setHidden:YES];
+
     [self.navigationController setNavigationBarHidden:NO];
-    self.navigationItem.title = @"Inscription";
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.title = NSLocalizedString(@"Inscription", nil);
+ 
+    countries = [[NSMutableArray alloc]initWithObjects:NSLocalizedString(@"Allemagne", nil),NSLocalizedString(@"Australie", nil),NSLocalizedString(@"Autriche", nil),NSLocalizedString(@"Belgique", nil),NSLocalizedString(@"Danemark", nil),NSLocalizedString(@"Espagne", nil),NSLocalizedString(@"France", nil),NSLocalizedString(@"Inde", nil),NSLocalizedString(@"Italie", nil),NSLocalizedString(@"Pays-Bas", nil), nil];
     
-    NSArray *labelsFirst = [[NSArray alloc] initWithObjects:@"Identifiant",@"Mot de passe",@"Confirmation mot de passe", nil];
-    NSArray *labelsSecond = [[NSArray alloc] initWithObjects:@"E-mail",@"Mobile",@"Nom",@"Prénom", nil];
-    NSArray *labelsThird = [[NSArray alloc] initWithObjects:@"J'accepte les CGU", nil];
+    nextTFarray = [[NSMutableArray alloc]init];
+    
+    NSArray *labelsFirst = [[NSArray alloc] initWithObjects:NSLocalizedString( @"Identifiant",nil),NSLocalizedString(@"Mot de passe",nil),NSLocalizedString(@"Confirmation mot de passe",nil), nil];
+    NSArray *labelsSecond = [[NSArray alloc] initWithObjects:NSLocalizedString(@"E-mail",nil),NSLocalizedString(@"Pays",nil),NSLocalizedString(@"Mobile",nil),NSLocalizedString(@"Nom",nil),NSLocalizedString(@"Prénom",nil), nil];
+    NSArray *labelsThird = [[NSArray alloc] initWithObjects:NSLocalizedString(@"J'accepte les CGU",nil), nil];
     labels = [[NSArray alloc] initWithObjects:labelsFirst,labelsSecond,labelsThird, nil];
     
-	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Terminé" style:UIBarButtonItemStylePlain target:self action:@selector(signup)];
+	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Terminé",nil) style:UIBarButtonItemStylePlain target:self action:@selector(signup)];
     self.navigationItem.rightBarButtonItem = item;
     accepted = NO;
     
@@ -44,6 +52,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(CGUaccepted) name:@"CGUaccepted" object:nil];
 }
+
+
 -(void)StartSignUp: (NSArray *)tab
 {
     BOOL signUp = [WebServices signUp:tab] ;
@@ -82,7 +92,7 @@
 
 - (void)startSignupProcess:(NSArray *)tab
 {
-    [SVProgressHUD showWithStatus:@"Vérification Mot de passe" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Inscription en cours",nil) maskType:SVProgressHUDMaskTypeBlack];
     [self performSelector:@selector(StartSignUp:) withObject:tab afterDelay:0.2];
 
 }
@@ -95,6 +105,13 @@
         self.pictureView.image = [UIImage imageWithData:[pref objectForKey:@"picture"]];
     }
     [self.tableView reloadData];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    self.pictureView.image =nil;
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults ];
+    [pref removeObjectForKey:@"picture"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -127,14 +144,14 @@
                 NSTextCheckingResult *match = [regex firstMatchInString:cell.theTextField.text options:0 range:NSMakeRange(0, cell.theTextField.text.length)];
                 if (!match)
                 {
-                    [[[UIAlertView alloc] initWithTitle:nil message:@"Le username ne doit contenir au moins 4 lettres minuscules et/ou des chiffres :" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Le username ne doit contenir au moins 4 lettres minuscules et/ou des chiffres :",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                     reallyBreak = YES;
                     break;
                 }
             }
             if ([cell.rightLabel.text isEqualToString:@"*"] && cell.theTextField.text.length == 0)
             {
-                [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter tous les champs obligatoires." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez compléter tous les champs obligatoires.",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                 reallyBreak = YES;
                 break;
                 
@@ -148,14 +165,14 @@
                 NSTextCheckingResult *match = [regex firstMatchInString:cell.theTextField.text options:0 range:NSMakeRange(0, cell.theTextField.text.length)];
                 if (!match)
                 {
-                    [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez compléter une adresse mail valide." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                    [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez compléter une adresse mail valide.",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                     reallyBreak = YES;
                     break;
                 }
             }
             if (index.section == 2 && cell.accessoryType == UITableViewCellAccessoryNone)
             {
-                [[[UIAlertView alloc] initWithTitle:nil message:@"Veuillez accepter les CGU" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Veuillez accepter les CGU",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                 reallyBreak = YES;
                 break;
             }
@@ -166,7 +183,7 @@
         }
     }
    
-    if (mutArray.count == 7 && accepted)
+    if (mutArray.count == 8 && accepted)
     {
         
         NSString *statut = @"";
@@ -180,6 +197,47 @@
             statut = @"protege";
         }
         [pref setObject:statut forKey:@"status"];
+        NSString *country = [mutArray objectAtIndex:4];
+      
+      
+            void (^selectedCase)() = @{
+                                       
+                                       NSLocalizedString(@"Allemagne", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"49"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Australie", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"61"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Autriche", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"43"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Belgique", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"32"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Danemark", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"45"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Espagne", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"34"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"France", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"33"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Inde", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"91"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Italie", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"39"] atIndexedSubscript:4];
+                                       },
+                                       NSLocalizedString(@"Pays-Bas", nil): ^{
+                                           [mutArray setObject:[NSString stringWithFormat:@"31"] atIndexedSubscript:4];
+                                       },
+                                       }[country];
+            if (selectedCase != nil)
+               selectedCase();
+        
+        
+    
          NSLog(@"mutArray : %@",mutArray);
         
         
@@ -201,15 +259,7 @@
 
 - (IBAction)statusChange:(id)sender {
     UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
-    if (segmentedControl.selectedSegmentIndex == 0)
-    {
-        [self.PicView setHidden:YES];
-    }
-    else if (segmentedControl.selectedSegmentIndex == 1)
-    {
-        
-        [self.PicView setHidden:NO];
-    }
+ 
 }
 
 - (IBAction)picture:(id)sender
@@ -218,9 +268,9 @@
     NSString *delete = nil;
     if ([pref objectForKey:@"picture"])
     {
-        delete = @"Supprimer la photo";
+        delete = NSLocalizedString(@"Supprimer la photo",nil);
     }
-    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Annuler" destructiveButtonTitle:delete otherButtonTitles:@"Choisir une photo",@"Prendre une photo", nil];
+    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Annuler",nil) destructiveButtonTitle:delete otherButtonTitles:NSLocalizedString(@"Choisir une photo",nil),NSLocalizedString(@"Prendre une photo",nil), nil];
     action.actionSheetStyle = UIActionSheetStyleAutomatic;
     [action showInView:self.view];
 }
@@ -229,6 +279,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+
     CGRect frameCell = textField.superview.superview.superview.frame;
     if (frameCell.origin.y > 170 && self.view.frame.origin.y == 0)
     {
@@ -241,14 +292,43 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    CGRect frameCell = textField.superview.superview.superview.frame;
-    if (frameCell.origin.y > 0 && self.view.frame.origin.y == -180)
-    {
-        [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
-            tabFrame.origin.y += 180;
-            self.view.frame = tabFrame;}];
+    int i=[nextTFarray count];
+    int x=tag+1;
+    UITextField *nextTextField = (UITextField *)[nextTFarray objectAtIndex:x];
+    if (x<3) {
+        if (self.view.frame.origin.y == -180)
+        {
+            [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
+                tabFrame.origin.y += 180;
+                self.view.frame = tabFrame;}];
+        }
+        [nextTextField becomeFirstResponder];
+       if (x == 2)
+        {
+            tag +=2;
+        }
+        tag ++;
     }
-    [textField resignFirstResponder];
+
+    else if ( x>3 && x<i-1)
+    {
+        [nextTextField becomeFirstResponder];
+        tag ++;
+    }
+    else
+    {
+        if (self.view.frame.origin.y == -180)
+        {
+            [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
+                tabFrame.origin.y += 180;
+                self.view.frame = tabFrame;}];
+        }
+        tag = 0;
+       
+        [textField resignFirstResponder];
+        return YES;
+       
+    }
     return YES;
 }
 
@@ -282,14 +362,28 @@
     }
     else if (indexPath.section == 1)
     {
-        if (indexPath.row == 0)
+        if (indexPath.row == 0 )
         {
             NSUserDefaults * pref = [NSUserDefaults standardUserDefaults];
-            cell.rightLabel.text = @"*";
             cell.theTextField.text = [pref objectForKey:@"email"];
             cell.theTextField.textColor = [UIColor grayColor];
             [cell.theTextField setUserInteractionEnabled:false];
+            
+            cell.rightLabel.text = @"*";
+            
         }
+        else if (indexPath.row == 1)
+        {
+             NSUserDefaults * pref = [NSUserDefaults standardUserDefaults];
+            if([pref objectForKey:@"country"])
+            {
+                cell.theTextField.text = [pref objectForKey:@"country"];
+            }
+            cell.rightLabel.text = @"*";
+        
+            [cell.theTextField setUserInteractionEnabled:false];
+        }
+       
         else
         {
             cell.rightLabel.text = @"";
@@ -300,12 +394,12 @@
         
         cell.rightLabel.text = @"";
         [cell.theTextField setHidden:YES];
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, 150, 20)];
-        label.text = [[labels objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        label.font = [UIFont systemFontOfSize:15];
-        [cell addSubview:label];
+      //  UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, 150, 20)];
+        cell.textLabel.text = [[labels objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        //label.font = [UIFont systemFontOfSize:15];
+        //[cell addSubview:label];
         UIButton *info = [UIButton buttonWithType:UIButtonTypeInfoLight];
-        info.frame = CGRectMake(160, 9, 22, 22);
+        info.frame = CGRectMake(170, 9, 22, 22);
         [info addTarget:self action:@selector(displayCGU) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:info];
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -318,6 +412,8 @@
             cell.accessoryType = UITableViewCellAccessoryNone;
         }
     }
+    [nextTFarray addObject:cell.theTextField    ];
+
     return cell;
 }
 
@@ -325,6 +421,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 1)
+    {
+        if (indexPath.row == 1)
+        {
+            self.CountrySelector.hidden = false;
+        }
+        
+    }
     if (indexPath.section == 2)
     {
         if (self.view.frame.origin.y == -180)
@@ -350,13 +454,14 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
-    if ([title isEqualToString:@"Choisir une photo"])
+    if ([title isEqualToString:NSLocalizedString(@"Choisir une photo",nil)])
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ALGroupViewController"];
-        [self.navigationController pushViewController:vc animated:YES];
+        picker = [[UIImagePickerController alloc ]init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentViewController:picker animated:YES completion:nil];
     }
-    else if ([title isEqualToString:@"Prendre une photo"])
+    else if ([title isEqualToString:NSLocalizedString(@"Prendre une photo",nil)])
     {
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
         {
@@ -369,7 +474,7 @@
             [self presentViewController:imagePicker animated:YES completion:nil];
         }
     }
-    else if ([title isEqualToString:@"Supprimer la photo"])
+    else if ([title isEqualToString:NSLocalizedString(@"Supprimer la photo",nil)])
     {
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
         [pref removeObjectForKey:@"picture"];
@@ -413,5 +518,39 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - PickerView delegate
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return [countries count];
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [countries objectAtIndex:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults ];
+    [pref setObject:[countries objectAtIndex:row] forKey:@"country"];
+    [self.tableView reloadData];
+    if (self.view.frame.origin.y == -180)
+    {
+        [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
+            tabFrame.origin.y += 180;
+            self.view.frame = tabFrame;}];
+    }
+    pickerView.hidden = YES;
+}
+
+
+
 
 @end

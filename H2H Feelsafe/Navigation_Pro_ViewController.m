@@ -21,7 +21,6 @@
     NSTimer *decompte;
     int compte;
     UIAlertView *dangerView;
-
     NSString *address;
 }
 
@@ -53,13 +52,13 @@
     
     address = [[NSString alloc]initWithFormat:@"%@",[[pref objectForKey:@"infos"]objectForKey:@"address" ]];
     
- 
+    self.SendBut.titleLabel.text = @"";
     
     decompte = [[NSTimer alloc]init];
     decompte = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(TimerCount) userInfo:nil repeats:YES];
     
     compte = 10;
-    dangerView = [[UIAlertView alloc]initWithTitle:@"Alerte danger dans:" message:@"8" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles: nil];
+    dangerView = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Alerte danger dans:",nil) message:@"10" delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles: nil];
 
     
     NSDictionary *infos = [pref objectForKey:@"infos"];
@@ -73,14 +72,13 @@
     else if ([alert isEqualToString:@"2"])
     {
         self.alert.image = [UIImage imageNamed:@"warning.png"];
-        
     }
    else  if ([alert isEqualToString:@"3"])
     {
         self.alert.image = [UIImage imageNamed:@"alert.png"];
     }
     
-    self.navigationItem.title = @"Protégé";
+    self.navigationItem.title = NSLocalizedString(@"Protégé", nil) ;
     
     self.StatutView.layer.borderColor =[UIColor blackColor].CGColor;
     self.StatutView.layer.borderWidth = 2.0f;
@@ -91,7 +89,7 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
+  //  self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Retour" style:UIBarButtonItemStylePlain target:nil action:nil];
     
     self.Prenom.adjustsFontSizeToFitWidth = YES;
     self.Prenom.text = [[pref objectForKey:@"infos"]objectForKey:@"firstname"];
@@ -103,8 +101,11 @@
     
    
     self.Picture.contentMode = UIViewContentModeScaleAspectFit;
-    UIImage *pic = [[UIImage alloc] initWithData:[pref objectForKey:@"picture"]];
-    self.Picture.image = pic ;
+    UIImage *pic = [[UIImage alloc] init];
+    
+   // NSLog(@"%@",[[pref objectForKey:@"picture"]class ]);
+    pic = [UIImage imageWithData:[pref objectForKey:@"picture"]];
+    self.Picture.image = pic;
     
         [self.alertLabel  setHidden:YES];
    if(  [ [ UIScreen mainScreen ] bounds ].size.height== 568)
@@ -162,7 +163,7 @@
     {
     if([alert isEqualToString:@"3"])
     {
-        [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Compte en danger, changement d'état impossible",nil)];
     }
     else
     {
@@ -173,7 +174,7 @@
     }
     else
     {
-        [SVProgressHUD showErrorWithStatus:@"Veuillez activer les services de localisation"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Veuillez activer les services de localisation",nil)];
     }
 }
 
@@ -182,7 +183,7 @@
     {
     if([alert isEqualToString:@"3"])
     {
-        [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Compte en danger, changement d'état impossible",nil)];
     }
     else
     {
@@ -193,7 +194,7 @@
     }
     else
     {
-        [SVProgressHUD showErrorWithStatus:@"Veuillez activer les services de localisation"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Veuillez activer les services de localisation",nil)];
     }
 }
 
@@ -202,7 +203,7 @@
     {
     if([alert isEqualToString:@"3"])
     {
-        [SVProgressHUD showErrorWithStatus:@"Compte en danger, changement d'état impossible"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Compte en danger, changement d'état impossible",nil)];
     }
     else
     {
@@ -214,7 +215,7 @@
     }
     else
     {
-        [SVProgressHUD showErrorWithStatus:@"Veuillez activer les services de localisation"];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Veuillez activer les services de localisation",nil)];
     }
 }
 
@@ -244,6 +245,7 @@
 
 - (IBAction)send:(id)sender {
     [self.message endEditing:YES];
+     self.message.text = nil;
     NSLog(@"message %@", self.message.text);
 }
 
@@ -258,12 +260,12 @@
     NSLog(@"Update %@",infos);
     if (Update)
     {
-        [SVProgressHUD showSuccessWithStatus:@"Informations mise à jours"];
+        [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Informations mise à jours",nil)];
         self.adresse.text = address;
     }
     else
     {
-        [SVProgressHUD showErrorWithStatus:@"La mise à jour des informations à échouée..."];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"La mise à jour des informations à échouée...",nil)];
     
     }
 }
@@ -273,7 +275,7 @@
 {
     
    
-    [SVProgressHUD showWithStatus:@"Mise à jour des informations" maskType:SVProgressHUDMaskTypeBlack];
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"Mise à jour des informations",nil) maskType:SVProgressHUDMaskTypeBlack];
     
     
     [locationManager startUpdatingLocation];
@@ -297,7 +299,6 @@
          //String to address
          NSString *locatedaddress = [[placemark.addressDictionary valueForKey:@"FormattedAddressLines"] componentsJoinedByString:@", "];
          address = locatedaddress ;
-         NSLog(@"putain %@",locatedaddress);
      }];
 
 }
@@ -305,26 +306,16 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    CGRect frameCell = textField.superview.superview.superview.frame;
-    if (frameCell.origin.y > 170 && self.view.frame.origin.y == 0)
-    {
-        [UIView animateWithDuration:0.2 animations:^{CGRect frame = self.view.frame;
-            frame.origin.y -= 180;
-            self.view.frame = frame;}];
-    }
+    
+    self.SendBut.titleLabel.text = NSLocalizedString(@"envoyer",nil);
     return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    CGRect frameCell = textField.superview.superview.superview.frame;
-    if (frameCell.origin.y > 0 && self.view.frame.origin.y == -180)
-    {
-        [UIView animateWithDuration:0.2 animations:^{CGRect tabFrame = self.view.frame;
-            tabFrame.origin.y += 180;
-            self.view.frame = tabFrame;}];
-    }
     [textField resignFirstResponder];
+    self.SendBut.titleLabel.text = @"";
+    textField.text = nil;
     return YES;
 }
 

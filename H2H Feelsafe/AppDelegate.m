@@ -61,8 +61,12 @@
     }
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.window.tintColor = [[UIColor alloc]initWithRed:(142.0/255.0) green:(20./255.0) blue:(129./255.0) alpha:1.0];
-    
+    if ([[UIDevice currentDevice].systemVersion integerValue]>= 7)
+    {
+        self.window.tintColor = [[UIColor alloc]initWithRed:(142.0/255.0) green:(20./255.0) blue:(129./255.0) alpha:1.0];
+    }
+    NSLog(@"version de l'iphone: %@",[UIDevice currentDevice].systemVersion );
+
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
@@ -93,11 +97,6 @@
 {
     NSLog(@"%@",error);
 }
-
-
-
-
-
 
 /*
 - (void)applicationWillResignActive:(UIApplication *)application

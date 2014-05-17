@@ -10,7 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@interface SignUpViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface SignUpViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (strong, nonatomic) IBOutlet UIView *PicView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property BOOL accepted;
 - (IBAction)statusChange:(id)sender;
+@property (strong, nonatomic) IBOutlet UITextField *TextField;
+@property (strong, nonatomic) IBOutlet UIPickerView *CountrySelector;
 
 - (IBAction)picture:(id)sender;
 

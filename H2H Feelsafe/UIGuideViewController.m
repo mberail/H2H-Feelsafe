@@ -37,11 +37,11 @@
     [self.navigationController setNavigationBarHidden:NO];
 
     pref = [NSUserDefaults standardUserDefaults ];
-    NSAttributedString *inscription = [self htmlToText: @"<h2>Créez vous, au choix, un compte :</h2><p><b>Référent</b>, pour localiser et recevoir des notifications des personnes que vous souhaitez protéger.</p><p><b>Protégé</b>, pour envoyer des messages à vos référent(s), alerter si besoin, et transmettre votre position.</p>"];
-    NSAttributedString *plan = [self htmlToText:@"  <h2>Position des protégés</h2><p>Le référent peut localiser et actualiser la position de ses protégés sur la carte.</p>"];
-    NSAttributedString *contact = [self htmlToText:@"<h2>Ajoutez vos protégés</h2><p>Le référent peut ajouter des protégés à partir de son répertoire ou du pseudo d’un protégé</p>"];
-    NSAttributedString *liste =  [self htmlToText:@"<h2>Liste des protégés</h2><p>Le référent peut accéder à la liste de ses protégés, indiquant la dernière adresse où ils se trouvent.</p>"];
-    NSAttributedString *alert = [self htmlToText:@"<h2>Alertez vos Référents</h2><p>Le protégé peut avertir son ou ses référent(s) d’un éventuel imprévu et lancer une alerte en cas d’urgence.</p>"];
+    NSAttributedString *inscription = [self htmlToText: NSLocalizedString(@"<h2>Créez vous, au choix, un compte :</h2><p><b>Référent</b>, pour localiser et recevoir des notifications des personnes que vous souhaitez protéger.</p><p><b>Protégé</b>, pour envoyer des messages à vos référent(s), alerter si besoin, et transmettre votre position.</p>", @"Conserve the HTML") ];
+    NSAttributedString *plan = [self htmlToText:NSLocalizedString(@"  <h2>Position des protégés</h2><p>Le référent peut localiser et actualiser la position de ses protégés sur la carte.</p>",nil)];
+    NSAttributedString *contact = [self htmlToText:NSLocalizedString(@"<h2>Ajoutez vos protégés</h2><p>Le référent peut ajouter des protégés à partir de son répertoire ou du pseudo d’un protégé</p>",nil)];
+    NSAttributedString *liste =  [self htmlToText:NSLocalizedString(@"<h2>Liste des protégés</h2><p>Le référent peut accéder à la liste de ses protégés, indiquant la dernière adresse où ils se trouvent.</p>",nil)];
+    NSAttributedString *alert = [self htmlToText:NSLocalizedString(@"<h2>Alertez vos Référents</h2><p>Le protégé peut avertir son ou ses référent(s) d’un éventuel imprévu et lancer une alerte en cas d’urgence.</p>",nil)];
     
     
     slidesText = [[NSArray alloc]initWithObjects:inscription,plan,contact,liste,alert, nil];

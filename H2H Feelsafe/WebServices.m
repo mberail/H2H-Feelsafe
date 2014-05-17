@@ -111,48 +111,66 @@
     return responseData;
 }
 
-+ (NSData *)getPictureData:(NSString *)url
++ (UIImage *)getPicture:(NSString*)userId
 {
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSDictionary *dictTemp = [[NSUserDefaults standardUserDefaults] objectForKey:@"infos"];
-    NSString *authStr = [NSString stringWithFormat:@"%@:%@",[dictTemp objectForKey:@"mail"],[pref objectForKey:@"password"]];
-    NSData *authData = [authStr dataUsingEncoding:NSASCIIStringEncoding];
-    NSString *authValue = [NSString stringWithFormat:@"Basic %@", [self base64forData:authData]];
-    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
-    [request setHTTPMethod:@"GET"];
-
-    NSData *responseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-  //  UIImage *pic = [[UIImage alloc] initWithData:responseData];
-    NSLog(@"data : %@",[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
-    return responseData;
+    UIImage *imgCache = [[UIImage alloc] init];
+    //if([userId isEqualToString:@"134"])
+    //{
+    //  imgCache = [UIImage imageNamed:@"default_profile.jpg"];
+    //}
+    // else
+    //{
+    NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picTESTURL,userId];
+    
+    if ([[ImageCache sharedImageCache] doesExist:pictureString] == YES)
+    {
+        imgCache = [[ImageCache sharedImageCache] getImage:pictureString];
+    }
+    else
+    {
+        NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:pictureString]];
+        NSString *data = [NSString stringWithFormat:@"%@",thedata];
+        NSLog(@"Picture Data, %@", thedata);
+        if ([data isEqualToString:@"(null)"] || data == nil)
+        {
+            imgCache = [UIImage  imageNamed:@"default_profile.jpg"];
+        }
+        else
+        {
+            imgCache = [UIImage imageWithData:thedata];
+            [[ImageCache sharedImageCache] addImage:pictureString with:imgCache];
+        }
+        // }
+        return imgCache;
+    }
+    return imgCache;
 }
 
 + (BOOL)checkEmail:(NSString *)emailAddress
 {
     //return 1;
     NSArray *objects = [NSArray arrayWithObject:emailAddress];
-    NSArray *keys = [NSArray arrayWithObject:@"login"];
+    NSArray *keys = [NSArray arrayWithObject:@"mail"];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/whoami",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/whoami",hURL];
     NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (response != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
         NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-        NSString *email = [infosDict objectForKey:@"login"];
+        NSString *email = [infosDict objectForKey:@"mail"];
         [pref setObject:email forKey:@"email"];
         int code = [[dictData objectForKey:@"code"] intValue];
-        if (code == 404)
+        if (code == 301)
         {
             NSString *mailOK = @"true";
             [pref setObject:mailOK forKey:@"CheckMail"];
 
         }
-        if (code == 4129)
+        if (code == 200)
         {
-            
-            NSString *status = [dictData objectForKey:@"status"];
+            NSLog(@"dictData %@",dictData);
+            NSString *status = [[dictData objectForKey:@"message"  ]objectForKey:@"status"];
            
             [pref setObject:status forKey:@"status"];
             NSString *mailOK = @"true";
@@ -164,7 +182,7 @@
         {
             NSString *mailOK = @"false";
             [pref setObject:mailOK forKey:@"CheckMail"];
-            [[[UIAlertView alloc] initWithTitle:nil message:@"L'adresse mail n'est pas valide !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"L'adresse mail n'est pas valide !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
     }
     return 0;
@@ -191,7 +209,8 @@
     [infosDict setObject:phoneos forKey:@"phoneos"]; //mise en cache de phoneos
     NSString *MDP = [infosDict objectForKey:@"password"];
     [pref setObject:MDP forKey:@"password"]; //mise en cache du mot de passe
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",kURL,[pref objectForKey:@"status"]];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/login",hURL,[pref objectForKey:@"status"]];
+    NSLog(@"url %@",stringUrl);
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (responseData != nil)
     {
@@ -203,15 +222,22 @@
             NSString *status = [pref objectForKey:@"status"];
             if ([status isEqual:@"referent"])
             {
-                NSDictionary *infos_referent = [dictData objectForKey:@"message"];
+                NSMutableDictionary *infos_referent = [dictData objectForKey:@"message"];
                 NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
                 [pref setObject:infos_referent forKey:@"infos"];
+                
+                [pref setObject:[infos_referent objectForKey:@"alert_frequency"] forKey:@"alert_frequency"];
+                [pref setObject:[infos_referent objectForKey:@"alert_message"] forKey:@"alert_message"];
+                [pref setObject:[infos_referent objectForKey:@"alert_notification"] forKey:@"alert_notification"];
+                [pref setObject:[infos_referent objectForKey:@"alert_mail"] forKey:@"alert_mail"];
+                
+                
                 NSLog(@"infos : %@",dictData);
             }
             else if ([status isEqual:@"protege"])
             {
                 NSNull *rien = [[NSNull alloc]init];
-                NSDictionary *infos_protege = [dictData objectForKey:@"message"];
+                NSMutableDictionary *infos_protege = [dictData objectForKey:@"message"];
                 if ([[infos_protege objectForKey:@"latitude"] isEqual:rien])
                 {
                     [infos_protege setValue:@"Rien"forKey:@"latitude"];
@@ -224,8 +250,56 @@
                 {
                     [infos_protege setValue:@"Rien"forKey:@"address"];
                 }
-                NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,[infos_protege objectForKey:@"id"]];
-                [pref setObject:[self getPictureData:pictureString] forKey:@"picture"];
+                NSString *userId = [infos_protege objectForKey:@"id"];
+               
+                NSData *imageData = UIImageJPEGRepresentation([self getPicture:userId], 1);
+                
+                [pref setObject:imageData forKey:@"picture"];
+               
+                NSLog(@"picture Data: %@",[pref objectForKey:@"picture"]);
+                
+                NSString *country = [infos_protege objectForKey:@"country"];
+                
+                
+                void (^selectedCase)() = @{
+                                           
+                                           NSLocalizedString(@"49", nil): ^{
+                                               [infos_protege setObject:@"Allemagne" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"61", nil): ^{
+                                               [infos_protege setObject:@"Australie" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"43", nil): ^{
+                                               [infos_protege setObject:@"Autriche" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"32", nil): ^{
+                                               [infos_protege setObject:@"Belgique" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"45", nil): ^{
+                                               [infos_protege setObject:@"Danemark" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"34", nil): ^{
+                                               [infos_protege setObject:@"Espagne" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"33", nil): ^{
+                                               [infos_protege setObject:@"France" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"91", nil): ^{
+                                               [infos_protege setObject:@"Inde" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"39", nil): ^{
+                                               [infos_protege setObject:@"Italie" forKey:@"country"];
+                                           },
+                                           NSLocalizedString(@"31", nil): ^{
+                                               [infos_protege setObject:@"Pays-Bas" forKey:@"country"];
+                                           },
+                                           }[country];
+                if (selectedCase != nil)
+                    selectedCase();
+                
+                
+                
+                [pref setObject:[infos_protege objectForKey:@"country"] forKey:@"country"];
                 
                 NSLog(@"infos : %@", infos_protege);
             
@@ -240,10 +314,9 @@
 
 + (BOOL)signUp:(NSArray *)parameters
 {
-    NSArray *keys = [NSArray arrayWithObjects:@"username",@"password",@"confirmation",@"mail",@"phone",@"lastname",@"firstname", nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"username",@"password",@"confirmation",@"mail",@"country",@"phone",@"lastname",@"firstname", nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
     NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    //NSUserDefaults *preference = [NSUserDefaults standardUserDefaults];
     NSString *phoneos = [pref objectForKey:@"phoneos"];
     [infosDict setObject:phoneos forKey:@"phoneos"];
     
@@ -258,12 +331,18 @@
         //mise en cache du phoneid
     }
     [infosDict setObject:phoneid forKey:@"phoneid"];
+    
     NSString *Status = [pref objectForKey:@"status"];
     [infosDict setObject:Status forKey:@"status"];
+
     NSString *MDP = [infosDict objectForKey:@"password"];
     [pref setObject:MDP forKey:@"password"];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/register",kURL];
+    
+    [infosDict setObject:@"false" forKey:@"premium"];
+    
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/register",hURL];
     NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
+    NSLog(@"parameters: %@",infosDict);
     if (response != nil)
     {
         NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableContainers error:nil];
@@ -298,21 +377,21 @@
             }
             return 1;
         }
-        if (code == 4128)
+        if (code == 352)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"L'identifiant est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"L'identifiant est déja utilisé !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
         if (code == 4120)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Le Username ne doit contenir que des minuscules et au minimum 4 caractères !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Le Username ne doit contenir que des minuscules et au minimum 4 caractères !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
-        if (code == 4129)
+        if (code == 351)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"L'addresse Mail est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"L'addresse Mail est déja utilisé !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
         if (code == 4122)
         {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Les mots de passes sont différents !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Les mots de passes sont différents !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
     }
     return 0;
@@ -325,7 +404,7 @@
     NSData *JsonData = [NSJSONSerialization dataWithJSONObject:contacts options:NSJSONWritingPrettyPrinted error:nil];
     NSString *jsonString = [[NSString alloc]initWithData:JsonData encoding:NSUTF8StringEncoding];
     [infodict setObject:contacts forKey:@"phonebook"];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/searchinphonebook",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/searchinphonebook",hURL];
     [infodict setObject:jsonString forKey:@"phonebook"];
     NSData *response = [self sendData:infodict atUrl:stringUrl withAuthorization:YES Json:YES];
     if (response != nil)
@@ -358,7 +437,7 @@
     NSArray *keys = [NSArray arrayWithObject:@"login"];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];
     //NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/searchbylogin",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/searchbylogin",hURL];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (responseData != nil)
     {
@@ -372,7 +451,7 @@
         if (code == 4119)
         {
             [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Minimum 4 catatères en minuscule !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Minimum 4 catatères en minuscule !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             
 
         }
@@ -382,11 +461,11 @@
             NSUserDefaults *pref =[NSUserDefaults standardUserDefaults];
             if([[pref objectForKey:@"status"]isEqualToString:@"referent"])
             {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Aucun protégé trouvé" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Aucun protégé trouvé",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             }
             else
             {
-                [[[UIAlertView alloc] initWithTitle:nil message:@"Aucun référent trouvé" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Aucun référent trouvé",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             }
             
         }
@@ -400,7 +479,7 @@
       NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [NSArray arrayWithObjects:@"alert",@"lon",@"lat",@"address",@"message",nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:parameters forKeys:keys];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/updateposition",kURL,[pref objectForKey:@"status"]];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/%@/updateposition",hURL,[pref objectForKey:@"status"]];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (responseData != nil)
     {
@@ -431,7 +510,7 @@
     [infosDict setObject:phoneid forKey:@"phoneid"];
     NSString *Status = [pref objectForKey:@"status"];
     [infosDict setObject:Status forKey:@"status"];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/updateaccount",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/updateaccount",hURL];
     NSData *response = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (response != nil)
     {
@@ -473,12 +552,12 @@
         if (code == 4128)
         {
             [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:nil message:@"L'identifiant est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"L'identifiant est déja utilisé !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
         if (code == 4129)
         {
             [SVProgressHUD dismiss];
-            [[[UIAlertView alloc] initWithTitle:nil message:@"L'addresse Mail est déja utilisé !" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"L'addresse Mail est déja utilisé !",nil) delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
         }
     }
     return 0;
@@ -491,8 +570,7 @@
     
     //NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:registered forKeys:keys];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:protegeId forKeys:keys];
-    NSUserDefaults *pref = [NSUserDefaults standardUserDefaults];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/decreasealert",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/decreasealert",hURL];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (responseData != nil)
     {
@@ -502,11 +580,11 @@
         {
              //NSString *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
             //NSLog(@"marche = %@",infos);
-            [SVProgressHUD showSuccessWithStatus:@"Alerte danger desactivée"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Alerte danger desactivée",nil)];
             //return infos;
         }
         else
-            [SVProgressHUD showSuccessWithStatus:@"Alerte danger desactivée"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Alerte danger desactivée",nil)];
     }
     //return nil;
     
@@ -516,11 +594,11 @@
 +(void)sendInvit: (NSString *)registered
 {
     NSArray *protegeId = [[NSArray alloc]initWithObjects:registered, nil];
-    NSArray *keys = [NSArray arrayWithObjects:@"id", nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"target", nil];
     
     //NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:registered forKeys:keys];
     NSDictionary *infosDict = [[NSDictionary alloc] initWithObjects:protegeId forKeys:keys];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/invite",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/invite",hURL];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:NO];
     if (responseData != nil)
     {
@@ -530,23 +608,25 @@
         {
            // NSString *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
             //NSLog(@"marche = %@",infos);
-            [SVProgressHUD showSuccessWithStatus:@"Invitation envoyée"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Invitation envoyée",nil)];
             //return infos;
             
         }
         if (code == 500)
         {
-            [SVProgressHUD showErrorWithStatus:@"Invitation déjà envoyée"];
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Invitation déjà envoyée",nil)];
         }
         else
-            NSLog(@"casser");
+        {
+            [SVProgressHUD dismiss];
+        }
     }
     //return nil;
 }
 
 +(NSArray *) checkInvitation
 {
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/checkinvitations",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/checkinvitations",hURL];
     NSData *responseData = [self getData:stringUrl ];
     if (responseData != nil)
     {
@@ -582,7 +662,7 @@
     NSData *JsonData = [NSJSONSerialization dataWithJSONObject:response options:NSJSONWritingPrettyPrinted error:nil];
     NSString *jsonString = [[NSString alloc]initWithData:JsonData encoding:NSUTF8StringEncoding];
     [infosDict setObject:jsonString forKey:@"invitations"];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/respondinvitation",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/respondinvitation",hURL];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:YES Json:YES];
     if (responseData != nil)
     {
@@ -590,7 +670,7 @@
         int code = [[dictData objectForKey:@"code"] intValue];
         if (code == 200)
         {
-            [SVProgressHUD showSuccessWithStatus:@"Réponse envoyée"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Réponse envoyée",nil)];
         }
         else
         {
@@ -602,7 +682,7 @@
 
 +(NSArray *) protegesInfos
 {
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/getprotegeinformations",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/getprotegeinformations",hURL];
     NSData *responseData = [self getData:stringUrl ];
     if (responseData != nil)
     {
@@ -614,10 +694,16 @@
             [SVProgressHUD dismiss];
             return infos;
         }
-        if(code == 404)
+        if(code == 301)
         {
            // NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
-            [SVProgressHUD showErrorWithStatus:@"Aucun protege trouvé, appuyez sur \"+\" pour en ajouter !"];
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Aucun protege trouvé, appuyez sur \"+\" pour en ajouter !",nil)];
+            return nil;
+        }
+        if(code == 404)
+        {
+            // NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Aucun protege trouvé, appuyez sur \"+\" pour en ajouter !",nil)];
             return nil;
         }
     }
@@ -626,7 +712,7 @@
 
 +(NSArray *) referentsInfos
 {
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/protege/getreferentinformations",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/protege/getreferentinformations",hURL];
     NSData *responseData = [self getData:stringUrl ];
     if (responseData != nil)
     {
@@ -641,7 +727,7 @@
         if(code == 404)
         {
             // NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
-            [SVProgressHUD showErrorWithStatus:@"Aucun réferents trouvé, appuyez sur \"+\" pour en ajouter !"];
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Aucun réferents trouvé, appuyez sur \"+\" pour en ajouter !",nil)];
             return nil;
         }
     }
@@ -660,7 +746,7 @@
     NSString *truc = [NSString stringWithFormat:@"%@",[pref objectForKey:@"email"]];
     NSArray *param = [[NSArray alloc]initWithObjects:truc, nil];
     NSMutableDictionary *infosDict = [[NSMutableDictionary alloc] initWithObjects:param forKeys:keys];
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/resetpassword",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/user/resetpassword",hURL];
     NSData *responseData = [self sendData:infosDict atUrl:stringUrl withAuthorization:NO Json:NO];
     if (responseData != nil)
     {
@@ -670,7 +756,7 @@
         {
             // NSString *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
             //NSLog(@"marche = %@",infos);
-            [SVProgressHUD showSuccessWithStatus:@"Un e-mail vous a été envoyer"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Un e-mail vous a été envoyer",nil)];
             //return infos;
             
         }
@@ -680,40 +766,6 @@
     //return nil;
 }
 
-+ (UIImage *)getPicture:(NSString*)userId
-{
-    UIImage *imgCache = [[UIImage alloc] init];
-    //if([userId isEqualToString:@"134"])
-    //{
-      //  imgCache = [UIImage imageNamed:@"default_profile.jpg"];
-    //}
-   // else
-    //{
-        NSString *pictureString = [NSString stringWithFormat:@"%@/%@/portrait.jpg",picURL,userId];
-        
-        if ([[ImageCache sharedImageCache] doesExist:pictureString] == YES)
-        {
-            imgCache = [[ImageCache sharedImageCache] getImage:pictureString];
-        }
-        else
-        {
-            NSData *thedata = [NSData dataWithContentsOfURL:[NSURL URLWithString:pictureString]];
-            NSString *data = [NSString stringWithFormat:@"%@",thedata];
-            NSLog(@"Picture Data, %@", thedata);
-            if ([data isEqualToString:@"(null)"] || data == nil)
-            {
-                imgCache = [UIImage imageNamed:@"default_profile.jpg"];
-            }
-            else
-            {
-                imgCache = [UIImage imageWithData:thedata];
-                [[ImageCache sharedImageCache] addImage:pictureString with:imgCache];
-            }
-       // }
-        return imgCache;
-    }
-    return imgCache;
-}
 
 
 +(void)Share: (NSMutableDictionary *)params
@@ -721,11 +773,11 @@
     
     
     
-    NSData *JsonData = [NSJSONSerialization dataWithJSONObject:[params objectForKey:@"json_protege"] options:NSJSONWritingPrettyPrinted error:nil];
+    NSData *JsonData = [NSJSONSerialization dataWithJSONObject:[params objectForKey:@"proteges"] options:NSJSONWritingPrettyPrinted error:nil];
     NSString *jsonString = [[NSString alloc]initWithData:JsonData encoding:NSUTF8StringEncoding];
-    [params setObject:jsonString forKey:@"json_protege"];
+    [params setObject:jsonString forKey:@"proteges"];
 
-    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/share",kURL];
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/share",hURL];
     NSData *responseData = [self sendData:params atUrl:stringUrl withAuthorization:YES Json:YES];
     if (responseData != nil)
     {
@@ -739,18 +791,38 @@
            
             if (code2 == 200)
             {
-                 [SVProgressHUD showSuccessWithStatus:@"Protégé partagé"];
+                 [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Protégé partagé",nil)];
             }
             else
             {
-                [SVProgressHUD showErrorWithStatus:@"Comptes déjà appariés"];
+                [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Comptes déjà appariés",nil)];
             }
         }
         else
-           [SVProgressHUD showErrorWithStatus:@"Référents non trouvé"];
+           [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Référents non trouvé",nil)];
     }
 }
 
+
++(void)updatealerting: (NSMutableDictionary *)params
+{
+    NSString *stringUrl = [NSString stringWithFormat:@"%@/referent/updatealerting",hURL];
+    NSData *responseData = [self sendData:params atUrl:stringUrl withAuthorization:YES Json:YES];
+    if (responseData != nil)
+    {
+        
+        NSDictionary *dictData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+        int code = [[dictData objectForKey:@"code"] intValue];
+        if (code == 200)
+        {
+            NSArray *infos = [[NSArray alloc]initWithArray:[dictData objectForKey:@"message"]];
+            NSLog(@"infos: %@",infos);
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Options de notifications à jour !",nil)];
+        }
+        else
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"Error",nil)];
+    }
+}
 
 
 

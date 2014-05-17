@@ -1,0 +1,66 @@
+
+/* Class = "IBUILabel"; text = "*"; ObjectID = "0JP-c2-DB3"; */
+"0JP-c2-DB3.text" = "*";
+
+/* Class = "IBUILabel"; text = "Username"; ObjectID = "1oa-iY-a9g"; */
+"1oa-iY-a9g.text" = "Username";
+
+/* Class = "IBUILabel"; text = "Alerte Danger"; ObjectID = "4t8-zV-BT4"; */
+"4t8-zV-BT4.text" = "Alerte Danger";
+
+/* Class = "IBUILabel"; text = "*"; ObjectID = "7bE-eS-HDq"; */
+"7bE-eS-HDq.text" = "*";
+
+/* Class = "IBUISegmentedControl"; Cyf-DI-TIV.segmentTitles[0] = "Référent"; ObjectID = "Cyf-DI-TIV"; */
+"Cyf-DI-TIV.segmentTitles[0]" = "Référent";
+
+/* Class = "IBUISegmentedControl"; Cyf-DI-TIV.segmentTitles[1] = "Protégé"; ObjectID = "Cyf-DI-TIV"; */
+"Cyf-DI-TIV.segmentTitles[1]" = "Protégé";
+
+/* Class = "IBUILabel"; text = "Le meilleur moyen de protéger ceux que vous aimez"; ObjectID = "DId-II-rDB"; */
+"DId-II-rDB.text" = "Le meilleur moyen de protéger ceux que vous aimez";
+
+/* Class = "IBUILabel"; text = "afin de vous identifier ou de créer votre profil H2H FeelSafe."; ObjectID = "DwH-Ur-pLv"; */
+"DwH-Ur-pLv.text" = "afin de vous identifier ou de créer votre profil H2H FeelSafe.";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "Ilg-Xq-OYn"; */
+"Ilg-Xq-OYn.text" = "Label";
+
+/* Class = "IBUILabel"; text = "Adressse"; ObjectID = "JvP-SW-bud"; */
+"JvP-SW-bud.text" = "Adressse";
+
+/* Class = "IBUILabel"; text = "Nom"; ObjectID = "L0Q-aB-IFZ"; */
+"L0Q-aB-IFZ.text" = "Nom";
+
+/* Class = "IBUISegmentedControl"; TMZ-ht-DFL.segmentTitles[0] = "Contacts"; ObjectID = "TMZ-ht-DFL"; */
+"TMZ-ht-DFL.segmentTitles[0]" = "Contacts";
+
+/* Class = "IBUISegmentedControl"; TMZ-ht-DFL.segmentTitles[1] = "Recherche"; ObjectID = "TMZ-ht-DFL"; */
+"TMZ-ht-DFL.segmentTitles[1]" = "Recherche";
+
+/* Class = "IBUILabel"; text = "Prenom"; ObjectID = "ULz-q7-Spo"; */
+"ULz-q7-Spo.text" = "Prenom";
+
+/* Class = "IBUILabel"; text = "Téléphone"; ObjectID = "WnU-cu-ufc"; */
+"WnU-cu-ufc.text" = "Téléphone";
+
+/* Class = "IBUIButton"; normalTitle = "mot de passe oublié ?"; ObjectID = "aQ1-Rw-9AW"; */
+"aQ1-Rw-9AW.normalTitle" = "mot de passe oublié ?";
+
+/* Class = "IBUILabel"; text = "Address"; ObjectID = "tXS-1b-1Nc"; */
+"tXS-1b-1Nc.text" = "Address";
+
+/* Class = "IBUILabel"; text = "Entrez votre adresse e-mail"; ObjectID = "uR5-Pg-mTQ"; */
+"uR5-Pg-mTQ.text" = "Entrez votre adresse e-mail";
+
+/* Class = "IBUIButton"; normalTitle = "Passer"; ObjectID = "xKk-mH-j6g"; */
+"xKk-mH-j6g.normalTitle" = "Passer";
+
+/* Class = "IBUISegmentedControl"; zdY-dh-f8B.segmentTitles[0] = "Plan"; ObjectID = "zdY-dh-f8B"; */
+"zdY-dh-f8B.segmentTitles[0]" = "Plan";
+
+/* Class = "IBUISegmentedControl"; zdY-dh-f8B.segmentTitles[1] = "Liste"; ObjectID = "zdY-dh-f8B"; */
+"zdY-dh-f8B.segmentTitles[1]" = "Liste";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "zhK-j5-ouE"; */
+"zhK-j5-ouE.text" = "Label";
