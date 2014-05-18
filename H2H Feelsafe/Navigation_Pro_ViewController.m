@@ -244,9 +244,12 @@
 
 
 - (IBAction)send:(id)sender {
+    alert = @"0";
     [self.message endEditing:YES];
-     self.message.text = nil;
+    
     NSLog(@"message %@", self.message.text);
+    [self startUpdateProcess];
+    
 }
 
 
@@ -256,12 +259,14 @@
     NSString *latitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.latitude];
     NSString *longitude =[[NSString alloc]initWithFormat:@"%f",locationManager.location.coordinate.longitude];
     NSArray *infos = [[NSArray alloc]initWithObjects:alert,longitude,latitude,address,self.message.text,nil];
+    NSLog(@"infos %@",infos);
     BOOL Update = [WebServices updateInformations:infos] ;
     NSLog(@"Update %@",infos);
     if (Update)
     {
         [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"Informations mise à jours",nil)];
         self.adresse.text = address;
+        self.message.text = nil;
     }
     else
     {
@@ -274,14 +279,19 @@
 - (void)startUpdateProcess
 {
     
-   
+   if (![alert isEqualToString:@"0"])
+       {
     [SVProgressHUD showWithStatus:NSLocalizedString(@"Mise à jour des informations",nil) maskType:SVProgressHUDMaskTypeBlack];
-    
+       }
+    else
+    {
+         [SVProgressHUD showWithStatus:NSLocalizedString(@"Envoie du message",nil) maskType:SVProgressHUDMaskTypeBlack];
+    }
     
     [locationManager startUpdatingLocation];
    // [self performSelectorOnMainThread:@selector(GetAdress) withObject:Nil waitUntilDone:YES];
-    [self performSelector:@selector(GetAdress)  withObject:nil afterDelay:0];
-    [self performSelector:@selector(StartUpdate) withObject:nil afterDelay:2];
+    [self performSelector:@selector(GetAdress)  withObject:nil];
+    
     
 }
 
@@ -289,6 +299,8 @@
 {
     self.geocoder = [[CLGeocoder alloc] init];
     [self.geocoder reverseGeocodeLocation: locationManager.location completionHandler:
+     
+     
      ^(NSArray *placemarks, NSError *error) {
          
          //Get address
@@ -299,7 +311,11 @@
          //String to address
          NSString *locatedaddress = [[placemark.addressDictionary valueForKey:@"FormattedAddressLines"] componentsJoinedByString:@", "];
          address = locatedaddress ;
+       [ self StartUpdate];
      }];
+    
+    
+    
 
 }
 

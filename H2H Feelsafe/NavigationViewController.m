@@ -83,6 +83,7 @@
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ListViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
+        self.viewDeckController.panningMode = IIViewDeckNavigationBarPanning;
         [self.viewDeckController closeLeftView];
     }
     else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Notifications",nil)])
@@ -91,7 +92,7 @@
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"NotificationViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
-        self.viewDeckController.panningMode = IIViewDeckFullViewPanning;
+        self.viewDeckController.panningMode = IIViewDeckLeftSide;
         [self.viewDeckController closeLeftView];
     }
     else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Périmètres",nil)])
@@ -100,7 +101,7 @@
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PerimeterViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
-        self.viewDeckController.panningMode = IIViewDeckFullViewPanning;
+        self.viewDeckController.panningMode = IIViewDeckLeftSide;
         [self.viewDeckController closeLeftView];
     }
     else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Mon compte",nil)])
@@ -109,7 +110,7 @@
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UpdateAccountViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
-         self.viewDeckController.panningMode = IIViewDeckFullViewPanning;
+         self.viewDeckController.panningMode = IIViewDeckLeftSide;
         [self.viewDeckController closeLeftView];
     }
     else if ([cell.textLabel.text isEqualToString:NSLocalizedString(@"Aide",nil)])
@@ -118,6 +119,7 @@
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"UIGuideViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
+         self.viewDeckController.panningMode = IIViewDeckLeftSide;
         [self.viewDeckController closeLeftView];
     }
     [self.tableView reloadData];
@@ -137,6 +139,7 @@
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:vc];
         self.viewDeckController.centerController = navController;
+        self.viewDeckController.panningMode = IIViewDeckNoPanning;
         [self.viewDeckController closeLeftView];
         //[UIView animateWithDuration:0.5 delay:2.0 options:UIViewAnimationOptionTransitionNone animations:^{[self.viewDeckController closeLeftView];} completion:^(BOOL finished){if (finished)[self dismissViewControllerAnimated:YES completion:^{[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isConnected"];}];}]; //fermeture des vues + mise en cache de la déconnexion
         NSLog(@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"isConnected"]);

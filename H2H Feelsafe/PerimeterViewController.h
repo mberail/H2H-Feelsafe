@@ -14,5 +14,8 @@
 
 @interface PerimeterViewController : UIViewController
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
+- (IBAction)radiusSizeSlider:(id)sender;
+@property (strong, nonatomic) IBOutlet UILabel *radiusLabel;
+@property (strong, nonatomic) IBOutlet UISlider *radiusSizeSlider;
 
 @end

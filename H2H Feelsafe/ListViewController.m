@@ -528,7 +528,11 @@
         
             pin.coordinate = coord;
             pin.title = [dictTemp objectForKey:@"username"];
-            pin.subtitle = [NSString stringWithFormat:@"%@",[dictTemp objectForKey:@"message"]];
+            if(!([dictTemp objectForKey:@"message"] == rien))
+            {
+                 pin.subtitle = [NSString stringWithFormat:@"%@",[dictTemp objectForKey:@"message"]];
+            }
+           
             
            
             
